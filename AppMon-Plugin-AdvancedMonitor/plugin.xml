@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AdvancedMonitor" name="Advanced Monitor">
+    <information>
+      <description value="Collect metrics form different server type. In particular:&#xA;- Apache server status page and parses out the results into the repository&#xA;- Web Server&#xA;- Database&#xA;- eSysAdm Server&#xA;- FLUME collector&#xA;- Redis Server" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="Advanced Monitor" />
+    </information>
+    <configuration>
+      <property key="monitorType" label="Monitor Type" type="list" description="Type of montor" default="Apache Web Server">
+        <list>
+          <item value="TCP Server" />
+          <item value="Web Server" />
+          <item value="Apache Web Server" />
+          <item value="eSysAdm Server" />
+          <item value="FLUME Server" />
+          <item value="Database Server" />
+          <item value="Oracle Database Server" />
+          <item value="PostgreSQL Server" />
+          <item value="Redis Server" />
+          <item value="WebService" />
+          <item value="SSH command" />
+          <item value="Local command" />
+        </list>
+      </property>
+      <property key="DBType" label="Database Type" type="list" description="The type of database server this monitor is connecting to" default="Oracle">
+        <list>
+          <item value="Oracle" />
+          <item value="Microsoft SQL Server" />
+          <item value="Postgres" />
+          <item value="MySQL" />
+          <item value="IBM DB2" />
+          <item value="IBM Netezza" />
+          <item value="Ingres" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="Database Server" />
+        </visibility>
+      </property>
+      <property key="OracleVersion" label="Oracle version" type="list" description="Oracle version" default="Oracle v11 or later">
+        <list>
+          <item value="Oracle v11 or later" />
+          <item value="Older Oracle" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+        </visibility>
+      </property>
+      <property key="port" label="Server Port" type="long" description="Port to use on the Server" default="1521">
+        <visibility>
+          <rule key="monitorType" value="Redis Server" />
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="FLUME Server" />
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="TCP Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+          <rule key="monitorType" value="eSysAdm Server" />
+        </visibility>
+      </property>
+      <property key="Database" label="Database Name" type="string" description="Name of the database to connect to on the sql server" default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+        </visibility>
+      </property>
+      <property key="OracleType" label="Oracle Database Type" type="list" description="Oracle connection type (SID, Sevice)" default="SID">
+        <list>
+          <item value="SID" />
+          <item value="ServiceName" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="DBType" value="Oracle" />
+        </visibility>
+      </property>
+      <property key="HasDB2Schema" label="Has DB2Schema" type="boolean" description="Specify a different Schema for use with the connection." default="false">
+        <visibility>
+          <rule key="DBType" value="IBM DB2" />
+        </visibility>
+      </property>
+      <property key="DB2Schema" label="Schema Value" type="string" description="The schema to use when connecting to the DB2 instance." default="" multiline="false">
+        <visibility>
+          <rule key="HasDB2Schema" value="true" />
+        </visibility>
+      </property>
+      <property key="SQLWindowsAuth" label="SQLServer uses Windows Logon" type="boolean" description="If checked, the program will use windows single sign-on" default="false">
+        <visibility>
+          <rule key="DBType" value="Microsoft SQL Server" />
+        </visibility>
+      </property>
+      <property key="DBUsername" label="Database Username" type="string" description="Username to use for login to the database" default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+        </visibility>
+      </property>
+      <property key="DBPassword" label="Database Password" type="password" description="Password for the username used to connect to the sql database" default="">
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+        </visibility>
+      </property>
+      <property key="DBURL" label="Database Connection URL" type="string" description="The URL to use to connect to the databse, instead of dynamically constructing the URL from the database, server, port, etc. &#xA;{0} will be replaced with database host&#xA;{1} will be replaced with database port&#xA;{2} will be replaced with database name&#xA;{3} will be replaced with database username&#xA;{4} will be replaced with database password" default="" multiline="true">
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+        </visibility>
+      </property>
+      <property key="SQLTimeout" label="Query Timeout" type="long" description="The query timeout, in seconds. 0 to have no timeout" default="0">
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+        </visibility>
+      </property>
+      <property key="runSQL" label="Execute test SQL" type="boolean" description="If true execute test SQL" default="true">
+        <visibility>
+          <rule key="monitorType" value="Oracle Database Server" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="PostgreSQL Server" />
+        </visibility>
+      </property>
+      <property key="SQLQuery" label="Query Statement" type="string" description="SQL Statement to execute on the SQL database.  The returned rows of this statement will be used for the monitor." default="SELECT 1 FROM DUAL" multiline="true">
+        <visibility>
+          <rule key="monitorType" value="Database Server" />
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="CaptureMode" label="Capture Mode" type="list" description="Select how data format returned by the query.&#xA;Single values -&gt; collect only the first value&#xA;Metrics on columns -&gt; collect selectes metrics form columns&#xA;Metric on rows -&gt; every row is a metric in the format group, metric, value" default="Single value">
+        <list>
+          <item value="Single value" />
+          <item value="Metrics on columns" />
+          <item value="Metrics on rows" />
+          <item value="Rows with multiple metrics" />
+          <item value="Mixed mode" />
+        </list>
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="ResultColumn" label="Result column" type="string" description="The name of the column to use to get the result. Empty means 1st column." default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Single value" />
+        </visibility>
+      </property>
+      <property key="SplittingName" label="Splitting Name" type="string" description="A splitting group name" default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+      <property key="Columns" label="Column(s)" type="string" description="The name of the columns you wish to capture (one per line). Leave empty to collect all the columns." default="" multiline="true">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+      <property key="customHTTPClient" label="Custsomize HTTP client" type="boolean" description="Configure HTTP client settings" default="false">
+        <visibility>
+          <rule key="monitorType" value="FLUME Server" />
+          <rule key="monitorType" value="Web Server" />
+          <rule key="monitorType" value="Apache Web Server" />
+          <rule key="monitorType" value="eSysAdm Server" />
+        </visibility>
+      </property>
+      <property key="allowAnyCert" label="Disable certificate validation" type="boolean" description="Enable to allow connections via SSL even if the certificate on the target host is invalid or self-signed." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="userAgent" label="User-Agent" type="string" description="The user agent string identifies the HTTP client and is sent with every request." default="dynaTrace/3.0" multiline="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverAuth" label="Server authorization" type="boolean" description="If the URL specified requires a name and password for access, server authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverUsername" label="Server username" type="string" description="The username that is used for authorization with the server." default="" multiline="false">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="serverPassword" label="Server password" type="password" description="The password for the username." default="">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="maxRedirects" label="Max. redirects" type="long" description="If a value of 1 or greater is specified, the URL Monitor will follow HTTP redirect codes (301-303, 307) to retrieve the webpage." default="3">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="useTimeout" label="Use custom timeout" type="boolean" description="If enabled allows configuration of HTTP timeout." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="maxSocketTimeout" label="Socket Timeout" type="long" description="The default socket timeout in milliseconds which is the timeout for waiting for data. A timeout value of zero is interpreted as an infinite timeout." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionTimeout" label="Connection Timeout" type="long" description="The timeout until a connection is established. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="monitorType" value="TCP Server" />
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionRequestTimeout" label="Connection RequestTimeout" type="long" description="The timeout until a connection request is received. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="useProxy" label="Use proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="hasVirtualHost" label="force Virtual Host" type="boolean" description="Force an HTTP Host: header. Use this in special cases (e.g. a load-balancer) when servername is not the virtual host configured in the WebServer" default="false">
+        <visibility>
+          <rule key="monitorType" value="Web Server" />
+          <rule key="monitorType" value="Apache Web Server" />
+        </visibility>
+      </property>
+      <property key="virtualHost" label="Virtual Host" type="string" description="Virtual host" default="" multiline="false">
+        <visibility>
+          <rule key="hasVirtualHost" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTagging" label="dynaTrace Tagging" type="boolean" description="Enable dynaTrace tagging." default="false">
+        <visibility>
+          <rule key="monitorType" value="Web Server" />
+          <rule key="monitorType" value="Apache Web Server" />
+        </visibility>
+      </property>
+      <property key="dtTimerName" label="timer name" type="string" description="Identify this webrequest through a unique timer name. The timer name will be sent with each web request as a dynaTrace header field value." default="Montior-Plugin" multiline="false">
+        <visibility>
+          <rule key="dtTagging" value="true" />
+        </visibility>
+      </property>
+      <property key="namespace" label="eSysAdm namespace" type="string" description="Namespace to collect" default="unknown" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="eSysAdm Server" />
+        </visibility>
+      </property>
+      <property key="aggregation" label="metric aggregation" type="list" description="Aggregation to be used in collection" default="sum">
+        <list>
+          <item value="average" />
+          <item value="min" />
+          <item value="max" />
+          <item value="first" />
+          <item value="last" />
+          <item value="count" />
+          <item value="sum" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="eSysAdm Server" />
+        </visibility>
+      </property>
+      <property key="splitting_aggregation" label="metric aggregation for splittings" type="list" description="Aggregation to be used in collection of splittings" default="last">
+        <list>
+          <item value="average" />
+          <item value="min" />
+          <item value="max" />
+          <item value="first" />
+          <item value="last" />
+          <item value="count" />
+          <item value="sum" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="eSysAdm Server" />
+        </visibility>
+      </property>
+      <property key="checkProbe" label="Check server probe" type="boolean" description="Enable to check a URL to validate the server" default="true">
+        <visibility>
+          <rule key="monitorType" value="Web Server" />
+          <rule key="monitorType" value="Apache Web Server" />
+        </visibility>
+      </property>
+      <property key="probeURL" label="Probe URL" type="string" description="Enter the URL to the webpage to be monitored. {host} will be replaced with target host. Example: https://{host}:8443/index.html" default="http://{host}/" multiline="false">
+        <visibility>
+          <rule key="checkProbe" value="true" />
+        </visibility>
+      </property>
+      <property key="method" label="Method" type="list" description="Specify the type of the HTTP request. GET: retrieve the page content, HEAD: retrieve HTTP headers only, POST: send data with the request and retrive the page content (e.g. used for HTML forms)" default="GET">
+        <list>
+          <item value="GET" />
+          <item value="HEAD" />
+          <item value="POST" />
+        </list>
+        <visibility>
+          <rule key="checkProbe" value="true" />
+        </visibility>
+      </property>
+      <property key="postData" label="POST Data" type="string" description="The data which will be sent with the POST request." default="" multiline="false">
+        <visibility>
+          <rule key="method" value="POST" />
+        </visibility>
+      </property>
+      <property key="param" label="Parameter" type="string" description="{PARAM} to be used in substitution" default="-" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="WebService" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="converter" label="Data Conversion" type="list" description="Specify preprocessing on variables value" default="NULL removal">
+        <list>
+          <item value="NULL removal" />
+          <item value="Unix Script" />
+          <item value="Windows commands" />
+          <item value="URL encoder" />
+          <item value="Replace space" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="WebService" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="authMethod" label="Authentication Method" type="list" description="Specify the type of SSH Authentication." default="Password">
+        <list>
+          <item value="Password" />
+          <item value="PublicKey" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+        </visibility>
+      </property>
+      <property key="username" label="Username" type="string" description="User that is used for authorization with the host." default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+        </visibility>
+      </property>
+      <property key="password" label="Password" type="password" description="User's password." default="">
+        <visibility>
+          <rule key="authMethod" value="Password" />
+        </visibility>
+      </property>
+      <property key="passphrase" label="publicKey passphrase" type="password" description="The password for the pem-file." default="">
+        <visibility>
+          <rule key="authMethod" value="PublicKey" />
+        </visibility>
+      </property>
+      <property key="keyFile" label="Key-File" type="string" description="The keyfile for the ssh-keypair, e.g. C:/.ssh/id_rsa" default="" multiline="false">
+        <visibility>
+          <rule key="authMethod" value="PublicKey" />
+        </visibility>
+      </property>
+      <property key="isCommandKey" label="Command Lookup" type="boolean" description="Il true command is obtained with a lookup in definition file" default="false">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="command" label="Command" type="string" description="Command which will be executed on the server" default="ping localhost" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="false" />
+        </visibility>
+      </property>
+      <property key="commandKey" label="Command Key" type="string" description="key in lookup table" default="${PARAM}" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="missingKey" label="Missing Key" type="string" description="key in lookup table if commandKey doesn't exist" default="*" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="commandFile" label="Command Lookup table" type="string" description="TSV tab separated file with commands" default="command.csv" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="capture" label="Capture Output" type="boolean" description="Defines if the output of the executed command should be captured and returned as message." default="false">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="bufferSize" label="output buffer size" type="long" description="Size of the output buffer" default="2048">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="wsdl" label="WS WSDL" type="string" description="URL to the WSDL file" default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="wsOperation" label="WS Operation" type="string" description="Name of the web service operation" default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="wsParameters" label="WS Parameters" type="string" description="Parameter-name=parameter-value pairs which will be used for substitution of parameters. One pair per line." default="" multiline="true">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="isDotNET" label="isDotNET" type="boolean" description="Is &quot;true&quot; when plugin invokes .NET web service" default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="wsUsePrefix" label="WS Use Prefix" type="boolean" description="indicator which shows if plugin will add a namespace prefix to child elements in the SOAP request" default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="metricNames" label="Returned Measure Names" type="string" description="Returned measures contains list of names of measures which are returned by the command in the first line of the command's output " default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="metricPrefix" label="Metric Prefix" type="string" description="Prefix in output to find metrics" default="***ReturnedMeasures:" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="ValidateColumn" label="Validating column" type="string" description="The name of the column to use to validate the result, if empty uses the first column." default="" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="Database Server" />
+        </visibility>
+      </property>
+      <property key="matchContent" label="Validating rule" type="list" description="If enabled, the specified rule will be used to check the response." default="Disabled">
+        <list>
+          <item value="Disabled" />
+          <item value="Success if contains" />
+          <item value="Error if contains" />
+          <item value="Regular Expression" />
+          <item value="Expected size in bytes" />
+        </list>
+        <visibility>
+          <rule key="monitorType" value="SSH command" />
+          <rule key="monitorType" value="Database Server" />
+          <rule key="monitorType" value="Local command" />
+          <rule key="checkProbe" value="true" />
+        </visibility>
+      </property>
+      <property key="searchString" label="Search string" type="string" description="Enter a case-sensitive string to search for in the retrieved webpage. If 'Success if match' is configured and the webpage contains the string, the measure will yield 1, otherwise 0." default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Success if contains" />
+          <rule key="matchContent" value="Error if contains" />
+        </visibility>
+      </property>
+      <property key="regex" label="Regular Expression" type="string" description="Regulal expression to validate the result" default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Regular Expression" />
+        </visibility>
+      </property>
+      <property key="compareBytes" label="Bytes" type="long" description="Enter the number of bytes expected for the response." default="0">
+        <visibility>
+          <rule key="matchContent" value="Expected size in bytes" />
+        </visibility>
+      </property>
+      <property key="parseProbe" label="Parse probe data" type="boolean" description="Enable parsing of JSON data." default="false">
+        <visibility>
+          <rule key="checkProbe" value="true" />
+        </visibility>
+      </property>
+      <property key="modStatusURL" label="Mod Status URL" type="string" description="Enter the URL to mod_status service. Remeber to add ?auto in order to have machine readable data. {host} will be replaced with target host. Example: 'http://{host}/server-status?auto'. " default="http://{host}/server-status?auto" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="Apache Web Server" />
+        </visibility>
+      </property>
+      <property key="redisAuth" label="Redis Authotization key" type="password" description="Port to use to connect to Redis" default="">
+        <visibility>
+          <rule key="monitorType" value="Redis Server" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor" name="Advanced Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AdvancedMonitor" class="net.eiroca.dynatrace.plugins.AdvancedMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup1" name="Server Monitor">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="HostReachable" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="1 if host is reachable" />
+      <metric name="SocketTimedOut" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="1 if socket had a timed-out" />
+      <metric name="ConnectionTimedOut" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="ConnectionTimedOut" />
+      <metric name="ServerLatency" unit="ms" defaultrate="none" hidedisplayaggregation="sum count" description="Server Latency" />
+      <metric name="Response Time" unit="ms" description="Complete response time (e.g. connection + query + read)" defaultrate="purepath" />
+      <metric name="Status" unit="number" description="Response Status (0 OK)" defaultrate="purepath" />
+      <metric name="Result" unit="number" description="Server Response (e.g. query data)" defaultrate="purepath" />
+      <metric name="ContentVerified" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="ContentVerified" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup2" name="HTTP Monitor">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="WebServer - HeaderSize" unit="bytes" defaultrate="none" description="Size of HTTP headers" />
+      <metric name="WebServer - Response Size" unit="bytes" defaultrate="none" description="ResponseSize" />
+      <metric name="WebServer - Throughput" unit="kilobytes" defaultrate="sec" hidedisplayaggregation="sum count" description="Throughput" />
+      <metric name="WebServer - HttpStatusCode" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="HttpStatusCode" />
+      <metric name="WebServer - ConnectionCloseDelay" unit="ms" defaultrate="none" hidedisplayaggregation="sum count" description="ConnectionCloseDelay" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup3" name="Apache Performance">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="Apache - TotalAccesses" unit="number" description="Total count of requests to the Apache server." defaultrate="none" />
+      <metric name="Apache - TotalBytes" unit="bytes" description="Total amount of megabytes served by the Apache server." defaultrate="none" />
+      <metric name="Apache - CPULoad" unit="percent" description="Current CPU load of the Apache server." defaultrate="none" />
+      <metric name="Apache - Uptime" unit="s" description="The time the servers has been running in seconds." defaultrate="none" />
+      <metric name="Apache - ReqPerSec" unit="number" description="Requests received per second." defaultrate="sec" />
+      <metric name="Apache - BytesPerSec" unit="bytes" description="Bytes sent per second." defaultrate="sec" />
+      <metric name="Apache - BytesPerReq" unit="bytes" description="Bytes sent per request." defaultrate="none" />
+      <metric name="Apache - BusyWorkers" unit="number" description="The number of worker serving requests." defaultrate="none" />
+      <metric name="Apache - IdleWorkers" unit="number" description="The number of idle worker." defaultrate="none" />
+      <metric name="Apache - WorkersUtilization" unit="percent" description="Shows how utilized the server is, consider increasing the workers thread pool if this reaches 100%.&#xD;&#xA;No more connections is accepted by Apache when it reaches 100%." defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup4" name="Apache Scoreboard">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="Apache - Scoreboard - Waiting" unit="number" defaultrate="purepath" description="Waiting for Connection" />
+      <metric name="Apache - Scoreboard - Starting up" unit="number" description="Starting up" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Reading Request" unit="number" description="Reading Request" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Sending Reply" unit="number" description="Sending Reply" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Keepalive (read)" unit="number" description="Keepalive (read)" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - DNS Lookup" unit="number" description="DNS Lookup" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Closing connection" unit="number" description="Closing connection" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Logging" unit="number" description="Logging" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Gracefully finishing" unit="number" description="Gracefully finishing" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Idle cleanup of worker" unit="number" description="Idle cleanup of worker" defaultrate="purepath" />
+      <metric name="Apache - Scoreboard - Open Slot" unit="number" description="Open slot with no current process" defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup5" name="Database Monitor">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="Database - Query Time" unit="ms" description="Query Time (only query)" defaultrate="purepath" />
+      <metric name="Database - Query Rows" unit="number" description="Query record count" defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup6" name="eSysAdm Monitor">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="eSysAdm - Metrics" unit="number" description="Metrics collected by eSysAdm server" defaultrate="purepath" />
+      <metric name="eSysAdm - Alerts" unit="number" description="Alerts collected by eSysAdm server" defaultrate="purepath" />
+      <metric name="eSysAdm - KPIs" unit="percent" description="KPIs (%) collected by eSysAdm server" defaultrate="purepath" />
+      <metric name="eSysAdm - Timings" unit="ms" description="Timings (ms) collected by eSysAdm server" defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup7" name="FLUME Monitor">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="FLUME - Append Accepted" unit="number" description="Append Accepted Count" defaultrate="purepath" />
+      <metric name="FLUME - Append Batch Accepted" unit="number" description="Append Batch Accepted Count" defaultrate="purepath" />
+      <metric name="FLUME - Append Batch Received" unit="number" description="Append Batch Received Count" defaultrate="purepath" />
+      <metric name="FLUME - Append Received" unit="number" description="Append Received Count" defaultrate="purepath" />
+      <metric name="FLUME - Batch Complete" unit="number" description="Batch Complete Count" defaultrate="purepath" />
+      <metric name="FLUME - Batch Empty" unit="number" description="Batch Empty Count" defaultrate="purepath" />
+      <metric name="FLUME - Batch Underflow" unit="number" description="Batch Underflow Count" defaultrate="purepath" />
+      <metric name="FLUME - Channel Capacity" unit="number" description="Channel Capacity" defaultrate="purepath" />
+      <metric name="FLUME - Channel Fill" unit="percent" description="Channel Fill (Percentage)" defaultrate="purepath" />
+      <metric name="FLUME - Channel Size" unit="number" description="Channel Size" defaultrate="purepath" />
+      <metric name="FLUME - Connection Closed" unit="number" description="Connection Closed Count" defaultrate="purepath" />
+      <metric name="FLUME - Connection Created" unit="number" description="Connection Created Count" defaultrate="purepath" />
+      <metric name="FLUME - Connection Failed" unit="number" description="Connection Failed Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Accepted" unit="number" description="Event Accepted Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Drain Attempt" unit="number" description="Event Drain Attempt Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Drain Success" unit="number" description="Event Drain Success Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Put Attempt" unit="number" description="Event Put Attempt Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Put Success" unit="number" description="Event Put Success Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Received" unit="number" description="Event Received Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Take Attempt" unit="number" description="Event Take Attempt Count" defaultrate="purepath" />
+      <metric name="FLUME - Event Take Success" unit="number" description="Event TakeSuccess Count" defaultrate="purepath" />
+      <metric name="FLUME - Open Connection" unit="number" description="Open Connection Count" defaultrate="purepath" />
+      <metric name="FLUME - Start Time" unit="number" description="Start Time" defaultrate="purepath" />
+      <metric name="FLUME - Stop Time" unit="number" description="Stop Time" defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup8" name="Oracle Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="Oracle - Info - System date" unit="number" description="Info - System date" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Free Buffer Waits" unit="number" description="SGA - Free Buffer Waits" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Write Complete Waits" unit="number" description="SGA - Write Complete Waits" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Buffer Busy Waits" unit="number" description="SGA - Buffer Busy Waits" defaultrate="purepath" />
+      <metric name="Oracle - SGA - DB Block Changes" unit="number" description="SGA - DB Block Changes" defaultrate="purepath" />
+      <metric name="Oracle - SGA - DB Block Gets" unit="number" description="SGA - DB Block Gets" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Consistent Gets" unit="number" description="SGA - Consistent Gets" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Physical Reads" unit="number" description="SGA - Physical Reads" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Physical Writes" unit="number" description="SGA - Physical Writes" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Buffer Cache Hit Ratio" unit="percent" description="SGA - Buffer Cache Hit Ratio" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Execution Without Parse Ratio" unit="percent" description="SGA - Execution Without Parse Ratio" defaultrate="purepath" />
+      <metric name="Oracle - SGA - Memory Sort Ratio" unit="percent" description="SGA - Memory Sort Ratio" defaultrate="purepath" />
+      <metric name="Oracle - Sessions - Maximum Concurrent User" unit="number" description="Sessions - Maximum Concurrent User" defaultrate="purepath" />
+      <metric name="Oracle - Sessions - Current Concurrent User" unit="number" description="Sessions - Current Concurrent User" defaultrate="purepath" />
+      <metric name="Oracle - Sessions - Highest Concurrent User" unit="number" description="Sessions - Highest Concurrent User" defaultrate="purepath" />
+      <metric name="Oracle - Sessions - Maximum Named Users" unit="number" description="Sessions - Maximum Named Users" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - SQL Area Get" unit="percent" description="Hit Ratio - SQL Area Get" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - SQL Area Pin" unit="percent" description="Hit Ratio - SQL Area Pin" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Table/Procedure Get" unit="percent" description="Hit Ratio - Table/Procedure Get" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Table/Procedure Pin" unit="percent" description="Hit Ratio - Table/Procedure Pin" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Body Get" unit="percent" description="Hit Ratio - Body Get" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Body Pin" unit="percent" description="Hit Ratio - Body Pin" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Trigger Get" unit="percent" description="Hit Ratio - Trigger Get" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Trigger Pin" unit="percent" description="Hit Ratio - Trigger Pin" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Library Cache Get" unit="percent" description="Hit Ratio - Library Cache Get" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Library Cache Pin" unit="percent" description="Hit Ratio - Library Cache Pin" defaultrate="purepath" />
+      <metric name="Oracle - Hit Ratio - Dictionary Cache" unit="percent" description="Hit Ratio - Dictionary Cache" defaultrate="purepath" />
+      <metric name="Oracle - Shared Pool - Free Memory" unit="number" description="Shared Pool - Free Memory" defaultrate="purepath" />
+      <metric name="Oracle - Shared Pool - Reloads" unit="number" description="Shared Pool - Reloads" defaultrate="purepath" />
+      <metric name="Oracle - Latches - Wait Latch Gets" unit="number" description="Latches - Wait Latch Gets" defaultrate="purepath" />
+      <metric name="Oracle - Latches - Immediate Latch Gets" unit="number" description="Latches - Immediate Latch Gets" defaultrate="purepath" />
+      <metric name="Oracle - Redo - Space Wait Ratio" unit="percent" description="Redo - Space Wait Ratio" defaultrate="purepath" />
+      <metric name="Oracle - Redo - Allocation Latch" unit="number" description="Redo - Allocation Latch" defaultrate="purepath" />
+      <metric name="Oracle - Redo - Copy Latches" unit="number" description="Redo - Copy Latches" defaultrate="purepath" />
+      <metric name="Oracle - Info - Recursive Calls Ratio" unit="percent" description="Info - Recursive Calls Ratio" defaultrate="purepath" />
+      <metric name="Oracle - Info - Short Table Scans Ratio" unit="percent" description="Info - Short Table Scans Ratio" defaultrate="purepath" />
+      <metric name="Oracle - Info - Rollback Segment Contention" unit="number" description="Info - Rollback Segment Contention" defaultrate="purepath" />
+      <metric name="Oracle - Info - CPU Parse Overhead" unit="number" description="Info - CPU Parse Overhead" defaultrate="purepath" />
+      <metric name="Oracle - Table Contention - Chained Fetch Ratio" unit="percent" description="Table Contention - Chained Fetch Ratio" defaultrate="purepath" />
+      <metric name="Oracle - Table Contention - Free List Contention" unit="number" description="Table Contention - Free List Contention" defaultrate="purepath" />
+      <metric name="Oracle - Tablespace - Total" unit="megabytes" description="Tablespace - Total Space (MB)" defaultrate="purepath" />
+      <metric name="Oracle - Tablespace - Used" unit="megabytes" description="Tablespace - Used Space (MB)" defaultrate="purepath" />
+      <metric name="Oracle - Tablespace - Free" unit="megabytes" description="Tablespace - Free Space (MB)" defaultrate="purepath" />
+      <metric name="Oracle - Tablespace - Used %" unit="percent" description="Tablespace - Used Space (%)" defaultrate="purepath" />
+      <metric name="Oracle - Tablespace - Free %" unit="percent" description="Tablespace - Total Space (%)" defaultrate="purepath" />
+      <metric name="Oracle - Waiter - Total Waits" unit="number" description="Waiter - Total Waits" defaultrate="purepath" />
+      <metric name="Oracle - Waiter - Total Timeouts" unit="number" description="Waiter - Total Timeouts" defaultrate="purepath" />
+      <metric name="Oracle - Waiter - Time Waited" unit="s" description="Waiter - Time Waited" defaultrate="purepath" />
+      <metric name="Oracle - Waiter - Average Wait time" unit="s" description="Waiter - Average Wait time" defaultrate="purepath" />
+      <metric name="Oracle - Lock - Lock Mode" unit="number" description="Lock - Lock Mode" defaultrate="purepath" />
+      <metric name="Oracle - Lock - Lock Status" unit="number" description="Lock - Lock Status" defaultrate="purepath" />
+      <metric name="Oracle - Lock - Locks" unit="number" description="Lock count" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Elapsed Time" unit="number" description="Elapsed Time" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - CPU Time" unit="number" description="CPU Time" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Disk Reads" unit="number" description="Disk Reads" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Disk Writes" unit="number" description="Disk Writes" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Executions" unit="number" description="Executions" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Parse Calls" unit="number" description="Parse Calls" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Buffer Gets" unit="number" description="Buffer Gets" defaultrate="purepath" />
+      <metric name="Oracle - Top SQL - Rows rocessed" unit="number" description="Rows rocessed" defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup9" name="PostgreSQL Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="PostgreSQL - blk_read_time" unit="number" description="blk_read_time" defaultrate="purepath" />
+      <metric name="PostgreSQL - blk_write_time" unit="number" description="blk_write_time" defaultrate="purepath" />
+      <metric name="PostgreSQL - blks_hit" unit="number" description="blks_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - blks_read" unit="number" description="blks_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - conflicts" unit="number" description="conflicts" defaultrate="purepath" />
+      <metric name="PostgreSQL - deadlocks" unit="number" description="deadlocks" defaultrate="purepath" />
+      <metric name="PostgreSQL - heap_hit" unit="number" description="heap_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - heap_ratio" unit="number" description="heap_ratio" defaultrate="purepath" />
+      <metric name="PostgreSQL - heap_read" unit="number" description="heap_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - idx_hit" unit="number" description="idx_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - idx_ratio" unit="number" description="idx_ratio" defaultrate="purepath" />
+      <metric name="PostgreSQL - idx_read" unit="number" description="idx_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Indexes - idx_blks_hit" unit="number" description="Indexes - idx_blks_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - Indexes - idx_blks_read" unit="number" description="Indexes - idx_blks_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Indexes - idx_scan" unit="number" description="Indexes - idx_scan" defaultrate="purepath" />
+      <metric name="PostgreSQL - Indexes - idx_tup_fetch" unit="number" description="Indexes - idx_tup_fetch" defaultrate="purepath" />
+      <metric name="PostgreSQL - Indexes - idx_tup_read" unit="number" description="Indexes - idx_tup_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - numbackends" unit="number" description="numbackends" defaultrate="purepath" />
+      <metric name="PostgreSQL - stat_activity" unit="number" description="stat_activity" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - analyze_count" unit="number" description="Tables - analyze_count" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - autoanalyze_count" unit="number" description="Tables - autoanalyze_count" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - autovacuum_count" unit="number" description="Tables - autovacuum_count" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - coalesce" unit="number" description="Tables - coalesce" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - heap_blks_hit" unit="number" description="Tables - heap_blks_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - heap_blks_read" unit="number" description="Tables - heap_blks_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - idx_blks_hit" unit="number" description="Tables - idx_blks_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - idx_blks_read" unit="number" description="Tables - idx_blks_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - n_dead_tup" unit="number" description="Tables - n_dead_tup" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - n_live_tup" unit="number" description="Tables - n_live_tup" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - n_tup_del" unit="number" description="Tables - n_tup_del" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - n_tup_hot_upd" unit="number" description="Tables - n_tup_hot_upd" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - n_tup_ins" unit="number" description="Tables - n_tup_ins" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - n_tup_upd" unit="number" description="Tables - n_tup_upd" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - percent_of_times_index_used" unit="number" description="Tables - percent_of_times_index_used" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - rows_in_table" unit="number" description="Tables - rows_in_table" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - seq_scan" unit="number" description="Tables - seq_scan" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - seq_tup_read" unit="number" description="Tables - seq_tup_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - tidx_blks_hit" unit="number" description="Tables - tidx_blks_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - tidx_blks_read" unit="number" description="Tables - tidx_blks_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - toast_blks_hit" unit="number" description="Tables - toast_blks_hit" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - toast_blks_read" unit="number" description="Tables - toast_blks_read" defaultrate="purepath" />
+      <metric name="PostgreSQL - Tables - vacuum_count" unit="number" description="Tables - vacuum_count" defaultrate="purepath" />
+      <metric name="PostgreSQL - temp_bytes" unit="number" description="temp_bytes" defaultrate="purepath" />
+      <metric name="PostgreSQL - tup_deleted" unit="number" description="tup_deleted" defaultrate="purepath" />
+      <metric name="PostgreSQL - tup_fetched" unit="number" description="tup_fetched" defaultrate="purepath" />
+      <metric name="PostgreSQL - tup_inserted" unit="number" description="tup_inserted" defaultrate="purepath" />
+      <metric name="PostgreSQL - tup_returned" unit="number" description="tup_returned" defaultrate="purepath" />
+      <metric name="PostgreSQL - tup_updated" unit="number" description="tup_updated" defaultrate="purepath" />
+      <metric name="PostgreSQL - xact_commit" unit="number" description="xact_commit" defaultrate="purepath" />
+      <metric name="PostgreSQL - xact_rollback" unit="number" description="xact_rollback" defaultrate="purepath" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup10" name="Redis Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric defaultrate="purepath" name="Redis - Server - uptime" unit="s" />
+      <metric defaultrate="purepath" name="Redis - Stats - instantaneous_ops_per_sec" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Stats - total_commands_processed" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Stats - keyspace_hits" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Stats - keyspace_misses" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Clients - connected_clients" unit="number" description="Connected clients" />
+      <metric defaultrate="purepath" name="Redis - Memory - used_memory" unit="bytes" />
+      <metric defaultrate="purepath" name="Redis - Memory - used_memory_peak" unit="bytes" />
+      <metric defaultrate="purepath" name="Redis - Memory - used_memory_overhead" unit="bytes" />
+      <metric defaultrate="purepath" name="Redis - Replication - master_last_io_seconds_ago" unit="s" />
+      <metric defaultrate="purepath" name="Redis - Replication - master_sync_in_progress" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Replication - connected_slaves" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Keyspace - keys" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Persistence - rdb_last_bgsave_time_sec" unit="s" />
+      <metric defaultrate="purepath" name="Redis - Persistence - rdb_bgsave_in_progress" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Persistence - rdb_changes_since_last_save" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Keyspace Hit Ratio" unit="percent" />
+    </metricgroup>
+  </extension>
+</plugin>
