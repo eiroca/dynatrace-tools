@@ -17,6 +17,7 @@
           <item value="Apache Web Server" />
           <item value="eSysAdm Server" />
           <item value="FLUME Server" />
+          <item value="ElasticSearch Server" />
           <item value="Database Server" />
           <item value="Oracle Database Server" />
           <item value="PostgreSQL Server" />
@@ -164,6 +165,7 @@
       <property key="customHTTPClient" label="Custsomize HTTP client" type="boolean" description="Configure HTTP client settings" default="false">
         <visibility>
           <rule key="monitorType" value="FLUME Server" />
+          <rule key="monitorType" value="ElasticSearch Server" />
           <rule key="monitorType" value="Web Server" />
           <rule key="monitorType" value="Apache Web Server" />
           <rule key="monitorType" value="eSysAdm Server" />
@@ -253,6 +255,7 @@
       </property>
       <property key="hasVirtualHost" label="force Virtual Host" type="boolean" description="Force an HTTP Host: header. Use this in special cases (e.g. a load-balancer) when servername is not the virtual host configured in the WebServer" default="false">
         <visibility>
+          <rule key="monitorType" value="ElasticSearch Server" />
           <rule key="monitorType" value="Web Server" />
           <rule key="monitorType" value="Apache Web Server" />
         </visibility>
@@ -264,6 +267,7 @@
       </property>
       <property key="dtTagging" label="dynaTrace Tagging" type="boolean" description="Enable dynaTrace tagging." default="false">
         <visibility>
+          <rule key="monitorType" value="ElasticSearch Server" />
           <rule key="monitorType" value="Web Server" />
           <rule key="monitorType" value="Apache Web Server" />
         </visibility>
@@ -501,6 +505,11 @@
       <property key="modStatusURL" label="Mod Status URL" type="string" description="Enter the URL to mod_status service. Remeber to add ?auto in order to have machine readable data. {host} will be replaced with target host. Example: 'http://{host}/server-status?auto'. " default="http://{host}/server-status?auto" multiline="false">
         <visibility>
           <rule key="monitorType" value="Apache Web Server" />
+        </visibility>
+      </property>
+      <property key="elasticURL" label="ElasticSearch Server URL" type="string" description="Enter the URL to an ElasticSearch Cluster Node. {host} will be replaced with target host. Example: 'http://{host}:9200/'. " default="http://{host}:9200/" multiline="false">
+        <visibility>
+          <rule key="monitorType" value="ElasticSearch Server" />
         </visibility>
       </property>
       <property key="redisAuth" label="Redis Authotization key" type="password" description="Port to use to connect to Redis" default="">
@@ -742,6 +751,59 @@
       <metric defaultrate="purepath" name="Redis - Persistence - rdb_bgsave_in_progress" unit="number" />
       <metric defaultrate="purepath" name="Redis - Persistence - rdb_changes_since_last_save" unit="number" />
       <metric defaultrate="purepath" name="Redis - Keyspace Hit Ratio" unit="percent" />
+      <metric defaultrate="purepath" name="Redis - Keyspace Hit Rate" unit="number" />
+      <metric defaultrate="purepath" name="Redis - Keyspace Miss Rate" unit="number" />
     </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup11" name="ElasticSearch Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="ElasticSearch - ActivePrimaryShards" description="The number of primary shards that are used across the cluster" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - ActiveShards" description="The number of shards (primary and replica) that are used across the cluster" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - ActiveShardsPercent" description="Percentage of shards that are active, a green cluster should have 100% here" unit="percent" defaultrate="purepath" />
+      <metric name="ElasticSearch - CompletionSize" description="Size of completion caches" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - DataNodeCount" description="Number of active data nodes" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - DelayedUnassignedShards" description="The number of shards that are in delayed state" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - DeleteCurrent" description="Currently active delete operations per node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - DeletedCount" description="Number of deleted documents" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - DeletedCountPerSecond" description="Derived measure which provides the number of documents deleted per second since the monitor was last run" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - DocCount" description="Number of documents" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - DocCountPerSecond" description="Derived measure which provides the number of documents added per second since the monitor was last run" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - FetchCurrent" description="Currently active fetch operations per node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - FieldDataEvictions" description="How often field data was evicted from the field data cache" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - FieldDataSize" description="Size of the field data per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - FileDescriptorCount" description="File descriptor metrics split by different file descriptor measures" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - FileDescriptorLimit" description="Allowed number of max file descriptor on the operating system split by node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - FileSystemSize" description="File system metrics split by different file system measures" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - IndexCount" description="The count of indexes" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - IndexingCurrent" description="Currently active indexing operations per node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - IndexingThrottleTime" description="Time that indexing was throttled per node" calculatedelta="true" unit="ms" defaultrate="purepath" />
+      <metric name="ElasticSearch - InitHeap" description="The number of bytes currently initialized on the heap per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - InitializingShards" description="The number of shards that are currently initializing" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - InitNonHeap" description="The number of bytes currently initialized off-heap per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - MaxDirect" description="The number of bytes of direct memory that can be used per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - MaxHeap" description="The number of bytes of heap-memory that can be used at max per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - MaxNonHeap" description="The number of bytes of off-heap memory that can be used at max per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - NodeCount" description="Number of active nodes" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - PercolateCount" description="Percolate metrics split by different percolate measures" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - PercolateSize" description="Size used for percolation per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - QueryCacheSize" description="Size of the query cache per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - QueryCurrent" description="Currently active query operations per node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - RecoveryAsSource" description="Number of shards that are recovered from this node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - RecoveryAsTarget" description="Number of shards that are recovered to this node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - RecoveryThrottleTime" description="Time that recovery was throttled per node" calculatedelta="true" unit="ms" defaultrate="purepath" />
+      <metric name="ElasticSearch - RelocatingShards" description="The number of shards that are currently relocated" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - RequestCacheSize" description="Size of the request cache" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - ScrollCurrent" description="Currently active scroll operations per node" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - SegmentCount" description="Number of segments" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - SegmentSize" description="Size of segments, split by different segment-measures" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - ShardCount" description="The number of shards with dynamic splittings by state" unit="number" defaultrate="purepath" />
+      <metric name="ElasticSearch - StoreSize" description="Size of storage overall per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - StoreThrottleTime" description="Time that storing was throttled per node" calculatedelta="true" unit="ms" defaultrate="purepath" />
+      <metric name="ElasticSearch - TranslogSize" description="Size of the translog per node" unit="bytes" defaultrate="purepath" />
+      <metric name="ElasticSearch - UnassignedShards" description="The number of shards that are currently uninitialized" unit="number" defaultrate="purepath" />
+    </metricgroup>
+    <information>
+      <description value="Provides metrics from Elasticsearch Cluster" />
+    </information>
   </extension>
 </plugin>

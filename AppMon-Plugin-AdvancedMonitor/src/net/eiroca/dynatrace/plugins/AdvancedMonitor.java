@@ -30,6 +30,7 @@ import net.eiroca.library.diagnostics.actions.SSHCommandAction;
 import net.eiroca.library.diagnostics.actions.WebServiceAction;
 import net.eiroca.library.diagnostics.monitors.ApacheServerMonitor;
 import net.eiroca.library.diagnostics.monitors.DatabaseMonitor;
+import net.eiroca.library.diagnostics.monitors.ElasticSearchMonitor;
 import net.eiroca.library.diagnostics.monitors.FLUMEServerMonitor;
 import net.eiroca.library.diagnostics.monitors.OracleMonitor;
 import net.eiroca.library.diagnostics.monitors.PostgreSQLMonitor;
@@ -57,6 +58,7 @@ public class AdvancedMonitor extends AbstractMonitorPlugin {
     AdvancedMonitor.monitors.put("Apache Web Server", ApacheServerMonitor.class);
     AdvancedMonitor.monitors.put("eSysAdm Server", eSysAdmServerMonitor.class);
     AdvancedMonitor.monitors.put("FLUME Server", FLUMEServerMonitor.class);
+    AdvancedMonitor.monitors.put("ElasticSearch Server", ElasticSearchMonitor.class);
     AdvancedMonitor.monitors.put("Database Server", DatabaseMonitor.class);
     AdvancedMonitor.monitors.put("Oracle Database Server", OracleMonitor.class);
     AdvancedMonitor.monitors.put("PostgreSQL Server", PostgreSQLMonitor.class);
