@@ -33,7 +33,8 @@ public class IncidentUtils {
 
   public static Type getSensitivityType(final List<Incident> incidents) {
     // Custom, Immediate, Medium, Low, PerViolation, After60s;
-    // TODO using the first element of Incidents collection. Are there any examples when Incidents collection has more
+    // TODO using the first element of Incidents collection. Are there any examples when Incidents
+    // collection has more
     // than one incident?
     Type sensitivityType = null;
     Sensitivity sensitivity;
@@ -48,7 +49,8 @@ public class IncidentUtils {
 
   public static Type getSensitivityType(final Incident incident) {
     // Custom, Immediate, Medium, Low, PerViolation, After60s;
-    // TODO using the first element of Incidents collection. Are there any examples when Incidents collection has more
+    // TODO using the first element of Incidents collection. Are there any examples when Incidents
+    // collection has more
     // than one incident?
     Type sensitivityType = null;
     Sensitivity sensitivity;

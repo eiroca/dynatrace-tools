@@ -2,16 +2,16 @@
  *
  * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU Affero General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License along with this program. If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
 package net.eiroca.library.dynatrace.util;
@@ -54,7 +54,8 @@ public class Sources {
 
   private static void parseIncidents(final Map<SourceType, SourceReferences> sources, final List<Incident> incidents) {
     for (final Incident incident : incidents) {
-      // parse message field to extract source-type, source-name, and host-name of the incident only if there are 0
+      // parse message field to extract source-type, source-name, and host-name of the incident only
+      // if there are 0
       // violations
       final Collection<Violation> violations = incident.getViolations();
       if (violations == null) {
