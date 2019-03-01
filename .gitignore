@@ -62,3 +62,4 @@ local.properties
 **/images/*
 **/build/*
 **/external\ docs/*
+/test_dashboard/
