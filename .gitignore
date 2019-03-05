@@ -56,10 +56,10 @@ local.properties
 .worksheet
 
 #
-**/target/*
-**/lib/*
-**/sdk/*
-**/images/*
+/target/*
+**/lib/*.jar
+/sdk/*
+/images/*
 **/build/*
-**/external\ docs/*
+/external\ docs/*
 /test_dashboard/
