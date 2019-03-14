@@ -25,8 +25,9 @@ import com.dynatrace.diagnostics.pdk.Status;
 import com.dynatrace.diagnostics.pdk.Status.StatusCode;
 import net.eiroca.library.core.Helper;
 import net.eiroca.library.diagnostics.CommandException;
-import net.eiroca.library.metrics.Measure;
+import net.eiroca.library.metrics.IMetric;
 import net.eiroca.library.metrics.MetricGroup;
+import net.eiroca.library.metrics.datum.IDatum;
 
 public class DynatracePlugin {
 
@@ -35,42 +36,42 @@ public class DynatracePlugin {
     for (final MetricGroup g : groups) {
       context.debug("processing group: ", g.getName());
       g.refresh();
-      for (final Measure m : g.getMetrics()) {
+      for (final IMetric<?> m : g.getMetrics()) {
         DynatracePlugin.exportMeasure(context, g, m);
       }
     }
   }
 
-  final public static void exportMeasure(final DynatraceContext<MonitorEnvironment> context, final MetricGroup g, final Measure m) {
+  final public static void exportMeasure(final DynatraceContext<MonitorEnvironment> context, final MetricGroup g, final IMetric<?> m) {
     final String group = g.getName();
-    final String key = m.getName();
-    final double value = m.getValue();
+    final String key = m.getMetadata().getDisplayName();
+    final IDatum value = m.getDatum();
     context.debug("processing metric: ", key);
     final Collection<MonitorMeasure> measures = context.env.getMonitorMeasures(group, key);
     if (measures != null) {
       for (final MonitorMeasure measure : measures) {
-        if (m.hasValue()) {
-          measure.setValue(value);
+        if (value.hasValue()) {
+          measure.setValue(value.getValue());
           context.trace(group, ".", key, "=", value);
         }
         if (m.hasSplittings()) {
           context.debug("processing metric splitting");
           double sum = 0;
-          for (final Entry<String, Measure> s : m.getSplittings().entrySet()) {
+          for (final Entry<String, ?> s : m.getSplittings().entrySet()) {
             final String splitGroup = s.getKey();
-            final Measure ms = s.getValue();
+            final IMetric<?> ms = (IMetric<?>)s.getValue();
             sum = 0;
-            for (final Entry<String, Measure> sm : ms.getSplittings().entrySet()) {
+            for (final Entry<String, ?> sm : ms.getSplittings().entrySet()) {
               final String splitName = sm.getKey();
-              final Measure splitValue = sm.getValue();
-              final double val = splitValue.getValue();
+              final IMetric<?> splitValue = (IMetric<?>)sm.getValue();
+              final double val = splitValue.getDatum().getValue();
               sum = sum + val;
               context.trace(group, ".", key, "(", splitGroup, ",", splitName, ")=", splitValue);
               final MonitorMeasure dynamicMeasureData = context.env.createDynamicMeasure(measure, splitGroup, splitName);
               dynamicMeasureData.setValue(val);
             }
           }
-          if (!m.hasValue()) {
+          if (!value.hasValue()) {
             measure.setValue(sum);
             context.trace(group, ".", key, "=", sum);
           }
