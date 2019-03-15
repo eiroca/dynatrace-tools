@@ -17,7 +17,9 @@
 package net.eiroca.library.dynatrace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -31,6 +33,19 @@ import net.eiroca.library.metrics.MetricMetadata;
 public class DynatracePluginUtils {
 
   static SortedMap<String, SortedMap<String, MetricMetadata>> definition = new TreeMap<>();
+  private static final Map<String, String> ALIAS = new HashMap<String, String>();
+  static {
+    ALIAS.put("number", null);
+    ALIAS.put("boolean", null);
+    ALIAS.put("counter", null);
+    ALIAS.put("counter", null);
+    ALIAS.put("purepath", null);
+    ALIAS.put("rate", "number");
+    ALIAS.put("request", null);
+    ALIAS.put("requests", null);
+    ALIAS.put("operation", null);
+    ALIAS.put("operations", null);
+  }
 
   public static void addMetadata(String groupName, String metricName, MetricMetadata metadata) {
     SortedMap<String, MetricMetadata> group = definition.get(groupName);
@@ -61,8 +76,8 @@ public class DynatracePluginUtils {
         for (IMetric<?> m : mg.getMetrics()) {
           MetricMetadata meta = m.getMetadata();
           String mName = meta.getDisplayName();
-          if ("Probe - Result".equals(mName) ) {
-            System.err.println(monitorname);
+          if (mName.contains("Rows rocessed")) {
+            // System.err.println(monitorname);
           }
           addMetadata(mgName, mName, meta);
         }
@@ -77,19 +92,30 @@ public class DynatracePluginUtils {
       sb.append("<extension point=\"com.dynatrace.diagnostics.pdk.monitormetricgroup\" id=\"" + sectionName + "\" name=\"" + mgName + "\">").append(LibStr.NL);
       sb.append(" <metricgroup monitorid=\"" + dynaMonitorName + "\">").append(LibStr.NL);
       for (Entry<String, MetricMetadata> metrics : groups.getValue().entrySet()) {
-        String mName = metrics.getKey();
         MetricMetadata meta = metrics.getValue();
         sb.append("  <metric");
-        sb.append(" name=\"" + meta.getDisplayName() + "\"");
-        sb.append(" description=\"" + meta.getInternalName() + "\"");
-        sb.append(" unit=\"number\"");
-        sb.append(" defaultrate=\"purepath\"");
+        addAttribute(sb, "name", meta.getDisplayName(), "?", (Map<String, String>)null);
+        addAttribute(sb, "description", meta.getDescription(), meta.getInternalName(), null);
+        addAttribute(sb, "unit", meta.getUnit(), null, ALIAS);
+        addAttribute(sb, "defaultrate", meta.getRate(), null, ALIAS);
+        addAttribute(sb, "hidedisplayaggregation", meta.getNoagg(), null, ALIAS);
+        if (meta.getCalcDelta()) {
+          addAttribute(sb, "calculatedelta", "true", null, null);
+        }
         sb.append(" />").append(LibStr.NL);
       }
       sb.append(" </metricgroup>").append(LibStr.NL);
       sb.append("</extension>").append(LibStr.NL);
     }
     System.out.println(sb.toString());
+  }
+
+  private static void addAttribute(StringBuilder sb, String name, String val, String defVal, Map<String, String> renamed) {
+    if (val == null) val = defVal;
+    if (val == null) return;
+    if (renamed != null) val = renamed.containsKey(val) ? renamed.get(val) : val;
+    if (val == null) return;
+    sb.append(' ').append(name).append('=').append('"').append(val).append('"');
   }
 
 }

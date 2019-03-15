@@ -526,7 +526,7 @@
     <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
       <metric name="HostReachable" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="1 if host is reachable" />
       <metric name="SocketTimedOut" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="1 if socket had a timed-out" />
-      <metric name="ConnectionTimedOut" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="ConnectionTimedOut" />
+      <metric name="ConnectionTimedOut" unit="number" defaultrate="none" hidedisplayaggregation="sum count" description="1 if connection timed out" />
       <metric name="ServerLatency" unit="ms" defaultrate="none" hidedisplayaggregation="sum count" description="Server Latency" />
       <metric name="Response Time" unit="ms" description="Complete response time (e.g. connection + query + read)" defaultrate="purepath" />
       <metric name="Status" unit="number" description="Response Status (0 OK)" defaultrate="purepath" />
@@ -546,7 +546,7 @@
   <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup3" name="Apache Performance">
     <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
       <metric name="Apache - TotalAccesses" unit="number" description="Total count of requests to the Apache server." defaultrate="none" />
-      <metric name="Apache - TotalBytes" unit="bytes" description="Total amount of megabytes served by the Apache server." defaultrate="none" />
+      <metric name="Apache - TotalBytes" unit="megabytes" description="Total amount of megabytes served by the Apache server." defaultrate="none" />
       <metric name="Apache - CPULoad" unit="percent" description="Current CPU load of the Apache server." defaultrate="none" />
       <metric name="Apache - Uptime" unit="s" description="The time the servers has been running in seconds." defaultrate="none" />
       <metric name="Apache - ReqPerSec" unit="number" description="Requests received per second." defaultrate="sec" />
