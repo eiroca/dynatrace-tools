@@ -19,7 +19,7 @@ package net.eiroca.library.dynatrace.tools;
 import java.util.Date;
 import java.util.UUID;
 import com.google.gson.JsonParser;
-import net.eiroca.ext.library.gson.JSonUtil;
+import net.eiroca.ext.library.gson.GsonUtil;
 
 public class Alert implements Comparable<Alert> {
 
@@ -58,7 +58,7 @@ public class Alert implements Comparable<Alert> {
 
   @Override
   public String toString() {
-    return JSonUtil.toJSON(this);
+    return GsonUtil.toJSON(this);
   }
 
   @Override

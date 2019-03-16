@@ -38,7 +38,7 @@ import org.xml.sax.InputSource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.eiroca.ext.library.gson.JSonUtil;
+import net.eiroca.ext.library.gson.GsonUtil;
 import net.eiroca.library.core.Helper;
 import net.eiroca.library.core.LibStr;
 import net.eiroca.library.rule.RegExRule;
@@ -303,7 +303,7 @@ public class DynatraceProcessor {
     final JsonArray records = data.getAsJsonArray("alerts");
     for (int i = 0; i < records.size(); i++) {
       final JsonObject alert = records.get(i).getAsJsonObject();
-      final String id = JSonUtil.getString(alert, "id");
+      final String id = GsonUtil.getString(alert, "id");
       final String alertJson = server.readAlert(id);
       final Alert dynaAlert = fromDynaTraceJson(id, alertJson);
       alerts.add(dynaAlert);
@@ -424,13 +424,13 @@ public class DynatraceProcessor {
   public Alert fromDynaTraceJson(final String id, final String json) {
     final Alert a = new Alert(id);
     final JsonObject data = a.parser.parse(json).getAsJsonObject();
-    a.system = JSonUtil.getString(data, "systemprofile");
-    a.rule = JSonUtil.getString(data, "rule");
-    a.message = JSonUtil.getString(data, "message");
-    a.description = JSonUtil.getString(data, "description");
-    a.start = JSonUtil.getDate(data, "start", DynatraceProcessor.ISO8601);
-    a.end = JSonUtil.getDate(data, "end", DynatraceProcessor.ISO8601);
-    final String stateStr = JSonUtil.getString(data, "state");
+    a.system = GsonUtil.getString(data, "systemprofile");
+    a.rule = GsonUtil.getString(data, "rule");
+    a.message = GsonUtil.getString(data, "message");
+    a.description = GsonUtil.getString(data, "description");
+    a.start = GsonUtil.getDate(data, "start", DynatraceProcessor.ISO8601);
+    a.end = GsonUtil.getDate(data, "end", DynatraceProcessor.ISO8601);
+    final String stateStr = GsonUtil.getString(data, "state");
     a.state = DynatraceProcessor.dyna2state.get(stateStr);
     if (a.state == null) {
       a.state = AlertState.NEW;
@@ -438,7 +438,7 @@ public class DynatraceProcessor {
     if ((a.state == AlertState.NEW) && (a.end != null)) {
       a.state = AlertState.CLOSED;
     }
-    final String severityStr = JSonUtil.getString(data, "severity");
+    final String severityStr = GsonUtil.getString(data, "severity");
     a.severity = DynatraceProcessor.dyna2severity.get(severityStr);
     if (a.severity == null) {
       a.severity = AlertSeverity.INFO;

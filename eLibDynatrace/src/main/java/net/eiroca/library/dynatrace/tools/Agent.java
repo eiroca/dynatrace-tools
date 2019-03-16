@@ -16,7 +16,7 @@
  **/
 package net.eiroca.library.dynatrace.tools;
 
-import net.eiroca.ext.library.gson.JSonUtil;
+import net.eiroca.ext.library.gson.GsonUtil;
 
 public class Agent implements Comparable<Agent> {
 
@@ -24,7 +24,7 @@ public class Agent implements Comparable<Agent> {
 
   @Override
   public String toString() {
-    return JSonUtil.toJSON(this);
+    return GsonUtil.toJSON(this);
   }
 
   @Override
