@@ -26,7 +26,6 @@ import com.dynatrace.diagnostics.pdk.PluginEnvironment;
 import net.eiroca.ext.library.http.utils.URLFetcherConfig;
 import net.eiroca.library.core.LibStr;
 import net.eiroca.library.system.IContext;
-import net.eiroca.library.system.ILog;
 
 public class DynatraceContext<T extends PluginEnvironment> implements IContext {
 
@@ -34,7 +33,7 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   private static final String CONFIG_DTTIMENRNAME = "dtTimerName";
 
   protected static final Level[] logLevels = new Level[] {
-      Level.FINEST, Level.FINER, Level.FINE, Level.INFO, Level.WARNING, Level.SEVERE
+      Level.FINEST, Level.FINER, Level.FINE, Level.CONFIG, Level.INFO, Level.WARNING, Level.SEVERE
   };
 
   protected String name;
@@ -76,7 +75,7 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
     return runner;
   }
 
-  private Level getLevel(final ILog.LogLevel level) {
+  private Level getLevel(final LogLevel level) {
     int importance = level.ordinal() + bonusLevel;
     if (importance < 0) {
       importance = 0;
@@ -90,15 +89,15 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   // IConfig
 
   @Override
-  public int getConfigInt(final String propName, final int defValue) {
-    final Long result = env.getConfigLong(propName);
-    return result != null ? result.intValue() : defValue;
-  }
-
-  @Override
   public String getConfigString(final String propName, final String defValue) {
     final String result = getConfigString(propName);
     return result != null ? result : defValue;
+  }
+
+  @Override
+  public int getConfigInt(final String propName, final int defValue) {
+    final Long result = env.getConfigLong(propName);
+    return result != null ? result.intValue() : defValue;
   }
 
   @Override
@@ -127,6 +126,11 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   @Override
   public URL getConfigUrl(final String propName) {
     return env.getConfigUrl(propName);
+  }
+
+  @Override
+  public boolean hasConfig(String key) {
+    return true;
   }
 
   // ILog
@@ -171,6 +175,14 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   @Override
   public void error(final Object... msg) {
     final Level l = getLevel(LogLevel.error);
+    if (logger.isLoggable(l)) {
+      logger.log(l, LibStr.concatenate(msg));
+    }
+  }
+
+  @Override
+  public void fatal(final Object... msg) {
+    final Level l = getLevel(LogLevel.fatal);
     if (logger.isLoggable(l)) {
       logger.log(l, LibStr.concatenate(msg));
     }
