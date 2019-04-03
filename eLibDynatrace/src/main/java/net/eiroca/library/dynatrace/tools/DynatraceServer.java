@@ -52,6 +52,8 @@ public class DynatraceServer {
   private final String API_PREFIX = "/api";
   private String API_VERSION = "/v2";
 
+  public boolean isDryRun = false;
+
   String server;
   CloseableHttpClient httpClient;
   HttpContext context = new BasicHttpContext();
@@ -145,10 +147,15 @@ public class DynatraceServer {
     final String json = DynatraceProcessor.toDynaTraceJson(alert).toString();
     prepareJsonCall(httpPut, json);
     try {
-      response = httpClient.execute(httpPut, context);
-      final int responseCode = response.getStatusLine().getStatusCode();
-      final HttpEntity entity2 = response.getEntity();
-      DynatraceServer.logger.debug("Closing " + alert.id + " " + responseCode + " - " + ((entity2 != null) ? EntityUtils.toString(entity2) : ""));
+      int responseCode = 200;
+      String responseData = "DRY_RUN";
+      if (!isDryRun) {
+        response = httpClient.execute(httpPut, context);
+        responseCode = response.getStatusLine().getStatusCode();
+        final HttpEntity responseEntity = response.getEntity();
+        responseData = ((responseEntity != null) ? EntityUtils.toString(responseEntity) : "");
+      }
+      DynatraceServer.logger.debug("Closing " + alert.id + " " + responseCode + " - " + responseData);
     }
     catch (final IOException e) {
       DynatraceServer.logger.error("Unable to change alert", e);
@@ -167,10 +174,15 @@ public class DynatraceServer {
     try {
       DynatraceServer.logger.trace("PUT Body=" + json);
       DynatraceServer.logger.trace("Invoking " + httpPut);
-      response = httpClient.execute(httpPut, context);
-      final int responseCode = response.getStatusLine().getStatusCode();
-      final HttpEntity entity2 = response.getEntity();
-      DynatraceServer.logger.debug("Update " + alert.id + " " + responseCode + " - " + ((entity2 != null) ? EntityUtils.toString(entity2) : ""));
+      int responseCode = 200;
+      String responseData = "DRY_RUN";
+      if (!isDryRun) {
+        response = httpClient.execute(httpPut, context);
+        responseCode = response.getStatusLine().getStatusCode();
+        final HttpEntity responseEntity = response.getEntity();
+        responseData = ((responseEntity != null) ? EntityUtils.toString(responseEntity) : "");
+      }
+      DynatraceServer.logger.debug("Update " + alert.id + " " + responseCode + " - " + responseData);
     }
     catch (final IOException e) {
       DynatraceServer.logger.error("Unable to change alert", e);
@@ -189,19 +201,24 @@ public class DynatraceServer {
     DynatraceServer.logger.trace("POST Body=" + json);
     try {
       DynatraceServer.logger.trace("Invoking " + httpPost);
-      response = httpClient.execute(httpPost, context);
-      final int responseCode = response.getStatusLine().getStatusCode();
-      if (responseCode < 400) {
-        final Header locationHeader = response.getLastHeader(HttpHeaders.LOCATION);
-        DynatraceServer.logger.trace("Location: " + locationHeader);
-        final String location = locationHeader != null ? locationHeader.getValue() : "";
-        final int sepPos = location.lastIndexOf("/");
-        if (sepPos > 0) {
-          alert.id = location.substring(sepPos + 1);
+      int responseCode = 200;
+      String responseData = "DRY_RUN";
+      if (!isDryRun) {
+        response = httpClient.execute(httpPost, context);
+        responseCode = response.getStatusLine().getStatusCode();
+        if (responseCode < 400) {
+          final Header locationHeader = response.getLastHeader(HttpHeaders.LOCATION);
+          DynatraceServer.logger.trace("Location: " + locationHeader);
+          final String location = locationHeader != null ? locationHeader.getValue() : "";
+          final int sepPos = location.lastIndexOf("/");
+          if (sepPos > 0) {
+            alert.id = location.substring(sepPos + 1);
+          }
         }
+        final HttpEntity responseEntity = response.getEntity();
+        responseData = ((responseEntity != null) ? EntityUtils.toString(responseEntity) : "");
       }
-      final HttpEntity entity2 = response.getEntity();
-      DynatraceServer.logger.debug("Create " + alert.system + " " + alert.id + " " + responseCode + " - " + EntityUtils.toString(entity2));
+      DynatraceServer.logger.debug("Create " + alert.system + " " + alert.id + " " + responseCode + " - " + responseData);
     }
     catch (final IOException e) {
       DynatraceServer.logger.warn("IOException", e);

@@ -41,7 +41,7 @@ import net.eiroca.library.diagnostics.monitors.eSysAdmServerMonitor;
 import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
 import net.eiroca.library.dynatrace.sdk.DynatraceContext;
 import net.eiroca.library.dynatrace.sdk.DynatracePlugin;
-import net.eiroca.library.metrics.MeasureGroup;
+import net.eiroca.library.metrics.MetricGroup;
 
 public class AdvancedMonitor extends AbstractMonitorPlugin {
 
@@ -79,7 +79,7 @@ public class AdvancedMonitor extends AbstractMonitorPlugin {
     else {
       final IServerMonitor monitor = (IServerMonitor)monitorClass.newInstance();
       try {
-        final List<MeasureGroup> groups = new ArrayList<>();
+        final List<MetricGroup> groups = new ArrayList<>();
         monitor.setup(context);
         monitor.check(host);
         monitor.loadMetricGroup(groups);
