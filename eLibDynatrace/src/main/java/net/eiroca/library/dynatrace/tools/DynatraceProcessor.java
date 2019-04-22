@@ -41,11 +41,11 @@ import com.google.gson.JsonParser;
 import net.eiroca.ext.library.gson.GsonUtil;
 import net.eiroca.library.core.Helper;
 import net.eiroca.library.core.LibStr;
+import net.eiroca.library.regex.LibRegEx;
 import net.eiroca.library.rule.RegExRule;
 import net.eiroca.library.rule.RuleManager;
 import net.eiroca.library.rule.context.LookupRuleGroup;
 import net.eiroca.library.rule.context.RegExRuleGroup;
-import net.eiroca.library.system.LibRegEx;
 import net.eiroca.library.system.Logs;
 
 public class DynatraceProcessor {
