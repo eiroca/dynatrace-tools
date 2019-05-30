@@ -36,8 +36,9 @@ public class DynatracePluginUtils {
   private static final Map<String, String> ALIAS = new HashMap<>();
   static {
     DynatracePluginUtils.ALIAS.put("number", null);
+    DynatracePluginUtils.ALIAS.put("num", null);
+    DynatracePluginUtils.ALIAS.put("unit", null);
     DynatracePluginUtils.ALIAS.put("boolean", null);
-    DynatracePluginUtils.ALIAS.put("counter", null);
     DynatracePluginUtils.ALIAS.put("counter", null);
     DynatracePluginUtils.ALIAS.put("purepath", null);
     DynatracePluginUtils.ALIAS.put("rate", "number");
