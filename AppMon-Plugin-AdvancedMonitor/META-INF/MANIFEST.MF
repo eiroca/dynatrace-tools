@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: net.eiroca.dynatrace.plugins.AdvancedMonitor;sing
  leton:=true
 Bundle-Name: Advanced Monitor
-Bundle-Version: 0.1.1
+Bundle-Version: 0.2.0
 Bundle-ClassPath: .,lib/bcprov-jdk15on-1.61.jar,lib/commons-codec-1.10
  .jar,lib/commons-lang3-3.8.1.jar,lib/commons-logging-1.2.jar,lib/comm
  ons-pool2-2.4.3.jar,lib/commons-text-1.6.jar,lib/db2jcc4.jar,lib/db2j
