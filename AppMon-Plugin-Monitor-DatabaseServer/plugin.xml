@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor" name="AppMon Database Monitor">
+    <information>
+      <description value="Collect metrics form a Database Server" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon Database Monitor" />
+    </information>
+    <configuration>
+      <property key="DBType" label="Database Type" type="list" description="The type of database server this monitor is connecting to" default="Oracle">
+        <list>
+          <item value="Oracle" />
+          <item value="Microsoft SQL Server" />
+          <item value="Postgres" />
+          <item value="MySQL" />
+          <item value="IBM DB2" />
+          <item value="IBM Netezza" />
+          <item value="Ingres" />
+        </list>
+      </property>
+      <property key="port" label="Server Port" type="long" description="Port to use on the Server" default="1521" />
+      <property key="Database" label="Database Name" type="string" description="Name of the database to connect to on the sql server" default="" multiline="false" />
+      <property key="OracleType" label="Oracle Database Type" type="list" description="Oracle connection type (SID, Sevice)" default="SID">
+        <list>
+          <item value="SID" />
+          <item value="ServiceName" />
+        </list>
+        <visibility>
+          <rule key="DBType" value="Oracle" />
+        </visibility>
+      </property>
+      <property key="HasDB2Schema" label="Has DB2Schema" type="boolean" description="Specify a different Schema for use with the connection." default="false">
+        <visibility>
+          <rule key="DBType" value="IBM DB2" />
+        </visibility>
+      </property>
+      <property key="DB2Schema" label="Schema Value" type="string" description="The schema to use when connecting to the DB2 instance." default="" multiline="false">
+        <visibility>
+          <rule key="HasDB2Schema" value="true" />
+        </visibility>
+      </property>
+      <property key="SQLWindowsAuth" label="SQLServer uses Windows Logon" type="boolean" description="If checked, the program will use windows single sign-on" default="false">
+        <visibility>
+          <rule key="DBType" value="Microsoft SQL Server" />
+        </visibility>
+      </property>
+      <property key="DBUsername" label="Database Username" type="string" description="Username to use for login to the database" default="" multiline="false" />
+      <property key="DBPassword" label="Database Password" type="password" description="Password for the username used to connect to the sql database" default="" />
+      <property key="DBURL" label="Database Connection URL" type="string" description="The URL to use to connect to the databse, instead of dynamically constructing the URL from the database, server, port, etc. &#xA;{0} will be replaced with database host&#xA;{1} will be replaced with database port&#xA;{2} will be replaced with database name&#xA;{3} will be replaced with database username&#xA;{4} will be replaced with database password" default="" multiline="true" />
+      <property key="SQLTimeout" label="Query Timeout" type="long" description="The query timeout, in seconds. 0 to have no timeout" default="0" />
+      <property key="runSQL" label="Execute test SQL" type="boolean" description="If true execute test SQL" default="true" />
+      <property key="SQLQuery" label="Query Statement" type="string" description="SQL Statement to execute on the SQL database.  The returned rows of this statement will be used for the monitor." default="SELECT 1 FROM DUAL" multiline="true">
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="CaptureMode" label="Capture Mode" type="list" description="Select how data format returned by the query.&#xA;Single values -&gt; collect only the first value&#xA;Metrics on columns -&gt; collect selectes metrics form columns&#xA;Metric on rows -&gt; every row is a metric in the format group, metric, value" default="Single value">
+        <list>
+          <item value="Single value" />
+          <item value="Metrics on columns" />
+          <item value="Metrics on rows" />
+          <item value="Rows with multiple metrics" />
+          <item value="Mixed mode" />
+        </list>
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="ResultColumn" label="Result column" type="string" description="The name of the column to use to get the result. Empty means 1st column." default="1" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Single value" />
+        </visibility>
+      </property>
+      <property key="SplittingName" label="Splitting Name" type="string" description="A splitting group name" default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+      <property key="Columns" label="Column(s)" type="string" description="The name of the columns you wish to capture (one per line). Leave empty to collect all the columns." default="" multiline="true">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+      <property key="matchContent" label="Validating rule" type="list" description="If enabled, the specified rule will be used to check the response." default="Disabled">
+        <list>
+          <item value="Disabled" />
+          <item value="Success if contains" />
+          <item value="Error if contains" />
+          <item value="Regular Expression" />
+        </list>
+      </property>
+      <property key="ValidateColumn" label="Validating column" type="string" description="The name of the column to use to validate the result, if empty uses the first column." default="1" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Regular Expression" />
+          <rule key="matchContent" value="Success if contains" />
+          <rule key="matchContent" value="Error if contains" />
+        </visibility>
+      </property>
+      <property key="searchString" label="Search string" type="string" description="Enter a case-sensitive string to search for in the retrieved webpage. If 'Success if match' is configured and the webpage contains the string, the measure will yield 1, otherwise 0." default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Success if contains" />
+          <rule key="matchContent" value="Error if contains" />
+        </visibility>
+      </property>
+      <property key="regex" label="Regular Expression" type="string" description="Regulal expression to validate the result" default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Regular Expression" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor.monitor" name="AppMon Database Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor" class="net.eiroca.dynatrace.plugins.AppMonDatabaseServerMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor.metricgroup2" name="Database Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDatabaseMonitor.monitor">
+      <metric name="Query Rows" description="Rows returned by the query" unit="number" />
+      <metric name="Query Columns" description="Columns returned by the query" unit="number" />
+      <metric name="Query Time" description="Tikem taken by the query" unit="ms" />
+    </metricgroup>
+  </extension>
+</plugin>

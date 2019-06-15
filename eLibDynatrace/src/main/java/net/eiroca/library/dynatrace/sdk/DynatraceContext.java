@@ -35,20 +35,21 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   protected static final Level[] logLevels = new Level[] {
       Level.FINEST, Level.FINER, Level.FINE, Level.CONFIG, Level.INFO, Level.WARNING, Level.SEVERE
   };
+  private static final int BOUNUS_LEVEL = 2;
 
   protected String name;
   protected Logger logger;
   protected Level defaultLevel = Level.INFO;
-  protected int bonusLevel = 1;
+  protected int bonusLevel = BOUNUS_LEVEL;
   protected T env;
   protected String runner;
 
   public DynatraceContext(final String contextName) {
-    this(contextName, 1, null);
+    this(contextName, BOUNUS_LEVEL, null);
   }
 
   public DynatraceContext(final String contextName, final T env) {
-    this(contextName, 1, env);
+    this(contextName, BOUNUS_LEVEL, env);
   }
 
   public DynatraceContext(final String contextName, final int bonusLevel, final T env) {
@@ -83,7 +84,8 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
     if (importance >= DynatraceContext.logLevels.length) {
       importance = DynatraceContext.logLevels.length - 1;
     }
-    return DynatraceContext.logLevels[importance];
+    // return DynatraceContext.logLevels[importance];
+    return Level.INFO;
   }
 
   // IConfig

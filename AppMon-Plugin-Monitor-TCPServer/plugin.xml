@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor" name="AppMon TCPServer Monitor">
+    <information>
+      <description value="Collect metrics form a TCP connection" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon TCPServer Monitor" />
+    </information>
+    <configuration>
+      <property key="port" label="Server port" type="long" description="Port to use on the server" default="22" />
+      <property key="useTimeout" label="Use custom timeout" type="boolean" description="If enabled allows configuration of timeouts." default="false" />
+      <property key="maxConnectionTimeout" label="Connection timeout" type="long" description="The timeout until a connection is established. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor.monitor" name="AppMon TCPServer Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor" class="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

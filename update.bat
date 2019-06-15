@@ -1,15 +1,29 @@
-del /Q .\AppMon-Plugin-AdvancedAction\lib\*
-del /Q .\AppMon-Plugin-AdvancedTask\lib\*
-del /Q .\AppMon-Plugin-AdvancedMonitor\lib\*
+for /D %%d in (AppMon-Plugin-Monitor-*) do (
+	del /Q .\%%d\lib\*
+	xcopy /y .\eLibDynatrace\target\eLibDynatrace-0.0.8.jar .\%%d\lib
+	xcopy /y .\eLibDynatrace\target\libs\* .\%%d\lib
+)
 
-xcopy /y .\eLibDynatrace\target\eLibDynatrace-0.0.1.jar .\AppMon-Plugin-AdvancedAction\lib
-xcopy /y .\eLibDynatrace\target\eLibDynatrace-0.0.1.jar .\AppMon-Plugin-AdvancedTask\lib
-xcopy /y .\eLibDynatrace\target\eLibDynatrace-0.0.1.jar .\AppMon-Plugin-AdvancedMonitor\lib
+for /D %%d in (AppMon-Plugin-Task-*) do (
+	del /Q .\%%d\lib\*
+	xcopy /y .\eLibDynatrace\target\eLibDynatrace-0.0.8.jar .\%%d\lib
+	xcopy /y .\eLibDynatrace\target\libs\* .\%%d\lib
+)
 
-xcopy /y .\eLibDynatrace\target\libs\* .\AppMon-Plugin-AdvancedAction\lib
-xcopy /y .\eLibDynatrace\target\libs\* .\AppMon-Plugin-AdvancedTask\lib
-xcopy /y .\eLibDynatrace\target\libs\* .\AppMon-Plugin-AdvancedMonitor\lib
+for /D %%d in (AppMon-Plugin-Action-*) do (
+	del /Q .\%%d\lib\*
+	xcopy /y .\eLibDynatrace\target\eLibDynatrace-0.0.8.jar .\%%d\lib
+	xcopy /y .\eLibDynatrace\target\libs\* .\%%d\lib
+)
 
-xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-AdvancedAction\lib
-xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-AdvancedTask\lib
-xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-AdvancedMonitor\lib
+xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-Monitor-OracleServer\lib
+xcopy /y ..\..\library\eJDBCDrivers\target\libs\* .\AppMon-Plugin-Monitor-OracleServer\lib
+
+xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-Monitor-DatabaseServer\lib
+xcopy /y ..\..\library\eJDBCDrivers\target\libs\* .\AppMon-Plugin-Monitor-DatabaseServer\lib
+
+xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-Monitor-PostgresServer\lib
+xcopy /y ..\..\library\eJDBCDrivers\target\libs\* .\AppMon-Plugin-Monitor-PostgresServer\lib
+
+xcopy /y ..\..\library\eJDBCDrivers\libs\* .\AppMon-Plugin-Monitor-Advanced\lib
+xcopy /y ..\..\library\eJDBCDrivers\target\libs\* .\AppMon-Plugin-Monitor-Advanced\lib

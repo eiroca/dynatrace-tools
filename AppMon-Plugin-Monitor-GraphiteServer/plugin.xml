@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor" name="AppMon Graphite Monitor">
+    <information>
+      <description value="Collect metrics form a Graphite Server" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon Graphite Monitor" />
+    </information>
+    <configuration>
+      <property key="graphiteURL" label="Graphite URL" type="string" description="Enter the URL to Graphite service. {host} will be replaced with target host. Example: 'http://{host}:8888'." default="http://{host}:8888" multiline="false" />
+      <property key="allMetrics" label="All metrics extraction" type="boolean" description="All metrics extraction" default="false" />
+      <property key="systemMetrics" label="System metrics extraction" type="boolean" description="System metrics extraction" default="true" />
+      <property key="customMetrics" label="Custom metrics extraction" type="boolean" description="Custom metrics extraction" default="true" />
+      <property key="target" label="Custom metrics to extract" type="string" description="Custom metrics to extract" default="carbon.*.*.* &#xD;&#xA;carbon.*.*.*.*&#xD;&#xA;carbon.*.*.*.*.*" multiline="true" />
+      <property key="mapping" label="Custom metrics mapping" type="string" description="Custom metrics mapping" default="carbon\\.(?&lt;split&gt;.*)\\.(?&lt;group&gt;.*);${group};${split}" multiline="true" />
+      <property key="from" label="Time range (from)" type="string" description="Time range (from)" default="-15min" multiline="false" />
+      <property key="until" label="Time range (to)" type="string" description="Time range (to)" default="" multiline="false" />
+      <property key="groupLevel" label="Group level" type="long" description="Group level" default="-1" />
+      <property key="tagPrefix" label="Tag prefix" type="string" description="Tag prefix" default="graphite." multiline="false" />
+      <property key="customHTTPClient" label="Custsomize HTTP client" type="boolean" description="Configure HTTP client settings" default="false" />
+      <property key="allowAnyCert" label="Disable certificate validation" type="boolean" description="Enable to allow connections via SSL even if the certificate on the target host is invalid or self-signed." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="userAgent" label="User-Agent" type="string" description="The user agent string identifies the HTTP client and is sent with every request." default="dynaTrace/3.0" multiline="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverAuth" label="Server authorization" type="boolean" description="If the URL specified requires a name and password for access, server authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverUsername" label="Server username" type="string" description="The username that is used for authorization with the server." default="" multiline="false">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="serverPassword" label="Server password" type="password" description="The password for the username." default="">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="maxRedirects" label="Max. redirects" type="long" description="If a value of 1 or greater is specified, the URL Monitor will follow HTTP redirect codes (301-303, 307) to retrieve the webpage." default="3">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="useTimeout" label="Use custom timeout" type="boolean" description="If enabled allows configuration of HTTP timeout." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="maxSocketTimeout" label="Socket Timeout" type="long" description="The default socket timeout in milliseconds which is the timeout for waiting for data. A timeout value of zero is interpreted as an infinite timeout." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionTimeout" label="Connection Timeout" type="long" description="The timeout until a connection is established. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionRequestTimeout" label="Connection RequestTimeout" type="long" description="The timeout until a connection request is received. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="useProxy" label="Use proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="hasVirtualHost" label="Force Virtual Host" type="boolean" description="Force an HTTP Host: header. Use this in special cases (e.g. a load-balancer) when servername is not the virtual host configured in the WebServer" default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="virtualHost" label="Virtual Host" type="string" description="Virtual host" default="" multiline="false">
+        <visibility>
+          <rule key="hasVirtualHost" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTagging" label="DynaTrace Tagging" type="boolean" description="Enable dynaTrace tagging." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTimerName" label="Timer name" type="string" description="Identify this webrequest through a unique timer name. The timer name will be sent with each web request as a dynaTrace header field value." default="Montior-Plugin" multiline="false">
+        <visibility>
+          <rule key="dtTagging" value="true" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor" name="AppMon Graphite Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor" class="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor.metricgroup2" name="Graphite Agents">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor">
+      <metric name="Agents - activeConnections" description="Agents - activeConnections" unit="number" />
+      <metric name="Agents - avgUpdateTime" description="Agents - avgUpdateTime" unit="ms" />
+      <metric name="Agents - blacklistMatches" description="Agents - blacklistMatches" unit="number" />
+      <metric name="Agents - cache.bulk_queries" description="Agents - cache.bulk_queries" unit="number" />
+      <metric name="Agents - cache.overflow" description="Agents - cache.overflow" unit="number" />
+      <metric name="Agents - cache.queries" description="Agents - cache.queries" unit="number" />
+      <metric name="Agents - cache.queues" description="Agents - cache.queues" unit="number" />
+      <metric name="Agents - cache.size" description="Agents - cache.size" unit="number" />
+      <metric name="Agents - committedPoints" description="Agents - committedPoints" unit="number" />
+      <metric name="Agents - cpuUsage" description="Agents - cpuUsage" unit="number" />
+      <metric name="Agents - creates" description="Agents - creates" unit="number" />
+      <metric name="Agents - droppedCreates" description="Agents - droppedCreates" unit="number" />
+      <metric name="Agents - errors" description="Agents - errors" unit="number" />
+      <metric name="Agents - memUsage" description="Agents - memUsage" unit="number" />
+      <metric name="Agents - metricsReceived" description="Agents - metricsReceived" unit="number" />
+      <metric name="Agents - pointsPerUpdate" description="Agents - pointsPerUpdate" unit="number" />
+      <metric name="Agents - updateOperations" description="Agents - updateOperations" unit="number" />
+      <metric name="Agents - whitelistRejects" description="Agents - whitelistRejects" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor.metricgroup3" name="Graphite Aggregator">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor">
+      <metric name="Aggregator - activeConnections" description="Aggregator - activeConnections" unit="number" />
+      <metric name="Aggregator - aggregateDatapointsSent" description="Aggregator - aggregateDatapointsSent" unit="number" />
+      <metric name="Aggregator - allocatedBuffers" description="Aggregator - allocatedBuffers" unit="number" />
+      <metric name="Aggregator - blacklistMatches" description="Aggregator - blacklistMatches" unit="number" />
+      <metric name="Aggregator - bufferedDatapoints" description="Aggregator - bufferedDatapoints" unit="number" />
+      <metric name="Aggregator - cpuUsage" description="Aggregator - cpuUsage" unit="number" />
+      <metric name="Aggregator - destinations - attemptedRelays" description="Aggregator - destinations - attemptedRelays" unit="number" />
+      <metric name="Aggregator - destinations - batchesSent" description="Aggregator - destinations - batchesSent" unit="number" />
+      <metric name="Aggregator - destinations - relayMaxQueueLength" description="Aggregator - destinations - relayMaxQueueLength" unit="number" />
+      <metric name="Aggregator - destinations - sent" description="Aggregator - destinations - sent" unit="number" />
+      <metric name="Aggregator - memUsage" description="Aggregator - memUsage" unit="number" />
+      <metric name="Aggregator - metricsReceived" description="Aggregator - metricsReceived" unit="number" />
+      <metric name="Aggregator - whitelistRejects" description="Aggregator - whitelistRejects" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor.metricgroup4" name="Graphite Stats">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor.monitor">
+      <metric name="Stats - Others" description="Others - Stats" unit="number" />
+      <metric name="Stats - counts.deamon.bad_lines_seen" description="Stats_counts - deamom - bad_lines_seen" unit="number" />
+      <metric name="Stats - counts.deamon.metrics_received" description="Stats_counts - deamom - metrics_received" unit="number" />
+      <metric name="Stats - counts.deamon.packets_received" description="Stats_counts - deamom - packets_received" unit="number" />
+      <metric name="Stats - counts.response" description="Stats_counts - response" unit="ms" />
+      <metric name="Stats - deamon.bad_lines_seen" description="Stats - deamom - bad_lines_seen" unit="number" />
+      <metric name="Stats - deamon.calculationtime" description="Stats - deamom - calculationtime" unit="number" />
+      <metric name="Stats - deamon.flush_length" description="Stats - deamom - flush_length" unit="number" />
+      <metric name="Stats - deamon.flush_time" description="Stats - deamom - flush_time" unit="number" />
+      <metric name="Stats - deamon.last_exception" description="Stats - deamom - last_exception" unit="number" />
+      <metric name="Stats - deamon.last_flush" description="Stats - deamom - last_flush" unit="number" />
+      <metric name="Stats - deamon.metrics_received" description="Stats - deamom - metrics_received" unit="number" />
+      <metric name="Stats - deamon.packets_received" description="Stats - deamom - packets_received" unit="number" />
+      <metric name="Stats - deamon.processing_time" description="Stats - deamom - processing_time" unit="number" />
+      <metric name="Stats - numStats" description="Stats - numStats" unit="number" />
+      <metric name="Stats - response" description="Stats - response" unit="ms" />
+      <metric name="Stats - timers.count" description="Stats - timers - count" unit="number" />
+      <metric name="Stats - timers.count_90" description="Stats - timers - count_90" unit="number" />
+      <metric name="Stats - timers.count_ps" description="Stats - timers - count_ps" unit="number" />
+      <metric name="Stats - timers.lower" description="Stats - timers - lower" unit="ms" />
+      <metric name="Stats - timers.lower_90" description="Stats - timers - lower_90" unit="ms" />
+      <metric name="Stats - timers.lower_ps" description="Stats - timers - lower_ps" unit="ms" />
+      <metric name="Stats - timers.mean" description="Stats - timers - mean" unit="ms" />
+      <metric name="Stats - timers.mean_90" description="Stats - timers - mean_90" unit="ms" />
+      <metric name="Stats - timers.mean_ps" description="Stats - timers - mean_ps" unit="ms" />
+      <metric name="Stats - timers.median" description="Stats - timers - median" unit="ms" />
+      <metric name="Stats - timers.std" description="Stats - timers - std" unit="ms" />
+      <metric name="Stats - timers.sum" description="Stats - timers - sum" unit="ms" />
+      <metric name="Stats - timers.sum_90" description="Stats - timers - sum_90" unit="ms" />
+      <metric name="Stats - timers.sum_ps" description="Stats - timers - sum_ps" unit="ms" />
+      <metric name="Stats - timers.sum_squares" description="Stats - timers - sum_squares" unit="number" />
+      <metric name="Stats - timers.sum_squares_90" description="Stats - timers - sum_squares_90" unit="number" />
+      <metric name="Stats - timers.sum_squares_ps" description="Stats - timers - sum_squares_ps" unit="number" />
+      <metric name="Stats - timers.upper" description="Stats - timers - upper" unit="ms" />
+      <metric name="Stats - timers.upper_90" description="Stats - timers - upper_90" unit="ms" />
+      <metric name="Stats - timers.upper_ps" description="Stats - timers - upper_ps" unit="ms" />
+      <metric name="Stats - timestamp_lag" description="Stats - timestamp_lag" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

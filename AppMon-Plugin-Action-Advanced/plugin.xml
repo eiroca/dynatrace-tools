@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonAdvancedAction" name="AppMon Advanced Action">
+    <information>
+      <description value="Executes commands remotely, locally or SOAP web services." />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon Advanced Action" />
+    </information>
+    <configuration>
+      <property key="actionType" label="Action type" type="list" description="Specify the type of action" default="Local command">
+        <list>
+          <item value="WebService" />
+          <item value="SSH command" />
+          <item value="Local command" />
+        </list>
+      </property>
+      <property key="dateFormat" label="Date Format" type="string" description="date format of the incident's  START_DATE and END_DATE. If missng default locale format is used" default="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" multiline="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="WebService" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="param" label="Parameter" type="string" description="{PARAM} to be used in substitution" default="-" multiline="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="WebService" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="converter" label="Data Conversion" type="list" description="Specify preprocessing on variables value" default="NULL removal">
+        <list>
+          <item value="NULL removal" />
+          <item value="Unix Script" />
+          <item value="Windows commands" />
+          <item value="URL encoder" />
+          <item value="Replace space" />
+        </list>
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="WebService" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="authMethod" label="Authentication Method" type="list" description="Specify the type of SSH Authentication." default="Password">
+        <list>
+          <item value="Password" />
+          <item value="PublicKey" />
+        </list>
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+        </visibility>
+      </property>
+      <property key="host" label="Host" type="string" description="The server where command will be executed." default="myServer" multiline="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+        </visibility>
+      </property>
+      <property key="port" label="Port" type="long" description="The host's port. Default is port 22." default="22">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+        </visibility>
+      </property>
+      <property key="username" label="Username" type="string" description="User that is used for authorization with the host." default="" multiline="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+        </visibility>
+      </property>
+      <property key="password" label="Password" type="password" description="User's password." default="">
+        <visibility>
+          <rule key="authMethod" value="Password" />
+        </visibility>
+      </property>
+      <property key="passphrase" label="publicKey passphrase" type="password" description="The password for the pem-file." default="">
+        <visibility>
+          <rule key="authMethod" value="PublicKey" />
+        </visibility>
+      </property>
+      <property key="keyFile" label="Key-File" type="string" description="The keyfile for the ssh-keypair, e.g. C:/.ssh/id_rsa" default="" multiline="false">
+        <visibility>
+          <rule key="authMethod" value="PublicKey" />
+        </visibility>
+      </property>
+      <property key="isCommandKey" label="Command Lookup" type="boolean" description="Il true command is obtained with a lookup in definition file" default="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="command" label="Command" type="string" description="Command which will be executed on the server" default="ping localhost" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="false" />
+        </visibility>
+      </property>
+      <property key="commandKey" label="Command Key" type="string" description="key in lookup table" default="${PARAM}" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="missingKey" label="Missing Key" type="string" description="key in lookup table if commandKey doesn't exist" default="*" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="commandFile" label="Command Lookup table" type="string" description="TSV tab separated file with commands" default="command.csv" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="capture" label="Capture Output" type="boolean" description="Defines if the output of the executed command should be captured and returned as message." default="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="bufferSize" label="output buffer size" type="long" description="Size of the output buffer" default="2048">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="wsdl" label="WS WSDL" type="string" description="URL to the WSDL file" default="" multiline="false">
+        <visibility>
+          <rule key="actionType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="wsOperation" label="WS Operation" type="string" description="Name of the web service operation" default="" multiline="false">
+        <visibility>
+          <rule key="actionType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="wsParameters" label="WS Parameters" type="string" description="Parameter-name=parameter-value pairs which will be used for substitution of parameters. One pair per line." default="" multiline="true">
+        <visibility>
+          <rule key="actionType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="isDotNET" label="isDotNET" type="boolean" description="Is &quot;true&quot; when plugin invokes .NET web service" default="false">
+        <visibility>
+          <rule key="actionType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="useProxy" label="Use Proxy?" type="boolean" description="Boolean indicator which is set to TRUE when WS are used and to FALSE when command is executing" default="false">
+        <visibility>
+          <rule key="actionType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="proxyHost" label="WS Proxy Host" type="string" description="WS Proxy Host" default="" multiline="false">
+        <visibility>
+          <rule key="hasProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="WS Proxy Port" type="long" description="WS Proxy Port" default="6670">
+        <visibility>
+          <rule key="hasProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="WS Proxy Authentication User" type="string" description="User to authenticate access through proxy" default="" multiline="false">
+        <visibility>
+          <rule key="hasProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="WS Proxy Authentication Password" type="password" description="Password which will be used to authenticate user's requests coming through the proxy" default="">
+        <visibility>
+          <rule key="hasProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="wsUsePrefix" label="WS Use Prefix" type="boolean" description="indicator which shows if plugin will add a namespace prefix to child elements in the SOAP request" default="false">
+        <visibility>
+          <rule key="actionType" value="WebService" />
+        </visibility>
+      </property>
+      <property key="metricNames" label="Returned Measure Names" type="string" description="Returned measures contains list of names of measures which are returned by the command in the first line of the command's output " default="" multiline="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="metricPrefix" label="Metric Prefix" type="string" description="Prefix in output to find metrics" default="***ReturnedMeasures:" multiline="false">
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="matchContent" label="Validating rule" type="list" description="If enabled, the specified rule will be used to check the response." default="Disabled">
+        <list>
+          <item value="Disabled" />
+          <item value="Success if contains" />
+          <item value="Error if contains" />
+          <item value="Regular Expression" />
+          <item value="Expected size in bytes" />
+        </list>
+        <visibility>
+          <rule key="actionType" value="SSH command" />
+          <rule key="actionType" value="Local command" />
+        </visibility>
+      </property>
+      <property key="searchString" label="Search string" type="string" description="Enter a case-sensitive string to search for in the retrieved webpage. If 'Success if match' is configured and the webpage contains the string, the measure will yield 1, otherwise 0." default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Success if contains" />
+          <rule key="matchContent" value="Error if contains" />
+        </visibility>
+      </property>
+      <property key="regex" label="Regular Expression" type="string" description="Regulal expression to validate the result" default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Regular Expression" />
+        </visibility>
+      </property>
+      <property key="compareBytes" label="Bytes" type="long" description="Enter the number of bytes expected for the response." default="0">
+        <visibility>
+          <rule key="matchContent" value="Expected size in bytes" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.action" id="net.eiroca.dynatrace.plugins.AppMonAdvancedAction.action" name="AppMon Advanced Action">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonAdvancedAction" class="net.eiroca.dynatrace.plugins.AppMonAdvancedAction" />
+  </extension>
+</plugin>

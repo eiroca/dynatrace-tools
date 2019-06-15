@@ -16,6 +16,7 @@
  **/
 package net.eiroca.library.dynatrace.sdk;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
@@ -33,11 +34,16 @@ public class DynatracePlugin {
 
   final public static void publishMeasures(final DynatraceContext<MonitorEnvironment> context, final List<MetricGroup> groups) {
     if (groups == null) { return; }
+    List<IMetric<?>> metricsList = new ArrayList<>();
     for (final MetricGroup g : groups) {
-      context.debug("processing group: ", g.getName());
-      g.refresh();
-      for (final IMetric<?> m : g.getMetrics()) {
-        DynatracePlugin.exportMeasure(context, g, m);
+      if (g.metricCount() > 0) {
+        context.debug("processing group: ", g.getName());
+        metricsList.clear();
+        g.refresh(false);
+        g.loadMetrics(metricsList, false);
+        for (final IMetric<?> m : metricsList) {
+          DynatracePlugin.exportMeasure(context, g, m);
+        }
       }
     }
   }
@@ -46,7 +52,7 @@ public class DynatracePlugin {
     final String group = g.getName();
     final String key = m.getMetadata().getDisplayName();
     final IDatum value = m.getDatum();
-    context.debug("processing metric: ", key);
+    context.debug("processing metric: ", group, ".", key, "=" + value);
     final Collection<MonitorMeasure> measures = context.env.getMonitorMeasures(group, key);
     if (measures != null) {
       for (final MonitorMeasure measure : measures) {

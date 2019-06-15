@@ -106,11 +106,13 @@ public class DynatracePluginUtils {
       return;
     }
     final List<IMetric<?>> metrics = new ArrayList<>();
+    final List<MetricGroup> groups = new ArrayList<>();
     MetricGroup monitorMG = monitor.getMetricGroup();
-    for (final MetricGroup mg : monitorMG.getGroups()) {
+    monitorMG.loadGroups(groups, true);
+    for (final MetricGroup mg : groups) {
       final String mgName = mg.getName();
       metrics.clear();
-      mg.loadMetrics(metrics, true);
+      mg.loadMetrics(metrics, false);
       for (final IMetric<?> m : metrics) {
         final MetricMetadata meta = m.getMetadata();
         final String mName = meta.getDisplayName();

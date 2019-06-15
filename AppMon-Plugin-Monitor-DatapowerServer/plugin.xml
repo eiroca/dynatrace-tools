@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor" name="AppMon DataPower Monitor">
+    <information>
+      <description value="Collect metrics form a DataPower appliance" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon DataPower Monitor" />
+    </information>
+    <configuration>
+      <property key="datapowerURL" label="DataPower URL" type="string" description="Enter the URL to DataPower SOMA service. {host} will be replaced with target host. Example: 'http://{host}:5550'." default="http://{host}:5550" multiline="false" />
+      <property key="datapowerTemplate" label="DataPower SOAP Template" type="string" description="SOAP call template. @SOMAMONITORCLASS@ will be replaced with SOMA metric class name." default="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;env:Envelope xmlns:env=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;env:Body&gt;&lt;dp:request domain=&quot;default&quot; xmlns:dp=&quot;http://www.datapower.com/schemas/management&quot;&gt;&lt;dp:get-status class=&quot;@SOMAMONITORCLASS@&quot;/&gt;&lt;/dp:request&gt;&lt;/env:Body&gt;&lt;/env:Envelope&gt;" multiline="false" />
+      <property key="datapowerVersion" label="DataPower Version" type="long" description="DataPower version" default="7" />
+      <property key="customHTTPClient" label="Custsomize HTTP client" type="boolean" description="Configure HTTP client settings" default="false" />
+      <property key="allowAnyCert" label="Disable certificate validation" type="boolean" description="Enable to allow connections via SSL even if the certificate on the target host is invalid or self-signed." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="userAgent" label="User-Agent" type="string" description="The user agent string identifies the HTTP client and is sent with every request." default="dynaTrace/3.0" multiline="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverAuth" label="Server authorization" type="boolean" description="If the URL specified requires a name and password for access, server authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverUsername" label="Server username" type="string" description="The username that is used for authorization with the server." default="" multiline="false">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="serverPassword" label="Server password" type="password" description="The password for the username." default="">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="maxRedirects" label="Max. redirects" type="long" description="If a value of 1 or greater is specified, the URL Monitor will follow HTTP redirect codes (301-303, 307) to retrieve the webpage." default="3">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="useTimeout" label="Use custom timeout" type="boolean" description="If enabled allows configuration of HTTP timeout." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="maxSocketTimeout" label="Socket Timeout" type="long" description="The default socket timeout in milliseconds which is the timeout for waiting for data. A timeout value of zero is interpreted as an infinite timeout." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionTimeout" label="Connection Timeout" type="long" description="The timeout until a connection is established. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionRequestTimeout" label="Connection RequestTimeout" type="long" description="The timeout until a connection request is received. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="useProxy" label="Use proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="hasVirtualHost" label="Force Virtual Host" type="boolean" description="Force an HTTP Host: header. Use this in special cases (e.g. a load-balancer) when servername is not the virtual host configured in the WebServer" default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="virtualHost" label="Virtual Host" type="string" description="Virtual host" default="" multiline="false">
+        <visibility>
+          <rule key="hasVirtualHost" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTagging" label="DynaTrace Tagging" type="boolean" description="Enable dynaTrace tagging." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTimerName" label="Timer name" type="string" description="Identify this webrequest through a unique timer name. The timer name will be sent with each web request as a dynaTrace header field value." default="Montior-Plugin" multiline="false">
+        <visibility>
+          <rule key="dtTagging" value="true" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor" name="AppMon DataPower Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor" class="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup2" name="DataPower Accepted">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Accepted - oneDay" description="ConnectionsAccepted_oneDay" unit="number" />
+      <metric name="Accepted - oneHour" description="ConnectionsAccepted_oneHour" unit="number" />
+      <metric name="Accepted - oneMinute" description="ConnectionsAccepted_oneMinute" unit="number" />
+      <metric name="Accepted - tenMinutes" description="ConnectionsAccepted_tenMinutes" unit="number" />
+      <metric name="Accepted - tenSeconds" description="ConnectionsAccepted_tenSeconds" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup3" name="DataPower CPU Usage">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="DataPower - CPU Usage - oneDay" description="CPUUsage_oneDay" unit="percent" />
+      <metric name="DataPower - CPU Usage - oneHour" description="CPUUsage_oneHour" unit="percent" />
+      <metric name="DataPower - CPU Usage - oneMinute" description="CPUUsage_oneMinute" unit="percent" />
+      <metric name="DataPower - CPU Usage - tenMinutes" description="CPUUsage_tenMinutes" unit="percent" />
+      <metric name="DataPower - CPU Usage - tenSeconds" description="CPUUsage_tenSeconds" unit="percent" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup4" name="DataPower Document Caching">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Document Caching - ByteCount" description="DocumentCachingSummary_ByteCount" unit="bytes" />
+      <metric name="Document Caching - CacheCount" description="DocumentCachingSummary_CacheCount" unit="number" />
+      <metric name="Document Caching - CacheSize" description="DocumentCachingSummary_CacheSize" unit="bytes" />
+      <metric name="Document Caching - DocCount" description="DocumentCachingSummary_DocCount" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup5" name="DataPower Domain Status">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Domain Status - DebugEnabled" description="DomainStatus_DebugEnabled" unit="number" />
+      <metric name="Domain Status - DiagEnabled" description="DomainStatus_DiagEnabled" unit="number" />
+      <metric name="Domain Status - ProbeEnabled" description="DomainStatus_ProbeEnabled" unit="number" />
+      <metric name="Domain Status - SaveNeeded" description="DomainStatus_SaveNeeded" unit="number" />
+      <metric name="Domain Status - TraceEnabled" description="DomainStatus_TraceEnabled" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup6" name="DataPower Environmental Sensors">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Environmental Sensors - CPU1RPM" description="EnvironmentalSensors_CPU1RPM" unit="number" />
+      <metric name="Environmental Sensors - CPU1Temp" description="EnvironmentalSensors_CPU1Temp" unit="number" />
+      <metric name="Environmental Sensors - CPU2RPM" description="EnvironmentalSensors_CPU2RPM" unit="number" />
+      <metric name="Environmental Sensors - CPU2Temp" description="EnvironmentalSensors_CPU2Temp" unit="number" />
+      <metric name="Environmental Sensors - CaseOpen" description="EnvironmentalSensors_CaseOpen" unit="number" />
+      <metric name="Environmental Sensors - Chassis1RPM" description="EnvironmentalSensors_Chassis1RPM" unit="number" />
+      <metric name="Environmental Sensors - Chassis2RPM" description="EnvironmentalSensors_Chassis2RPM" unit="number" />
+      <metric name="Environmental Sensors - Chassis3RPM" description="EnvironmentalSensors_Chassis3RPM" unit="number" />
+      <metric name="Environmental Sensors - PowerSupplyOk" description="EnvironmentalSensors_PowerSupplyOk" unit="number" />
+      <metric name="Environmental Sensors - SystemTemp" description="EnvironmentalSensors_systemTemp" unit="number" />
+      <metric name="Environmental Sensors - Volt12" description="EnvironmentalSensors_Volt12" unit="number" />
+      <metric name="Environmental Sensors - Volt33" description="EnvironmentalSensors_Volt33" unit="number" />
+      <metric name="Environmental Sensors - Volt5" description="EnvironmentalSensors_Volt5" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup7" name="DataPower FileSystem Status">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="FileSystem Status - FreeEncrypted" description="FileSystemStatus_FreeEncrypted" unit="number" />
+      <metric name="FileSystem Status - FreeInternal" description="FileSystemStatus_FreeInternal" unit="number" />
+      <metric name="FileSystem Status - FreeTemporary" description="FileSystemStatus_FreeTemporary" unit="number" />
+      <metric name="FileSystem Status - TotalEncrypted" description="FileSystemStatus_TotalEncrypted" unit="number" />
+      <metric name="FileSystem Status - TotalInternal" description="FileSystemStatus_TotalInternal" unit="number" />
+      <metric name="FileSystem Status - TotalTemporary" description="FileSystemStatus_TotalTemporary" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup8" name="DataPower HTTP Connections">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="HTTP Connections - CreateOneDay" description="HTTPConnections_CreateOneDay" unit="number" />
+      <metric name="HTTP Connections - CreateOneHour" description="HTTPConnections_CreateOneHour" unit="number" />
+      <metric name="HTTP Connections - CreateOneMin" description="HTTPConnections_CreateOneMin" unit="number" />
+      <metric name="HTTP Connections - CreateSec" description="HTTPConnections_CreateSec" unit="number" />
+      <metric name="HTTP Connections - CreateTenMin" description="HTTPConnections_CreateTenMin" unit="number" />
+      <metric name="HTTP Connections - CreateTenSec" description="HTTPConnections_CreateTenSec" unit="number" />
+      <metric name="HTTP Connections - DestroyOneDay" description="HTTPConnections_DestroyOneDay" unit="number" />
+      <metric name="HTTP Connections - DestroyOneHour" description="HTTPConnections_DestroyOneHour" unit="number" />
+      <metric name="HTTP Connections - DestroyOneMin" description="HTTPConnections_DestroyOneMin" unit="number" />
+      <metric name="HTTP Connections - DestroySec" description="HTTPConnections_DestroySec" unit="number" />
+      <metric name="HTTP Connections - DestroyTenMin" description="HTTPConnections_DestroyTenMin" unit="number" />
+      <metric name="HTTP Connections - DestroyTenSec" description="HTTPConnections_DestroyTenSec" unit="number" />
+      <metric name="HTTP Connections - OfferOneDay" description="HTTPConnections_OfferOneDay" unit="number" />
+      <metric name="HTTP Connections - OfferOneHour" description="HTTPConnections_OfferOneHour" unit="number" />
+      <metric name="HTTP Connections - OfferOneMin" description="HTTPConnections_OfferOneMin" unit="number" />
+      <metric name="HTTP Connections - OfferSec" description="HTTPConnections_OfferSec" unit="number" />
+      <metric name="HTTP Connections - OfferTenMin" description="HTTPConnections_OfferTenMin" unit="number" />
+      <metric name="HTTP Connections - OfferTenSec" description="HTTPConnections_OfferTenSec" unit="number" />
+      <metric name="HTTP Connections - ReqOneDay" description="HTTPConnections_ReqOneDay" unit="number" />
+      <metric name="HTTP Connections - ReqOneHour" description="HTTPConnections_ReqOneHour" unit="number" />
+      <metric name="HTTP Connections - ReqOneMin" description="HTTPConnections_ReqOneMin" unit="number" />
+      <metric name="HTTP Connections - ReqSec" description="HTTPConnections_ReqSec" unit="number" />
+      <metric name="HTTP Connections - ReqTenMin" description="HTTPConnections_ReqTenMin" unit="number" />
+      <metric name="HTTP Connections - ReqTenSec" description="HTTPConnections_ReqTenSec" unit="number" />
+      <metric name="HTTP Connections - ReturnOneDay" description="HTTPConnections_ReturnOneDay" unit="number" />
+      <metric name="HTTP Connections - ReturnOneHour" description="HTTPConnections_ReturnOneHour" unit="number" />
+      <metric name="HTTP Connections - ReturnOneMin" description="HTTPConnections_ReturnOneMin" unit="number" />
+      <metric name="HTTP Connections - ReturnSec" description="HTTPConnections_ReturnSec" unit="number" />
+      <metric name="HTTP Connections - ReturnTenMin" description="HTTPConnections_ReturnTenMin" unit="number" />
+      <metric name="HTTP Connections - ReturnTenSec" description="HTTPConnections_ReturnTenSec" unit="number" />
+      <metric name="HTTP Connections - ReuseOneDay" description="HTTPConnections_ReuseOneDay" unit="number" />
+      <metric name="HTTP Connections - ReuseOneHour" description="HTTPConnections_ReuseOneHour" unit="number" />
+      <metric name="HTTP Connections - ReuseOneMin" description="HTTPConnections_ReuseOneMin" unit="number" />
+      <metric name="HTTP Connections - ReuseSec" description="HTTPConnections_ReuseSec" unit="number" />
+      <metric name="HTTP Connections - ReuseTenMin" description="HTTPConnections_ReuseTenMin" unit="number" />
+      <metric name="HTTP Connections - ReuseTenSec" description="HTTPConnections_ReuseTenSec" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup9" name="DataPower HTTP Mean Transaction Time">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="HTTP Mean Transaction Time - OneDay" description="HTTPMeanTransactionTime_OneDay" unit="ms" />
+      <metric name="HTTP Mean Transaction Time - OneHour" description="HTTPMeanTransactionTime_OneHour" unit="ms" />
+      <metric name="HTTP Mean Transaction Time - OneMinute" description="HTTPMeanTransactionTime_OneMinute" unit="ms" />
+      <metric name="HTTP Mean Transaction Time - TenMinutes" description="HTTPMeanTransactionTime_TenMinutes" unit="ms" />
+      <metric name="HTTP Mean Transaction Time - TenSeconds" description="HTTPMeanTransactionTime_TenSeconds" unit="ms" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup10" name="DataPower HTTP Transactions">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="HTTP Transactions - OneDay" description="HTTPTransactions_OneDay" unit="number" />
+      <metric name="HTTP Transactions - OneHour" description="HTTPTransactions_OneHour" unit="number" />
+      <metric name="HTTP Transactions - OneMinute" description="HTTPTransactions_OneMinute" unit="number" />
+      <metric name="HTTP Transactions - TenMinutes" description="HTTPTransactions_TenMinutes" unit="number" />
+      <metric name="HTTP Transactions - TenSeconds" description="HTTPTransactions_TenSeconds" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup11" name="DataPower Memory Status">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Memory Status - FreeMemory" description="MemoryStatus_FreeMemory" unit="kilobytes" />
+      <metric name="Memory Status - HoldMemory" description="MemoryStatus_HoldMemory" unit="kilobytes" />
+      <metric name="Memory Status - ReqMemory" description="MemoryStatus_ReqMemory" unit="kilobytes" />
+      <metric name="Memory Status - TotalMemory" description="MemoryStatus_TotalMemory" unit="kilobytes" />
+      <metric name="Memory Status - Usage" description="MemoryStatus_Usage" unit="number" />
+      <metric name="Memory Status - UsedMemory" description="MemoryStatus_UsedMemory" unit="kilobytes" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup12" name="DataPower Object Status">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Object Status - AdminState" description="ObjectStatus_AdminState" unit="number" />
+      <metric name="Object Status - OpState" description="ObjectStatus_OpState" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup13" name="DataPower Stylesheet Caching">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Stylesheet Caching - CacheCount" description="StylesheetCachingSummary_CacheCount" unit="number" />
+      <metric name="Stylesheet Caching - StylesheetCachingSummary_BadCount" description="StylesheetCachingSummary_BadCount" unit="number" />
+      <metric name="Stylesheet Caching - StylesheetCachingSummary_CacheKBCount" description="StylesheetCachingSummary_CacheKBCount" unit="number" />
+      <metric name="Stylesheet Caching - StylesheetCachingSummary_CacheSize" description="StylesheetCachingSummary_CacheSize" unit="bytes" />
+      <metric name="Stylesheet Caching - StylesheetCachingSummary_DupCount" description="StylesheetCachingSummary_DupCount" unit="number" />
+      <metric name="Stylesheet Caching - StylesheetCachingSummary_PendingCount" description="StylesheetCachingSummary_PendingCount" unit="number" />
+      <metric name="Stylesheet Caching - StylesheetCachingSummary_ReadyCount" description="StylesheetCachingSummary_ReadyCount" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup14" name="DataPower Stylesheet Executions">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="Stylesheet Executions - OneDay" description="StylesheetExecutions_OneDay" unit="number" />
+      <metric name="Stylesheet Executions - OneHour" description="StylesheetExecutions_OneHour" unit="number" />
+      <metric name="Stylesheet Executions - OneMinute" description="StylesheetExecutions_OneMinute" unit="number" />
+      <metric name="Stylesheet Executions - TenMinutes" description="StylesheetExecutions_TenMinutes" unit="number" />
+      <metric name="Stylesheet Executions - TenSeconds" description="StylesheetExecutions_TenSeconds" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup15" name="DataPower System Usage">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="System Usage - Interval" description="SystemUsage_Interval" unit="number" />
+      <metric name="System Usage - Load" description="SystemUsage_Load" unit="number" />
+      <metric name="System Usage - WorkList" description="SystemUsage_WorkList" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup16" name="DataPower TCP Summary">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="TCP Summary - Close_Wait" description="TCPSummary_Close_Wait" unit="number" />
+      <metric name="TCP Summary - Closed" description="TCPSummary_Closed" unit="number" />
+      <metric name="TCP Summary - Closing" description="TCPSummary_Closing" unit="number" />
+      <metric name="TCP Summary - Established" description="TCPSummary_Established" unit="number" />
+      <metric name="TCP Summary - Fin_Wait_1" description="TCPSummary_Fin_Wait_1" unit="number" />
+      <metric name="TCP Summary - Fin_Wait_2" description="TCPSummary_Fin_Wait_2" unit="number" />
+      <metric name="TCP Summary - Last_Ack" description="TCPSummary_Last_Ack" unit="number" />
+      <metric name="TCP Summary - Listen" description="TCPSummary_Listen" unit="number" />
+      <metric name="TCP Summary - Syn_Received" description="TCPSummary_Syn_Received" unit="number" />
+      <metric name="TCP Summary - Syn_Sent" description="TCPSummary_Syn_Sent" unit="number" />
+      <metric name="TCP Summary - Time_Wait" description="TCPSummary_Time_Wait" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup17" name="DataPower WS Operation Metrics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
+      <metric name="WS Operation Metrics - LastRequestSize" description="WSOperationMetricsSimpleIndex_LastRequestSize" unit="bytes" />
+      <metric name="WS Operation Metrics - LastResponseSize" description="WSOperationMetricsSimpleIndex_LastResponseSize" unit="bytes" />
+      <metric name="WS Operation Metrics - LastResponseTime" description="WSOperationMetricsSimpleIndex_LastResponseTime" unit="ms" />
+      <metric name="WS Operation Metrics - MaxRequestSize" description="WSOperationMetricsSimpleIndex_MaxRequestSize" unit="bytes" />
+      <metric name="WS Operation Metrics - MaxResponseSize" description="WSOperationMetricsSimpleIndex_MaxResponseSize" unit="bytes" />
+      <metric name="WS Operation Metrics - MaxResponseTime" description="WSOperationMetricsSimpleIndex_MaxResponseTime" unit="ms" />
+      <metric name="WS Operation Metrics - NumberOfFailedRequests" description="WSOperationMetricsSimpleIndex_NumberOfFailedRequests" unit="number" />
+      <metric name="WS Operation Metrics - NumberOfRequests" description="WSOperationMetricsSimpleIndex_NumberOfRequests" unit="number" />
+      <metric name="WS Operation Metrics - NumberOfSuccessfulRequests" description="WSOperationMetricsSimpleIndex_NumberOfSuccessfulRequests" unit="number" />
+      <metric name="WS Operation Metrics - ServiceTime" description="WSOperationMetricsSimpleIndex_ServiceTime" unit="ms" />
+    </metricgroup>
+  </extension>
+</plugin>

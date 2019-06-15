@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor" name="AppMon PostgresSQL Monitor">
+    <information>
+      <description value="Collect metrics form a PostgresSQL Server" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon PostgresSQL Monitor" />
+    </information>
+    <configuration>
+      <property key="port" label="Server Port" type="long" description="Port to use on the server" default="5432" />
+      <property key="Database" label="Database Name" type="string" description="Name of the database to connect to on the sql server" default="" multiline="false" />
+      <property key="DBUsername" label="Database Username" type="string" description="Username to use for login to the database" default="" multiline="false" />
+      <property key="DBPassword" label="Database Password" type="password" description="Password for the username used to connect to the sql database" default="" />
+      <property key="DBURL" label="Database Connection URL" type="string" description="The URL to use to connect to the databse, instead of dynamically constructing the URL from the database, server, port, etc. &#xA;{0} will be replaced with database host&#xA;{1} will be replaced with database port&#xA;{2} will be replaced with database name&#xA;{3} will be replaced with database username&#xA;{4} will be replaced with database password" default="" multiline="true" />
+      <property key="SQLTimeout" label="Query Timeout" type="long" description="The query timeout, in seconds. 0 to have no timeout" default="0" />
+      <property key="runSQL" label="Execute test SQL" type="boolean" description="If true execute test SQL" default="true" />
+      <property key="SQLQuery" label="Query Statement" type="string" description="SQL Statement to execute on the SQL database.  The returned rows of this statement will be used for the monitor." default="SELECT 1 FROM DUAL" multiline="true">
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="CaptureMode" label="Capture Mode" type="list" description="Select how data format returned by the query.&#xA;Single values -&gt; collect only the first value&#xA;Metrics on columns -&gt; collect selectes metrics form columns&#xA;Metric on rows -&gt; every row is a metric in the format group, metric, value" default="Single value">
+        <list>
+          <item value="Single value" />
+          <item value="Metrics on columns" />
+          <item value="Metrics on rows" />
+          <item value="Rows with multiple metrics" />
+          <item value="Mixed mode" />
+        </list>
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="ResultColumn" label="Result column" type="string" description="The name of the column to use to get the result. Empty means 1st column." default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Single value" />
+        </visibility>
+      </property>
+      <property key="SplittingName" label="Splitting Name" type="string" description="A splitting group name" default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+      <property key="Columns" label="Column(s)" type="string" description="The name of the columns you wish to capture (one per line). Leave empty to collect all the columns." default="" multiline="true">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor" name="AppMon PostgresSQL Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor" class="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor.metricgroup2" name="PostgreSQL Indexes">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor">
+      <metric name="Indexes - idx_blks_hit" description="Indexes - idx_blks_hit" unit="number" />
+      <metric name="Indexes - idx_blks_read" description="Indexes - idx_blks_read" unit="number" />
+      <metric name="Indexes - idx_scan" description="Indexes - idx_scan" unit="number" />
+      <metric name="Indexes - idx_tup_fetch" description="Indexes - idx_tup_fetch" unit="number" />
+      <metric name="Indexes - idx_tup_read" description="Indexes - idx_tup_read" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor.metricgroup3" name="PostgreSQL Sequences">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor">
+      <metric name="Sequences - blks_hit" description="blks_hit" unit="number" />
+      <metric name="Sequences - blks_read" description="blks_read" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor.metricgroup4" name="PostgreSQL Stats">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor">
+      <metric name="blk_read_time" description="blk_read_time" unit="number" />
+      <metric name="blk_write_time" description="blk_write_time" unit="number" />
+      <metric name="blks_hit" description="blks_hit" unit="number" />
+      <metric name="blks_read" description="blks_read" unit="number" />
+      <metric name="conflicts" description="conflicts" unit="number" />
+      <metric name="deadlocks" description="deadlocks" unit="number" />
+      <metric name="heap_hit" description="heap_hit" unit="number" />
+      <metric name="heap_ratio" description="heap_ratio" unit="number" />
+      <metric name="heap_read" description="heap_read" unit="number" />
+      <metric name="idx_hit" description="idx_hit" unit="number" />
+      <metric name="idx_ratio" description="idx_ratio" unit="number" />
+      <metric name="idx_read" description="idx_read" unit="number" />
+      <metric name="numbackends" description="numbackends" unit="number" />
+      <metric name="stat_activity" description="stat_activity" unit="number" />
+      <metric name="temp_bytes" description="temp_bytes" unit="number" />
+      <metric name="tup_deleted" description="tup_deleted" unit="number" />
+      <metric name="tup_fetched" description="tup_fetched" unit="number" />
+      <metric name="tup_inserted" description="tup_inserted" unit="number" />
+      <metric name="tup_returned" description="tup_returned" unit="number" />
+      <metric name="tup_updated" description="tup_updated" unit="number" />
+      <metric name="xact_commit" description="xact_commit" unit="number" />
+      <metric name="xact_rollback" description="xact_rollback" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor.metricgroup5" name="PostgreSQL Tables">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor">
+      <metric name="Tables - analyze_count" description="Tables - analyze_count" unit="number" />
+      <metric name="Tables - autoanalyze_count" description="Tables - autoanalyze_count" unit="number" />
+      <metric name="Tables - autovacuum_count" description="Tables - autovacuum_count" unit="number" />
+      <metric name="Tables - coalesce" description="Tables - coalesce" unit="number" />
+      <metric name="Tables - heap_blks_hit" description="Tables - heap_blks_hit" unit="number" />
+      <metric name="Tables - heap_blks_read" description="Tables - heap_blks_read" unit="number" />
+      <metric name="Tables - idx_blks_hit" description="Tables - idx_blks_hit" unit="number" />
+      <metric name="Tables - idx_blks_read" description="Tables - idx_blks_read" unit="number" />
+      <metric name="Tables - n_dead_tup" description="Tables - n_dead_tup" unit="number" />
+      <metric name="Tables - n_live_tup" description="Tables - n_live_tup" unit="number" />
+      <metric name="Tables - n_tup_del" description="Tables - n_tup_del" unit="number" />
+      <metric name="Tables - n_tup_hot_upd" description="Tables - n_tup_hot_upd" unit="number" />
+      <metric name="Tables - n_tup_ins" description="Tables - n_tup_ins" unit="number" />
+      <metric name="Tables - n_tup_upd" description="Tables - n_tup_upd" unit="number" />
+      <metric name="Tables - percent_of_times_index_used" description="Tables - percent_of_times_index_used" unit="number" />
+      <metric name="Tables - rows_in_table" description="Tables - rows_in_table" unit="number" />
+      <metric name="Tables - seq_scan" description="Tables - seq_scan" unit="number" />
+      <metric name="Tables - seq_tup_read" description="Tables - seq_tup_read" unit="number" />
+      <metric name="Tables - tidx_blks_hit" description="Tables - tidx_blks_hit" unit="number" />
+      <metric name="Tables - tidx_blks_read" description="Tables - tidx_blks_read" unit="number" />
+      <metric name="Tables - toast_blks_hit" description="Tables - toast_blks_hit" unit="number" />
+      <metric name="Tables - toast_blks_read" description="Tables - toast_blks_read" unit="number" />
+      <metric name="Tables - vacuum_count" description="Tables - vacuum_count" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

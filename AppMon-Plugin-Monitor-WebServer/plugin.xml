@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor" name="AppMon WebServer Monitor">
+    <information>
+      <description value="Collect metrics form a Web Server" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon WebServer Monitor" />
+    </information>
+    <configuration>
+      <property key="probeURL" label="Probe URL" type="string" description="Enter the URL to the webpage to be monitored. {host} will be replaced with target host. Example: https://{host}:8443/index.html" default="http://{host}/" multiline="false" />
+      <property key="method" label="Method" type="list" description="Specify the type of the HTTP request. GET: retrieve the page content, HEAD: retrieve HTTP headers only, POST: send data with the request and retrive the page content (e.g. used for HTML forms)" default="GET">
+        <list>
+          <item value="GET" />
+          <item value="HEAD" />
+          <item value="POST" />
+        </list>
+        <visibility>
+          <rule key="checkProbe" value="true" />
+        </visibility>
+      </property>
+      <property key="postData" label="POST Data" type="string" description="The data which will be sent with the POST request." default="" multiline="false">
+        <visibility>
+          <rule key="method" value="POST" />
+        </visibility>
+      </property>
+      <property key="matchContent" label="Validating rule" type="list" description="If enabled, the specified rule will be used to check the response." default="Disabled">
+        <list>
+          <item value="Disabled" />
+          <item value="Success if contains" />
+          <item value="Error if contains" />
+          <item value="Regular Expression" />
+          <item value="Expected size in bytes" />
+        </list>
+      </property>
+      <property key="searchString" label="Search string" type="string" description="Enter a case-sensitive string to search for in the retrieved webpage. If 'Success if match' is configured and the webpage contains the string, the measure will yield 1, otherwise 0." default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Success if contains" />
+          <rule key="matchContent" value="Error if contains" />
+        </visibility>
+      </property>
+      <property key="regex" label="Regular Expression" type="string" description="Regulal expression to validate the result" default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Regular Expression" />
+        </visibility>
+      </property>
+      <property key="compareBytes" label="Bytes" type="long" description="Enter the number of bytes expected for the response." default="0">
+        <visibility>
+          <rule key="matchContent" value="Expected size in bytes" />
+        </visibility>
+      </property>
+      <property key="parseProbe" label="Parse probe data" type="boolean" description="Enable parsing of JSON data." default="false" />
+      <property key="customHTTPClient" label="Custsomize HTTP client" type="boolean" description="Configure HTTP client settings" default="false" />
+      <property key="allowAnyCert" label="Disable certificate validation" type="boolean" description="Enable to allow connections via SSL even if the certificate on the target host is invalid or self-signed." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="userAgent" label="User-Agent" type="string" description="The user agent string identifies the HTTP client and is sent with every request." default="dynaTrace/3.0" multiline="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverAuth" label="Server authorization" type="boolean" description="If the URL specified requires a name and password for access, server authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverUsername" label="Server username" type="string" description="The username that is used for authorization with the server." default="" multiline="false">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="serverPassword" label="Server password" type="password" description="The password for the username." default="">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="maxRedirects" label="Max. redirects" type="long" description="If a value of 1 or greater is specified, the URL Monitor will follow HTTP redirect codes (301-303, 307) to retrieve the webpage." default="3">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="useTimeout" label="Use custom timeout" type="boolean" description="If enabled allows configuration of HTTP timeout." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="maxSocketTimeout" label="Socket Timeout" type="long" description="The default socket timeout in milliseconds which is the timeout for waiting for data. A timeout value of zero is interpreted as an infinite timeout." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionTimeout" label="Connection Timeout" type="long" description="The timeout until a connection is established. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionRequestTimeout" label="Connection RequestTimeout" type="long" description="The timeout until a connection request is received. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="useProxy" label="Use proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="hasVirtualHost" label="Force Virtual Host" type="boolean" description="Force an HTTP Host: header. Use this in special cases (e.g. a load-balancer) when servername is not the virtual host configured in the WebServer" default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="virtualHost" label="Virtual Host" type="string" description="Virtual host" default="" multiline="false">
+        <visibility>
+          <rule key="hasVirtualHost" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTagging" label="DynaTrace Tagging" type="boolean" description="Enable dynaTrace tagging." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTimerName" label="Timer name" type="string" description="Identify this webrequest through a unique timer name. The timer name will be sent with each web request as a dynaTrace header field value." default="Montior-Plugin" multiline="false">
+        <visibility>
+          <rule key="dtTagging" value="true" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.monitor" name="AppMon WebServer Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor" class="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.metricgroup2" name="WebServer Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.monitor">
+      <metric name="WebServer - ConnectionCloseDelay" description="Connection close delay" unit="ms" />
+      <metric name="WebServer - HeaderSize" description="Size of HTTP headers" unit="bytes" />
+      <metric name="WebServer - HttpStatusCode" description="HTTP status code" unit="number" />
+      <metric name="WebServer - Response Size" description="Response Size" unit="bytes" />
+      <metric name="WebServer - Throughput" description="Throughput" unit="kilobytes" defaultrate="s" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.metricgroup3" name="Probe Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonWebServerMonitor.monitor">
+      <metric name="Probe - Result" description="Probe result" unit="number" />
+      <metric name="Probe - Rows" description="Probe number of rows returned" unit="number" />
+      <metric name="Probe - Status" description="Probe status" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

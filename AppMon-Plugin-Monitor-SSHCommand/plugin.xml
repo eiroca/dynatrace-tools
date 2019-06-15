@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor" name="AppMon SSHCommand Monitor">
+    <information>
+      <description value="Collect metrics form a SSH command" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon SSHCommand Monitor" />
+    </information>
+    <configuration>
+      <property key="port" label="Server Port" type="long" description="Port to use on the Server" default="22" />
+      <property key="param" label="Parameter" type="string" description="{PARAM} to be used in substitution" default="-" multiline="false" />
+      <property key="converter" label="Data Conversion" type="list" description="Specify preprocessing on variables value" default="NULL removal">
+        <list>
+          <item value="NULL removal" />
+          <item value="Unix Script" />
+          <item value="Windows commands" />
+          <item value="URL encoder" />
+          <item value="Replace space" />
+        </list>
+      </property>
+      <property key="authMethod" label="Authentication Method" type="list" description="Specify the type of SSH Authentication." default="Password">
+        <list>
+          <item value="Password" />
+          <item value="PublicKey" />
+        </list>
+      </property>
+      <property key="username" label="Username" type="string" description="User that is used for authorization with the host." default="" multiline="false">
+        <visibility>
+          <rule key="authMethod" value="Password" />
+        </visibility>
+      </property>
+      <property key="password" label="Password" type="password" description="User's password." default="">
+        <visibility>
+          <rule key="authMethod" value="Password" />
+        </visibility>
+      </property>
+      <property key="passphrase" label="publicKey passphrase" type="password" description="The password for the pem-file." default="">
+        <visibility>
+          <rule key="authMethod" value="PublicKey" />
+        </visibility>
+      </property>
+      <property key="keyFile" label="Key-File" type="string" description="The keyfile for the ssh-keypair, e.g. C:/.ssh/id_rsa" default="" multiline="false">
+        <visibility>
+          <rule key="authMethod" value="PublicKey" />
+        </visibility>
+      </property>
+      <property key="isCommandKey" label="Command Lookup" type="boolean" description="Il true command is obtained with a lookup in definition file" default="false" />
+      <property key="command" label="Command" type="string" description="Command which will be executed on the server" default="ping localhost" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="false" />
+        </visibility>
+      </property>
+      <property key="commandKey" label="Command Key" type="string" description="key in lookup table" default="${PARAM}" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="missingKey" label="Missing Key" type="string" description="key in lookup table if commandKey doesn't exist" default="*" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="commandFile" label="Command Lookup table" type="string" description="TSV tab separated file with commands" default="command.csv" multiline="false">
+        <visibility>
+          <rule key="isCommandKey" value="true" />
+        </visibility>
+      </property>
+      <property key="capture" label="Capture Output" type="boolean" description="Defines if the output of the executed command should be captured and returned as message." default="false" />
+      <property key="bufferSize" label="output buffer size" type="long" description="Size of the output buffer" default="2048" />
+      <property key="metricNames" label="Returned Measure Names" type="string" description="Returned measures contains list of names of measures which are returned by the command in the first line of the command's output" default="" multiline="false" />
+      <property key="metricPrefix" label="Metric Prefix" type="string" description="Prefix in output to find metrics" default="***ReturnedMeasures:" multiline="false" />
+      <property key="matchContent" label="Validating rule" type="list" description="If enabled, the specified rule will be used to check the response." default="Disabled">
+        <list>
+          <item value="Disabled" />
+          <item value="Success if contains" />
+          <item value="Error if contains" />
+          <item value="Regular Expression" />
+          <item value="Expected size in bytes" />
+        </list>
+      </property>
+      <property key="searchString" label="Search string" type="string" description="Enter a case-sensitive string to search for in the retrieved webpage. If 'Success if match' is configured and the webpage contains the string, the measure will yield 1, otherwise 0." default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Success if contains" />
+          <rule key="matchContent" value="Error if contains" />
+        </visibility>
+      </property>
+      <property key="regex" label="Regular Expression" type="string" description="Regulal expression to validate the result" default="" multiline="false">
+        <visibility>
+          <rule key="matchContent" value="Regular Expression" />
+        </visibility>
+      </property>
+      <property key="compareBytes" label="Bytes" type="long" description="Enter the number of bytes expected for the response." default="0">
+        <visibility>
+          <rule key="matchContent" value="Expected size in bytes" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor.monitor" name="AppMon SSHCommand Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor" class="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor.monitor.metricgroup1" name="Action Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor.monitor">
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="Result" description="Output result" unit="number" />
+      <metric name="Status" description="Exection status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

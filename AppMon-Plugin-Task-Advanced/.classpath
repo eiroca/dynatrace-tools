@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+    <classpathentry kind="lib" path="lib/bcprov-jdk15on-1.61.jar"/>
+    <classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
+    <classpathentry kind="lib" path="lib/commons-lang3-3.8.1.jar"/>
+    <classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+    <classpathentry kind="lib" path="lib/commons-pool2-2.4.3.jar"/>
+    <classpathentry kind="lib" path="lib/commons-text-1.6.jar"/>
+    <classpathentry kind="lib" path="lib/eExtLib-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibCore-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibDB-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibDiagnostic-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibDynatrace-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibExt-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibHTTP-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/eLibSys-0.0.8.jar"/>
+    <classpathentry kind="lib" path="lib/googleauth-1.2.0.jar"/>
+    <classpathentry kind="lib" path="lib/groovy-2.4.7.jar"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>

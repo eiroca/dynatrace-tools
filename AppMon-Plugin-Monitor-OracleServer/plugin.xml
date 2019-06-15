@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor" name="AppMon OracleServer Monitor">
+    <information>
+      <description value="Collect metrics form an Oracle Server" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon OracleServer Monitor" />
+    </information>
+    <configuration>
+      <property key="OracleVersion" label="Oracle version" type="list" description="Oracle version" default="Oracle v11 or later">
+        <list>
+          <item value="Oracle v11 or later" />
+          <item value="Older Oracle" />
+        </list>
+      </property>
+      <property key="port" label="Server Port" type="long" description="Port to use on the Server" default="1521" />
+      <property key="Database" label="Database Name" type="string" description="Name of the database to connect to on the sql server" default="" multiline="false" />
+      <property key="OracleType" label="Oracle Database Type" type="list" description="Oracle connection type (SID, Sevice)" default="SID">
+        <list>
+          <item value="SID" />
+          <item value="ServiceName" />
+        </list>
+      </property>
+      <property key="DBUsername" label="Database Username" type="string" description="Username to use for login to the database" default="" multiline="false" />
+      <property key="DBPassword" label="Database Password" type="password" description="Password for the username used to connect to the sql database" default="" />
+      <property key="DBURL" label="Database Connection URL" type="string" description="The URL to use to connect to the databse, instead of dynamically constructing the URL from the database, server, port, etc. &#xA;{0} will be replaced with database host&#xA;{1} will be replaced with database port&#xA;{2} will be replaced with database name&#xA;{3} will be replaced with database username&#xA;{4} will be replaced with database password" default="" multiline="true" />
+      <property key="SQLTimeout" label="Query Timeout" type="long" description="The query timeout, in seconds. 0 to have no timeout" default="0" />
+      <property key="runSQL" label="Execute test SQL" type="boolean" description="If true execute test SQL" default="true" />
+      <property key="SQLQuery" label="Query Statement" type="string" description="SQL Statement to execute on the SQL database.  The returned rows of this statement will be used for the monitor." default="SELECT 1 FROM DUAL" multiline="true">
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="CaptureMode" label="Capture Mode" type="list" description="Select how data format returned by the query.&#xA;Single values -&gt; collect only the first value&#xA;Metrics on columns -&gt; collect selectes metrics form columns&#xA;Metric on rows -&gt; every row is a metric in the format group, metric, value" default="Single value">
+        <list>
+          <item value="Single value" />
+          <item value="Metrics on columns" />
+          <item value="Metrics on rows" />
+          <item value="Rows with multiple metrics" />
+          <item value="Mixed mode" />
+        </list>
+        <visibility>
+          <rule key="runSQL" value="true" />
+        </visibility>
+      </property>
+      <property key="ResultColumn" label="Result column" type="string" description="The name of the column to use to get the result. Empty means 1st column." default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Single value" />
+        </visibility>
+      </property>
+      <property key="SplittingName" label="Splitting Name" type="string" description="A splitting group name" default="" multiline="false">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+      <property key="Columns" label="Column(s)" type="string" description="The name of the columns you wish to capture (one per line). Leave empty to collect all the columns." default="" multiline="true">
+        <visibility>
+          <rule key="CaptureMode" value="Metrics on columns" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor" name="AppMon OracleServer Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor" class="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup2" name="Oracle Stats">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="Hit Ratio - Body Get" description="Hit Ratio - Body Get" unit="percent" />
+      <metric name="Hit Ratio - Body Pin" description="Hit Ratio - Body Pin" unit="percent" />
+      <metric name="Hit Ratio - Dictionary Cache" description="Hit Ratio - Dictionary Cache" unit="percent" />
+      <metric name="Hit Ratio - Library Cache Get" description="Hit Ratio - Library Cache Get" unit="percent" />
+      <metric name="Hit Ratio - Library Cache Pin" description="Hit Ratio - Library Cache Pin" unit="percent" />
+      <metric name="Hit Ratio - SQL Area Get" description="Hit Ratio - SQL Area Get" unit="percent" />
+      <metric name="Hit Ratio - SQL Area Pin" description="Hit Ratio - SQL Area Pin" unit="percent" />
+      <metric name="Hit Ratio - Table/Procedure Get" description="Hit Ratio - Table/Procedure Get" unit="percent" />
+      <metric name="Hit Ratio - Table/Procedure Pin" description="Hit Ratio - Table/Procedure Pin" unit="percent" />
+      <metric name="Hit Ratio - Trigger Get" description="Hit Ratio - Trigger Get" unit="percent" />
+      <metric name="Hit Ratio - Trigger Pin" description="Hit Ratio - Trigger Pin" unit="percent" />
+      <metric name="Info - CPU Parse Overhead" description="Info - CPU Parse Overhead" unit="number" />
+      <metric name="Info - Recursive Calls Ratio" description="Info - Recursive Calls Ratio" unit="percent" />
+      <metric name="Info - Rollback Segment Contention" description="Info - Rollback Segment Contention" unit="number" />
+      <metric name="Info - Short Table Scans Ratio" description="Info - Short Table Scans Ratio" unit="percent" />
+      <metric name="Info - System date" description="Info - System date" unit="number" />
+      <metric name="Latches - Immediate Latch Gets" description="Latches - Immediate Latch Gets" unit="number" />
+      <metric name="Latches - Wait Latch Gets" description="Latches - Wait Latch Gets" unit="number" />
+      <metric name="Redo - Allocation Latch" description="Redo - Allocation Latch" unit="number" />
+      <metric name="Redo - Copy Latches" description="Redo - Copy Latches" unit="number" />
+      <metric name="Redo - Space Wait Ratio" description="Redo - Space Wait Ratio" unit="percent" />
+      <metric name="SGA - Buffer Busy Waits" description="SGA - Buffer Busy Waits" unit="number" />
+      <metric name="SGA - Buffer Cache Hit Ratio" description="SGA - Buffer Cache Hit Ratio" unit="percent" />
+      <metric name="SGA - Consistent Gets" description="SGA - Consistent Gets" unit="number" />
+      <metric name="SGA - DB Block Changes" description="SGA - DB Block Changes" unit="number" />
+      <metric name="SGA - DB Block Gets" description="SGA - DB Block Gets" unit="number" />
+      <metric name="SGA - Execution Without Parse Ratio" description="SGA - Execution Without Parse Ratio" unit="percent" />
+      <metric name="SGA - Free Buffer Waits" description="SGA - Free Buffer Waits" unit="number" />
+      <metric name="SGA - Memory Sort Ratio" description="SGA - Memory Sort Ratio" unit="percent" />
+      <metric name="SGA - Physical Reads" description="SGA - Physical Reads" unit="number" />
+      <metric name="SGA - Physical Writes" description="SGA - Physical Writes" unit="number" />
+      <metric name="SGA - Write Complete Waits" description="SGA - Write Complete Waits" unit="number" />
+      <metric name="Sessions - Current Concurrent User" description="Sessions - Current Concurrent User" unit="number" />
+      <metric name="Sessions - Highest Concurrent User" description="Sessions - Highest Concurrent User" unit="number" />
+      <metric name="Sessions - Maximum Concurrent User" description="Sessions - Maximum Concurrent User" unit="number" />
+      <metric name="Sessions - Maximum Named Users" description="Sessions - Maximum Named Users" unit="number" />
+      <metric name="Shared Pool - Free Memory" description="Shared Pool - Free Memory" unit="number" />
+      <metric name="Shared Pool - Reloads" description="Shared Pool - Reloads" unit="number" />
+      <metric name="Table Contention - Chained Fetch Ratio" description="Table Contention - Chained Fetch Ratio" unit="percent" />
+      <metric name="Table Contention - Free List Contention" description="Table Contention - Free List Contention" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup3" name="Oracle Tablespaces">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="Tablespace - Free" description="Tablespace - Free Space (MB)" unit="megabytes" />
+      <metric name="Tablespace - Free %" description="Tablespace - Total Space (%)" unit="percent" />
+      <metric name="Tablespace - Total" description="Tablespace - Total Space (MB)" unit="megabytes" />
+      <metric name="Tablespace - Used" description="Tablespace - Used Space (MB)" unit="megabytes" />
+      <metric name="Tablespace - Used %" description="Tablespace - Used Space (%)" unit="percent" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup4" name="Oracle TopSQLs">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="TopSQL - Buffer Gets" description="Buffer Gets" unit="number" />
+      <metric name="TopSQL - CPU Time" description="CPU Time" unit="number" />
+      <metric name="TopSQL - Disk Reads" description="Disk Reads" unit="number" />
+      <metric name="TopSQL - Disk Writes" description="Disk Writes" unit="number" />
+      <metric name="TopSQL - Elapsed Time" description="Elapsed Time" unit="number" />
+      <metric name="TopSQL - Executions" description="Executions" unit="number" />
+      <metric name="TopSQL - Parse Calls" description="Parse Calls" unit="number" />
+      <metric name="TopSQL - Rows rocessed" description="Rows rocessed" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup5" name="Oracle Waiters">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="Waiter - Average Wait time" description="Waiter - Average Wait time" unit="s" />
+      <metric name="Waiter - Time Waited" description="Waiter - Time Waited" unit="s" />
+      <metric name="Waiter - Total Timeouts" description="Waiter - Total Timeouts" unit="number" />
+      <metric name="Waiter - Total Waits" description="Waiter - Total Waits" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

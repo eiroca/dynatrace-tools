@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor" name="AppMon WebService Monitor">
+    <information>
+      <description value="Collect metrics form a Web Service" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon WebService Monitor" />
+    </information>
+    <configuration>
+      <property key="param" label="Parameter" type="string" description="{PARAM} to be used in substitution" default="-" multiline="false" />
+      <property key="converter" label="Data Conversion" type="list" description="Specify preprocessing on variables value" default="NULL removal">
+        <list>
+          <item value="NULL removal" />
+          <item value="Unix Script" />
+          <item value="Windows commands" />
+          <item value="URL encoder" />
+          <item value="Replace space" />
+        </list>
+      </property>
+      <property key="wsdl" label="WS WSDL" type="string" description="URL to the WSDL file" default="" multiline="false" />
+      <property key="wsOperation" label="WS Operation" type="string" description="Name of the web service operation" default="" multiline="false" />
+      <property key="wsParameters" label="WS Parameters" type="string" description="Parameter-name=parameter-value pairs which will be used for substitution of parameters. One pair per line." default="" multiline="true" />
+      <property key="isDotNET" label="isDotNET" type="boolean" description="Is &quot;true&quot; when plugin invokes .NET web service" default="false" />
+      <property key="wsUsePrefix" label="WS Use Prefix" type="boolean" description="indicator which shows if plugin will add a namespace prefix to child elements in the SOAP request" default="false" />
+      <property key="useProxy" label="Use proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false" />
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false" />
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080" />
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false" />
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false" />
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="" />
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor.monitor" name="AppMon WebService Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor" class="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor.monitor.metricgroup1" name="Action Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor.monitor">
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="Result" description="Output result" unit="number" />
+      <metric name="Status" description="Exection status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>

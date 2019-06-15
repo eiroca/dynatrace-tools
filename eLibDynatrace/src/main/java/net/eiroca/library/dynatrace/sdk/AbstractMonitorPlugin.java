@@ -16,13 +16,20 @@
  **/
 package net.eiroca.library.dynatrace.sdk;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.dynatrace.diagnostics.pdk.Monitor;
 import com.dynatrace.diagnostics.pdk.MonitorEnvironment;
 import com.dynatrace.diagnostics.pdk.Status;
+import net.eiroca.library.core.Helper;
+import net.eiroca.library.diagnostics.CommandException;
+import net.eiroca.library.diagnostics.IServerMonitor;
+import net.eiroca.library.metrics.MetricGroup;
 
 public abstract class AbstractMonitorPlugin extends DynatracePlugin implements Monitor {
 
   protected static String name = "Dynatrace Monitor Plugin";
+  protected static Class<?> monitorClass = null;
 
   @Override
   public Status setup(final MonitorEnvironment env) throws Exception {
@@ -48,6 +55,26 @@ public abstract class AbstractMonitorPlugin extends DynatracePlugin implements M
     return status;
   }
 
-  abstract public Status monitor(DynatraceContext<MonitorEnvironment> context, String host) throws Exception;
+  public Status monitor(final DynatraceContext<MonitorEnvironment> context, final String host) throws Exception {
+    Status status = new Status(Status.StatusCode.Success);
+    if (monitorClass != null) {
+      final IServerMonitor monitor = (IServerMonitor)monitorClass.newInstance();
+      try {
+        final List<MetricGroup> groups = new ArrayList<>();
+        monitor.setup(context);
+        monitor.check(host);
+        monitor.loadMetricGroup(groups);
+        DynatracePlugin.publishMeasures(context, groups);
+      }
+      catch (final CommandException err) {
+        status = fromException(err);
+      }
+      finally {
+        Helper.close(monitor);
+      }
+      context.info(context.getRunner(), " end: ", status.getShortMessage());
+    }
+    return status;
+  }
 
 }

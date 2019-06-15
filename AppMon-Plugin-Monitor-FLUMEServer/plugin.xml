@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor" name="AppMon FLUME Monitor">
+    <information>
+      <description value="Collect metrics form a FLUME agent" />
+      <category value="" />
+      <license value="LICENSE" />
+      <supportlevel value="unsupported" />
+      <displayname value="AppMon FLUME Monitor" />
+    </information>
+    <configuration>
+      <property key="port" label="FLUME agent port" type="long" description="Port to use on the Server" default="1981" />
+      <property key="customHTTPClient" label="Custsomize HTTP client" type="boolean" description="Configure HTTP client settings" default="false" />
+      <property key="allowAnyCert" label="Disable certificate validation" type="boolean" description="Enable to allow connections via SSL even if the certificate on the target host is invalid or self-signed." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="userAgent" label="User-Agent" type="string" description="The user agent string identifies the HTTP client and is sent with every request." default="dynaTrace/3.0" multiline="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverAuth" label="Server authorization" type="boolean" description="If the URL specified requires a name and password for access, server authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="serverUsername" label="Server username" type="string" description="The username that is used for authorization with the server." default="" multiline="false">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="serverPassword" label="Server password" type="password" description="The password for the username." default="">
+        <visibility>
+          <rule key="serverAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="maxRedirects" label="Max. redirects" type="long" description="If a value of 1 or greater is specified, the URL Monitor will follow HTTP redirect codes (301-303, 307) to retrieve the webpage." default="3">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="useTimeout" label="Use custom timeout" type="boolean" description="If enabled allows configuration of HTTP timeout." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="maxSocketTimeout" label="Socket Timeout" type="long" description="The default socket timeout in milliseconds which is the timeout for waiting for data. A timeout value of zero is interpreted as an infinite timeout." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionTimeout" label="Connection Timeout" type="long" description="The timeout until a connection is established. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="maxConnectionRequestTimeout" label="Connection RequestTimeout" type="long" description="The timeout until a connection request is received. A value of zero means the timeout is not used." default="0">
+        <visibility>
+          <rule key="useTimeout" value="true" />
+        </visibility>
+      </property>
+      <property key="useProxy" label="Use proxy" type="boolean" description="If enabled, the configured HTTP proxy server will be used to access the URL." default="false">
+        <visibility>
+          <rule key="monitorType" value="WebService" />
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyHost" label="Proxy host" type="string" description="The hostname of the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPort" label="Proxy port" type="long" description="The port of the HTTP proxy server." default="8080">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyAuth" label="Proxy authorization" type="boolean" description="If the HTTP proxy server requires a username and a password for access, proxy authorization needs to be enabled." default="false">
+        <visibility>
+          <rule key="useProxy" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyUsername" label="Proxy username" type="string" description="The username that is used for authorization with the HTTP proxy server." default="" multiline="false">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="proxyPassword" label="Proxy password" type="password" description="The password for the proxy username." default="">
+        <visibility>
+          <rule key="proxyAuth" value="true" />
+        </visibility>
+      </property>
+      <property key="hasVirtualHost" label="Force Virtual Host" type="boolean" description="Force an HTTP Host: header. Use this in special cases (e.g. a load-balancer) when servername is not the virtual host configured in the WebServer" default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="virtualHost" label="Virtual Host" type="string" description="Virtual host" default="" multiline="false">
+        <visibility>
+          <rule key="hasVirtualHost" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTagging" label="DynaTrace Tagging" type="boolean" description="Enable dynaTrace tagging." default="false">
+        <visibility>
+          <rule key="customHTTPClient" value="true" />
+        </visibility>
+      </property>
+      <property key="dtTimerName" label="Timer name" type="string" description="Identify this webrequest through a unique timer name. The timer name will be sent with each web request as a dynaTrace header field value." default="Montior-Plugin" multiline="false">
+        <visibility>
+          <rule key="dtTagging" value="true" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor.monitor" name="AppMon FLUME Monitor">
+    <plugin configid="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor" class="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor.metricgroup1" name="Server Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor.monitor">
+      <metric name="ConnectionTimedOut" description="1 if connection timed out" unit="number" />
+      <metric name="ContentVerified" description="1 if result is validated and valid" unit="number" />
+      <metric name="HostReachable" description="1 if host is reachable" unit="number" />
+      <metric name="Response Time" description="Complete response time (e.g. connection + query + read)" unit="ms" />
+      <metric name="Result" description="Server Response (e.g. query data)" unit="number" />
+      <metric name="ServerLatency" description="Server latency" unit="ms" />
+      <metric name="SocketTimedOut" description="1 if socket had timed out" unit="number" />
+      <metric name="Status" description="Response status (0 OK)" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonAdvancedMonitor.metricgroup2" name="FLUME Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor.monitor">
+      <metric name="Append Accepted" description="Append Accepted Count" unit="number" />
+      <metric name="Append Batch Accepted" description="Append batch accepted count" unit="number" />
+      <metric name="Append Batch Received" description="Append batch received count" unit="number" />
+      <metric name="Append Received" description="Append received count" unit="number" />
+      <metric name="Batch Complete" description="Batch complete count" unit="number" />
+      <metric name="Batch Empty" description="Batch empty count" unit="number" />
+      <metric name="Batch Underflow" description="Batch underflow count" unit="number" />
+      <metric name="Channel Capacity" description="Channel capacity" unit="number" />
+      <metric name="Channel Fill" description="Channel fill (%)" unit="percent" />
+      <metric name="Channel Size" description="Channel size" unit="number" />
+      <metric name="Connection closed" description="Connection Closed count" unit="number" />
+      <metric name="Connection created" description="Connection Created count" unit="number" />
+      <metric name="Connection failed" description="Connection failed count" unit="number" />
+      <metric name="Event Accepted" description="Event accepted count" unit="number" />
+      <metric name="Event Drain Attempt" description="Event drain attempt count" unit="number" />
+      <metric name="Event Drain Success" description="Event drain success count" unit="number" />
+      <metric name="Event Put Attempt" description="Event put attempt count" unit="number" />
+      <metric name="Event Put Success" description="Event put success count" unit="number" />
+      <metric name="Event Received" description="Event received count" unit="number" />
+      <metric name="Event Take Attempt" description="Event Take attempt count" unit="number" />
+      <metric name="Event Take Success" description="Event Take success count" unit="number" />
+      <metric name="Open Connection" description="Open connection count" unit="number" />
+      <metric name="Start Time" description="Start time" unit="number" />
+      <metric name="Stop Time" description="Stop time" unit="number" />
+    </metricgroup>
+  </extension>
+</plugin>
