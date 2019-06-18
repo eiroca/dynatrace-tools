@@ -29,6 +29,7 @@ import net.eiroca.library.diagnostics.CommandException;
 import net.eiroca.library.metrics.IMetric;
 import net.eiroca.library.metrics.MetricGroup;
 import net.eiroca.library.metrics.datum.IDatum;
+import net.eiroca.library.metrics.datum.StatisticDatum;
 
 public class DynatracePlugin {
 
@@ -62,24 +63,25 @@ public class DynatracePlugin {
         }
         if (m.hasSplittings()) {
           context.debug("processing metric splitting");
-          double sum = 0;
+          StatisticDatum d = new StatisticDatum();
           for (final Entry<String, ?> s : m.getSplittings().entrySet()) {
             final String splitGroup = s.getKey();
             final IMetric<?> ms = (IMetric<?>)s.getValue();
-            sum = 0;
+            d.init(0);
             for (final Entry<String, ?> sm : ms.getSplittings().entrySet()) {
               final String splitName = sm.getKey();
               final IMetric<?> splitValue = (IMetric<?>)sm.getValue();
               final double val = splitValue.getDatum().getValue();
-              sum = sum + val;
+              d.addValue(val);
               context.trace(group, ".", key, "(", splitGroup, ",", splitName, ")=", splitValue);
               final MonitorMeasure dynamicMeasureData = context.env.createDynamicMeasure(measure, splitGroup, splitName);
               dynamicMeasureData.setValue(val);
             }
           }
           if (!value.hasValue()) {
-            measure.setValue(sum);
-            context.trace(group, ".", key, "=", sum);
+            double val = d.getValue(m.getMetadata().getAggregation());
+            measure.setValue(val);
+            context.trace(group, ".", key, "=", val);
           }
         }
       }

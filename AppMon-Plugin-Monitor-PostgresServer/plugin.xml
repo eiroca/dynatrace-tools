@@ -134,4 +134,11 @@
       <metric name="Tables - vacuum_count" description="Tables - vacuum_count" unit="number" />
     </metricgroup>
   </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor.metricgroup6" name="Database Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor.monitor">
+      <metric name="Query Rows" description="Rows returned by the query" unit="number" />
+      <metric name="Query Columns" description="Columns returned by the query" unit="number" />
+      <metric name="Query Time" description="Tikem taken by the query" unit="ms" />
+    </metricgroup>
+  </extension>
 </plugin>

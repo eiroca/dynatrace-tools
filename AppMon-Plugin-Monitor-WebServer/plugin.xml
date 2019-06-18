@@ -17,9 +17,6 @@
           <item value="HEAD" />
           <item value="POST" />
         </list>
-        <visibility>
-          <rule key="checkProbe" value="true" />
-        </visibility>
       </property>
       <property key="postData" label="POST Data" type="string" description="The data which will be sent with the POST request." default="" multiline="false">
         <visibility>

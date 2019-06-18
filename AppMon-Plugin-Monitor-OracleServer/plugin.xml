@@ -151,4 +151,18 @@
       <metric name="Waiter - Total Waits" description="Waiter - Total Waits" unit="number" />
     </metricgroup>
   </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup6" name="Oracle Locks">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="Lock - Lock Mode" description="Type of the Lock:   0, 'None'; 1, 'Null'; 2, 'Row-S (SS)'; 3, 'Row-X (SX)'; 4, 'Share'; 5, 'S/Row-X (SSX)'; 6, 'Exclusive'" unit="number" />
+      <metric name="Lock - Lock Status" description="Status of the database object" unit="number" />
+      <metric name="Lock - Locks" description="Lock count" unit="number" />
+    </metricgroup>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor.metricgroup7" name="Database Statistics">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonOracleServerMonitor.monitor">
+      <metric name="Query Rows" description="Rows returned by the query" unit="number" />
+      <metric name="Query Columns" description="Columns returned by the query" unit="number" />
+      <metric name="Query Time" description="Tikem taken by the query" unit="ms" />
+    </metricgroup>
+  </extension>
 </plugin>
