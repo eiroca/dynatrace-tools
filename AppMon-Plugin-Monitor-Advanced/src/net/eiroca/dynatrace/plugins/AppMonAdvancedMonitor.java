@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
+ * Copyright (C) 1999-2019 Enrico Croce - AGPL >= 3.0
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -29,6 +29,7 @@ import net.eiroca.library.diagnostics.actions.LocalCommandAction;
 import net.eiroca.library.diagnostics.actions.SSHCommandAction;
 import net.eiroca.library.diagnostics.actions.WebServiceAction;
 import net.eiroca.library.diagnostics.monitors.ApacheServerMonitor;
+import net.eiroca.library.diagnostics.monitors.DataPowerMonitor;
 import net.eiroca.library.diagnostics.monitors.DatabaseMonitor;
 import net.eiroca.library.diagnostics.monitors.ElasticSearchMonitor;
 import net.eiroca.library.diagnostics.monitors.FLUMEServerMonitor;
@@ -36,7 +37,6 @@ import net.eiroca.library.diagnostics.monitors.GraphiteMonitor;
 import net.eiroca.library.diagnostics.monitors.OracleMonitor;
 import net.eiroca.library.diagnostics.monitors.PostgreSQLMonitor;
 import net.eiroca.library.diagnostics.monitors.RedisMonitor;
-import net.eiroca.library.diagnostics.monitors.DataPowerMonitor;
 import net.eiroca.library.diagnostics.monitors.TCPServerMonitor;
 import net.eiroca.library.diagnostics.monitors.WebServerMonitor;
 import net.eiroca.library.diagnostics.monitors.eSysAdmServerMonitor;
@@ -55,28 +55,28 @@ public class AppMonAdvancedMonitor extends AbstractMonitorPlugin {
 
   private static Map<String, Class<?>> monitors = new HashMap<>();
   static {
-    monitors.put("Apache Web Server", ApacheServerMonitor.class);
-    monitors.put("Database Server", DatabaseMonitor.class);
-    monitors.put("DataPower Server", DataPowerMonitor.class);
-    monitors.put("ElasticSearch Server", ElasticSearchMonitor.class);
-    monitors.put("eSysAdm Server", eSysAdmServerMonitor.class);
-    monitors.put("FLUME Server", FLUMEServerMonitor.class);
-    monitors.put("Graphite Server", GraphiteMonitor.class);
-    monitors.put("Local command", LocalCommandAction.class);
-    monitors.put("Oracle Database Server", OracleMonitor.class);
-    monitors.put("PostgreSQL Server", PostgreSQLMonitor.class);
-    monitors.put("Redis Server", RedisMonitor.class);
-    monitors.put("SSH command", SSHCommandAction.class);
-    monitors.put("TCP Server", TCPServerMonitor.class);
-    monitors.put("Web Server", WebServerMonitor.class);
-    monitors.put("WebService", WebServiceAction.class);
+    AppMonAdvancedMonitor.monitors.put("Apache Web Server", ApacheServerMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("Database Server", DatabaseMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("DataPower Server", DataPowerMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("ElasticSearch Server", ElasticSearchMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("eSysAdm Server", eSysAdmServerMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("FLUME Server", FLUMEServerMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("Graphite Server", GraphiteMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("Local command", LocalCommandAction.class);
+    AppMonAdvancedMonitor.monitors.put("Oracle Database Server", OracleMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("PostgreSQL Server", PostgreSQLMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("Redis Server", RedisMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("SSH command", SSHCommandAction.class);
+    AppMonAdvancedMonitor.monitors.put("TCP Server", TCPServerMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("Web Server", WebServerMonitor.class);
+    AppMonAdvancedMonitor.monitors.put("WebService", WebServiceAction.class);
   }
 
   @Override
   public Status monitor(final DynatraceContext<MonitorEnvironment> context, final String host) throws Exception {
     Status status = new Status(Status.StatusCode.Success);
-    final String monitorType = context.getConfigString(CONFIG_MONITORTYPE);
-    final Class<?> monitorClass = monitors.get(monitorType);
+    final String monitorType = context.getConfigString(AppMonAdvancedMonitor.CONFIG_MONITORTYPE);
+    final Class<?> monitorClass = AppMonAdvancedMonitor.monitors.get(monitorType);
     if (monitorClass == null) {
       status = new Status(Status.StatusCode.ErrorInternalConfigurationProblem, "Unknown type: " + monitorType);
     }

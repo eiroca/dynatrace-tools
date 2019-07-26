@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
+ * Copyright (C) 1999-2019 Enrico Croce - AGPL >= 3.0
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -57,8 +57,8 @@ public abstract class AbstractMonitorPlugin extends DynatracePlugin implements M
 
   public Status monitor(final DynatraceContext<MonitorEnvironment> context, final String host) throws Exception {
     Status status = new Status(Status.StatusCode.Success);
-    if (monitorClass != null) {
-      final IServerMonitor monitor = (IServerMonitor)monitorClass.newInstance();
+    if (AbstractMonitorPlugin.monitorClass != null) {
+      final IServerMonitor monitor = (IServerMonitor)AbstractMonitorPlugin.monitorClass.newInstance();
       try {
         final List<MetricGroup> groups = new ArrayList<>();
         monitor.setup(context);

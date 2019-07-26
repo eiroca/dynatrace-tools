@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
+ * Copyright (C) 1999-2019 Enrico Croce - AGPL >= 3.0
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -369,7 +369,8 @@ public class DynatraceActionData extends ActionData {
           headerName = violatedMeasureName;
         }
         else {
-          // Skip violation if it has the same violated measure name as metric name has and number of violations for a
+          // Skip violation if it has the same violated measure name as metric name has and number
+          // of violations for a
           // given incident more than 1
           if (metricName.equals(violatedMeasureName) && (incident.getViolations().size() > 1)) {
             continue;

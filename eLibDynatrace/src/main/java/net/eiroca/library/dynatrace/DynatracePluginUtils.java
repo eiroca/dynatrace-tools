@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
+ * Copyright (C) 1999-2019 Enrico Croce - AGPL >= 3.0
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -63,18 +63,18 @@ public class DynatracePluginUtils {
       if (monitorname.equals(ServerMonitors.registry.defaultName())) {
         continue;
       }
-      processMonitor(monitorname);
+      DynatracePluginUtils.processMonitor(monitorname);
     }
     final StringBuilder sb = new StringBuilder(1024);
     int num = 0;
     for (final Entry<String, SortedMap<String, MetricMetadata>> groups : DynatracePluginUtils.definition.entrySet()) {
       num++;
-      exportEntry(sb, groups, baseName, num);
+      DynatracePluginUtils.exportEntry(sb, groups, baseName, num);
     }
     System.out.println(sb.toString());
   }
 
-  private static void exportEntry(StringBuilder sb, Entry<String, SortedMap<String, MetricMetadata>> groups, String baseName, int num) {
+  private static void exportEntry(final StringBuilder sb, final Entry<String, SortedMap<String, MetricMetadata>> groups, final String baseName, final int num) {
     final String mgName = groups.getKey();
     final String sectionName = baseName + ".metricgroup_" + num;
     sb.append("<extension point=\"com.dynatrace.diagnostics.pdk.monitormetricgroup\" id=\"" + sectionName + "\" name=\"" + mgName + "\">").append(LibStr.NL);
@@ -96,7 +96,7 @@ public class DynatracePluginUtils {
     sb.append("</extension>").append(LibStr.NL);
   }
 
-  private static void processMonitor(String monitorname) {
+  private static void processMonitor(final String monitorname) {
     IServerMonitor monitor;
     try {
       monitor = ServerMonitors.build(monitorname);
@@ -107,7 +107,7 @@ public class DynatracePluginUtils {
     }
     final List<IMetric<?>> metrics = new ArrayList<>();
     final List<MetricGroup> groups = new ArrayList<>();
-    MetricGroup monitorMG = monitor.getMetricGroup();
+    final MetricGroup monitorMG = monitor.getMetricGroup();
     monitorMG.loadGroups(groups, true);
     for (final MetricGroup mg : groups) {
       final String mgName = mg.getName();

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
+ * Copyright (C) 1999-2019 Enrico Croce - AGPL >= 3.0
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -35,7 +35,7 @@ public class DynatracePlugin {
 
   final public static void publishMeasures(final DynatraceContext<MonitorEnvironment> context, final List<MetricGroup> groups) {
     if (groups == null) { return; }
-    List<IMetric<?>> metricsList = new ArrayList<>();
+    final List<IMetric<?>> metricsList = new ArrayList<>();
     for (final MetricGroup g : groups) {
       if (g.metricCount() > 0) {
         context.debug("processing group: ", g.getName());
@@ -63,7 +63,7 @@ public class DynatracePlugin {
         }
         if (m.hasSplittings()) {
           context.debug("processing metric splitting");
-          StatisticDatum d = new StatisticDatum();
+          final StatisticDatum d = new StatisticDatum();
           for (final Entry<String, ?> s : m.getSplittings().entrySet()) {
             final String splitGroup = s.getKey();
             final IMetric<?> ms = (IMetric<?>)s.getValue();
@@ -79,7 +79,7 @@ public class DynatracePlugin {
             }
           }
           if (!value.hasValue()) {
-            double val = d.getValue(m.getMetadata().getAggregation());
+            final double val = d.getValue(m.getMetadata().getAggregation());
             measure.setValue(val);
             context.trace(group, ".", key, "=", val);
           }

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (C) 2001-2019 eIrOcA (eNrIcO Croce & sImOnA Burzio) - AGPL >= 3.0
+ * Copyright (C) 1999-2019 Enrico Croce - AGPL >= 3.0
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -40,16 +40,16 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   protected String name;
   protected Logger logger;
   protected Level defaultLevel = Level.INFO;
-  protected int bonusLevel = BOUNUS_LEVEL;
+  protected int bonusLevel = DynatraceContext.BOUNUS_LEVEL;
   protected T env;
   protected String runner;
 
   public DynatraceContext(final String contextName) {
-    this(contextName, BOUNUS_LEVEL, null);
+    this(contextName, DynatraceContext.BOUNUS_LEVEL, null);
   }
 
   public DynatraceContext(final String contextName, final T env) {
-    this(contextName, BOUNUS_LEVEL, env);
+    this(contextName, DynatraceContext.BOUNUS_LEVEL, env);
   }
 
   public DynatraceContext(final String contextName, final int bonusLevel, final T env) {
@@ -131,7 +131,7 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   }
 
   @Override
-  public boolean hasConfig(String key) {
+  public boolean hasConfig(final String key) {
     return true;
   }
 
