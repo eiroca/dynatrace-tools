@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.PostgreSQLMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonPostgresServerMonitor extends AbstractMonitorPlugin {
+public class AppMonPostgresServerMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "PostgresSQL Monitor";
-    AbstractMonitorPlugin.monitorClass = PostgreSQLMonitor.class;
+    AppMonPluginMonitor.name = "PostgresSQL Monitor";
+    AppMonPluginMonitor.monitorClass = PostgreSQLMonitor.class;
   }
 
 }

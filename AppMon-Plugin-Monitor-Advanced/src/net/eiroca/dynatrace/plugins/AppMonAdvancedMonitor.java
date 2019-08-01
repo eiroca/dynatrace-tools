@@ -40,15 +40,15 @@ import net.eiroca.library.diagnostics.monitors.RedisMonitor;
 import net.eiroca.library.diagnostics.monitors.TCPServerMonitor;
 import net.eiroca.library.diagnostics.monitors.WebServerMonitor;
 import net.eiroca.library.diagnostics.monitors.eSysAdmServerMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
-import net.eiroca.library.dynatrace.sdk.DynatraceContext;
-import net.eiroca.library.dynatrace.sdk.DynatracePlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonContext;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 import net.eiroca.library.metrics.MetricGroup;
 
-public class AppMonAdvancedMonitor extends AbstractMonitorPlugin {
+public class AppMonAdvancedMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "Advanced Server Monitor";
+    AppMonPluginMonitor.name = "Advanced Server Monitor";
   }
 
   private static final String CONFIG_MONITORTYPE = "monitorType";
@@ -73,7 +73,7 @@ public class AppMonAdvancedMonitor extends AbstractMonitorPlugin {
   }
 
   @Override
-  public Status monitor(final DynatraceContext<MonitorEnvironment> context, final String host) throws Exception {
+  public Status monitor(final AppMonContext<MonitorEnvironment> context, final String host) throws Exception {
     Status status = new Status(Status.StatusCode.Success);
     final String monitorType = context.getConfigString(AppMonAdvancedMonitor.CONFIG_MONITORTYPE);
     final Class<?> monitorClass = AppMonAdvancedMonitor.monitors.get(monitorType);
@@ -87,7 +87,7 @@ public class AppMonAdvancedMonitor extends AbstractMonitorPlugin {
         monitor.setup(context);
         monitor.check(host);
         monitor.loadMetricGroup(groups);
-        DynatracePlugin.publishMeasures(context, groups);
+        AppMonPlugin.publishMeasures(context, groups);
       }
       catch (final CommandException err) {
         status = fromException(err);

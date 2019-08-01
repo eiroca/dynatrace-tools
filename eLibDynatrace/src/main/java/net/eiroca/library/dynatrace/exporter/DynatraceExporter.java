@@ -14,8 +14,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.exporter;
 
-public enum AlertSeverity {
-  INFO, WARN, SEVERE, CRITICAL
+import net.eiroca.library.sysadm.monitoring.sdk.exporter.Exporters;
+
+public class DynatraceExporter {
+
+  public static void init() {
+    Exporters.registry.addEntry(OneAgentExporter.ID, OneAgentExporter.class.getName());
+  }
+
 }

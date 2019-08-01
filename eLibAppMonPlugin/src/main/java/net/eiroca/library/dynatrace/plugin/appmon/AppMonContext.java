@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.sdk;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import java.io.File;
 import java.net.URL;
@@ -27,7 +27,7 @@ import net.eiroca.ext.library.http.utils.URLFetcherConfig;
 import net.eiroca.library.core.LibStr;
 import net.eiroca.library.system.IContext;
 
-public class DynatraceContext<T extends PluginEnvironment> implements IContext {
+public class AppMonContext<T extends PluginEnvironment> implements IContext {
 
   private static final String CONFIG_DTTAGGING = "dtTagging";
   private static final String CONFIG_DTTIMENRNAME = "dtTimerName";
@@ -40,19 +40,19 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
   protected String name;
   protected Logger logger;
   protected Level defaultLevel = Level.INFO;
-  protected int bonusLevel = DynatraceContext.BOUNUS_LEVEL;
+  protected int bonusLevel = AppMonContext.BOUNUS_LEVEL;
   protected T env;
   protected String runner;
 
-  public DynatraceContext(final String contextName) {
-    this(contextName, DynatraceContext.BOUNUS_LEVEL, null);
+  public AppMonContext(final String contextName) {
+    this(contextName, AppMonContext.BOUNUS_LEVEL, null);
   }
 
-  public DynatraceContext(final String contextName, final T env) {
-    this(contextName, DynatraceContext.BOUNUS_LEVEL, env);
+  public AppMonContext(final String contextName, final T env) {
+    this(contextName, AppMonContext.BOUNUS_LEVEL, env);
   }
 
-  public DynatraceContext(final String contextName, final int bonusLevel, final T env) {
+  public AppMonContext(final String contextName, final int bonusLevel, final T env) {
     runner = Thread.currentThread().getName();
     name = contextName;
     this.bonusLevel = bonusLevel;
@@ -64,7 +64,7 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
 
   public String getConfigString(final String propName) {
     if (URLFetcherConfig.CONFIG_TAGNAME.equals(propName)) { return Constants.HEADER_DYNATRACE; }
-    if (URLFetcherConfig.CONFIG_TAGVALUE.equals(propName)) { return env.getConfigString(DynatraceContext.CONFIG_DTTIMENRNAME) == null ? null : "NA=" + env.getConfigString(DynatraceContext.CONFIG_DTTIMENRNAME); }
+    if (URLFetcherConfig.CONFIG_TAGVALUE.equals(propName)) { return env.getConfigString(AppMonContext.CONFIG_DTTIMENRNAME) == null ? null : "NA=" + env.getConfigString(AppMonContext.CONFIG_DTTIMENRNAME); }
     return env.getConfigString(propName);
   }
 
@@ -81,8 +81,8 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
     if (importance < 0) {
       importance = 0;
     }
-    if (importance >= DynatraceContext.logLevels.length) {
-      importance = DynatraceContext.logLevels.length - 1;
+    if (importance >= AppMonContext.logLevels.length) {
+      importance = AppMonContext.logLevels.length - 1;
     }
     // return DynatraceContext.logLevels[importance];
     return Level.INFO;
@@ -110,7 +110,7 @@ public class DynatraceContext<T extends PluginEnvironment> implements IContext {
 
   @Override
   public boolean getConfigBoolean(final String propName, final boolean defValue) {
-    if (URLFetcherConfig.CONFIG_TAGGING.equals(propName)) { return env.getConfigBoolean(DynatraceContext.CONFIG_DTTAGGING); }
+    if (URLFetcherConfig.CONFIG_TAGGING.equals(propName)) { return env.getConfigBoolean(AppMonContext.CONFIG_DTTAGGING); }
     final Boolean result = env.getConfigBoolean(propName);
     return result != null ? result : defValue;
   }

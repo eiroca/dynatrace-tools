@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace;
+package net.eiroca.library.dynatrace.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,29 +30,30 @@ import net.eiroca.library.metrics.IMetric;
 import net.eiroca.library.metrics.MetricGroup;
 import net.eiroca.library.metrics.MetricMetadata;
 
-public class DynatracePluginUtils {
+/** Generate metric part of plugin xml */
+public class AppMonPluginUtils {
 
   static SortedMap<String, SortedMap<String, MetricMetadata>> definition = new TreeMap<>();
   private static final Map<String, String> ALIAS = new HashMap<>();
   static {
-    DynatracePluginUtils.ALIAS.put("number", "number");
-    DynatracePluginUtils.ALIAS.put("num", "number");
-    DynatracePluginUtils.ALIAS.put("unit", "number");
-    DynatracePluginUtils.ALIAS.put("boolean", "number");
-    DynatracePluginUtils.ALIAS.put("counter", "number");
-    DynatracePluginUtils.ALIAS.put("purepath", "number");
-    DynatracePluginUtils.ALIAS.put("rate", "number");
-    DynatracePluginUtils.ALIAS.put("request", "number");
-    DynatracePluginUtils.ALIAS.put("requests", "number");
-    DynatracePluginUtils.ALIAS.put("operation", "number");
-    DynatracePluginUtils.ALIAS.put("operations", "number");
+    AppMonPluginUtils.ALIAS.put("number", "number");
+    AppMonPluginUtils.ALIAS.put("num", "number");
+    AppMonPluginUtils.ALIAS.put("unit", "number");
+    AppMonPluginUtils.ALIAS.put("boolean", "number");
+    AppMonPluginUtils.ALIAS.put("counter", "number");
+    AppMonPluginUtils.ALIAS.put("purepath", "number");
+    AppMonPluginUtils.ALIAS.put("rate", "number");
+    AppMonPluginUtils.ALIAS.put("request", "number");
+    AppMonPluginUtils.ALIAS.put("requests", "number");
+    AppMonPluginUtils.ALIAS.put("operation", "number");
+    AppMonPluginUtils.ALIAS.put("operations", "number");
   }
 
   public static void addMetadata(final String groupName, final String metricName, final MetricMetadata metadata) {
-    SortedMap<String, MetricMetadata> group = DynatracePluginUtils.definition.get(groupName);
+    SortedMap<String, MetricMetadata> group = AppMonPluginUtils.definition.get(groupName);
     if (group == null) {
       group = new TreeMap<>();
-      DynatracePluginUtils.definition.put(groupName, group);
+      AppMonPluginUtils.definition.put(groupName, group);
     }
     group.put(metricName, metadata);
   }
@@ -63,13 +64,13 @@ public class DynatracePluginUtils {
       if (monitorname.equals(ServerMonitors.registry.defaultName())) {
         continue;
       }
-      DynatracePluginUtils.processMonitor(monitorname);
+      AppMonPluginUtils.processMonitor(monitorname);
     }
     final StringBuilder sb = new StringBuilder(1024);
     int num = 0;
-    for (final Entry<String, SortedMap<String, MetricMetadata>> groups : DynatracePluginUtils.definition.entrySet()) {
+    for (final Entry<String, SortedMap<String, MetricMetadata>> groups : AppMonPluginUtils.definition.entrySet()) {
       num++;
-      DynatracePluginUtils.exportEntry(sb, groups, baseName, num);
+      AppMonPluginUtils.exportEntry(sb, groups, baseName, num);
     }
     System.out.println(sb.toString());
   }
@@ -82,13 +83,13 @@ public class DynatracePluginUtils {
     for (final Entry<String, MetricMetadata> metrics : groups.getValue().entrySet()) {
       final MetricMetadata meta = metrics.getValue();
       sb.append("  <metric");
-      DynatracePluginUtils.addAttribute(sb, "name", meta.getDisplayName(), "?", (Map<String, String>)null);
-      DynatracePluginUtils.addAttribute(sb, "description", meta.getDescription(), meta.getInternalName(), null);
-      DynatracePluginUtils.addAttribute(sb, "unit", meta.getUnit(), "number", DynatracePluginUtils.ALIAS);
-      DynatracePluginUtils.addAttribute(sb, "defaultrate", meta.getRate(), null, DynatracePluginUtils.ALIAS);
-      DynatracePluginUtils.addAttribute(sb, "hidedisplayaggregation", meta.getNoagg(), null, DynatracePluginUtils.ALIAS);
+      AppMonPluginUtils.addAttribute(sb, "name", meta.getDisplayName(), "?", (Map<String, String>)null);
+      AppMonPluginUtils.addAttribute(sb, "description", meta.getDescription(), meta.getInternalName(), null);
+      AppMonPluginUtils.addAttribute(sb, "unit", meta.getUnit(), "number", AppMonPluginUtils.ALIAS);
+      AppMonPluginUtils.addAttribute(sb, "defaultrate", meta.getRate(), null, AppMonPluginUtils.ALIAS);
+      AppMonPluginUtils.addAttribute(sb, "hidedisplayaggregation", meta.getNoagg(), null, AppMonPluginUtils.ALIAS);
       if (meta.getCalcDelta()) {
-        DynatracePluginUtils.addAttribute(sb, "calculatedelta", "true", null, null);
+        AppMonPluginUtils.addAttribute(sb, "calculatedelta", "true", null, null);
       }
       sb.append(" />").append(LibStr.NL);
     }
@@ -119,7 +120,7 @@ public class DynatracePluginUtils {
         if (mName.contains("Rows rocessed")) {
           // System.err.println(monitorname);
         }
-        DynatracePluginUtils.addMetadata(mgName, mName, meta);
+        AppMonPluginUtils.addMetadata(mgName, mName, meta);
       }
     }
   }

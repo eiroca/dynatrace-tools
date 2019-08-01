@@ -27,14 +27,14 @@ import net.eiroca.library.diagnostics.actions.LocalCommandAction;
 import net.eiroca.library.diagnostics.actions.SSHCommandAction;
 import net.eiroca.library.diagnostics.actions.WebServiceAction;
 import net.eiroca.library.diagnostics.util.ReturnObject;
-import net.eiroca.library.dynatrace.sdk.AbstractActionPlugin;
-import net.eiroca.library.dynatrace.sdk.DynatraceActionData;
-import net.eiroca.library.dynatrace.sdk.DynatraceContext;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonActionData;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonContext;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginAction;
 
-public class AppMonAdvancedAction extends AbstractActionPlugin {
+public class AppMonAdvancedAction extends AppMonPluginAction {
 
   static {
-    AbstractActionPlugin.name = "Advanced Action";
+    AppMonPluginAction.name = "Advanced Action";
   }
 
   private static final String CONFIG_ACTIONTYPE = "actionType";
@@ -47,7 +47,7 @@ public class AppMonAdvancedAction extends AbstractActionPlugin {
   }
 
   @Override
-  public Status execute(final DynatraceContext<ActionEnvironment> context, final DynatraceActionData data) throws Exception {
+  public Status execute(final AppMonContext<ActionEnvironment> context, final AppMonActionData data) throws Exception {
     context.debug(context.getRunner(), " executing action");
     Status status = new Status(Status.StatusCode.Success);
     final String actionType = context.getConfigString(AppMonAdvancedAction.CONFIG_ACTIONTYPE);

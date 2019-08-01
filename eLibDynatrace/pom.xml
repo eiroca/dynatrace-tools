@@ -88,6 +88,11 @@
 			<artifactId>eLibDiagnostic</artifactId>
 			<version>${eLib.version}</version>
 		</dependency>
+      <dependency>
+         <groupId>net.eiroca</groupId>
+         <artifactId>eLibSysAdm</artifactId>
+         <version>${eLib.version}</version>
+      </dependency>
 		<dependency>
 			<groupId>net.eiroca</groupId>
 			<artifactId>eLibExt</artifactId>
@@ -107,18 +112,6 @@
 			<groupId>net.eiroca</groupId>
 			<artifactId>eLibSys</artifactId>
 			<version>${eLib.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>${commons-logging.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>systemLibs</groupId>
-			<artifactId>dynaPlugin</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/../sdk/com.dynatrace.diagnostics.sdk.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>

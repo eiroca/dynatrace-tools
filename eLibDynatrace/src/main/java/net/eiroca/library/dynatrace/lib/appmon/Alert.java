@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.lib.appmon;
 
 import java.util.Date;
 import java.util.UUID;

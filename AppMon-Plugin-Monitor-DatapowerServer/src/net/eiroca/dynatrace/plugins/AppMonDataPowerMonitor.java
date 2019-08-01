@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.DataPowerMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonDataPowerMonitor extends AbstractMonitorPlugin {
+public class AppMonDataPowerMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "Datapower Monitor";
-    AbstractMonitorPlugin.monitorClass = DataPowerMonitor.class;
+    AppMonPluginMonitor.name = "Datapower Monitor";
+    AppMonPluginMonitor.monitorClass = DataPowerMonitor.class;
   }
 
 }

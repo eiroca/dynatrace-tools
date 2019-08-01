@@ -14,22 +14,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.lib.appmon;
 
-import net.eiroca.ext.library.gson.GsonUtil;
-
-public class Agent implements Comparable<Agent> {
-
-  public String instanceName;
-
-  @Override
-  public String toString() {
-    return GsonUtil.toJSON(this);
-  }
-
-  @Override
-  public int compareTo(final Agent o) {
-    return instanceName.compareTo(o.instanceName);
-  }
-
+public enum ServiceState {
+  OK, WARNING, ERROR, FAILED
 }

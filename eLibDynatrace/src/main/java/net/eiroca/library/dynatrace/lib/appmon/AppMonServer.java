@@ -14,13 +14,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.lib.appmon;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -29,38 +25,22 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
 import net.eiroca.ext.library.http.HttpClientHelper;
 import net.eiroca.library.core.Helper;
 import net.eiroca.library.core.LibStr;
-import net.eiroca.library.system.Logs;
+import net.eiroca.library.dynatrace.lib.DynatraceServer;
+import net.eiroca.library.server.ServerResponse;
 
-public class DynatraceServer {
-
-  public static final SimpleDateFormat ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
-  private static Logger logger = Logs.getLogger();
+public class AppMonServer extends DynatraceServer {
 
   private final String API_PROTOCOL = "https://";
   private final String API_PORT = ":8021";
   private final String API_PREFIX = "/api";
   private String API_VERSION = "/v2";
 
-  public boolean isDryRun = false;
-
-  String server;
-  CloseableHttpClient httpClient;
-  HttpContext context = new BasicHttpContext();
-  final String authHeader;
-
-  public DynatraceServer(final String server, final int version, final String authHeader, final HttpHost proxy) {
-    this.server = server;
+  public AppMonServer(final String server, final int version, final String authHeader, final HttpHost proxy) {
+    super(server, authHeader, proxy);
     if (version == 72) {
       API_VERSION = "/v4";
     }
@@ -73,13 +53,6 @@ public class DynatraceServer {
     else {
       API_VERSION = "/v1";
     }
-    try {
-      httpClient = HttpClientHelper.createAcceptAllClient(proxy);
-    }
-    catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-      DynatraceServer.logger.error("Unable to create HttpClient", e);
-    }
-    this.authHeader = authHeader;
   }
 
   private StringBuilder baseAgentsUrl() {
@@ -130,71 +103,25 @@ public class DynatraceServer {
     return sb.toString();
   }
 
-  public void prepareJsonCall(final HttpEntityEnclosingRequestBase method, final String json) {
-    method.setHeader(HttpHeaders.CONTENT_TYPE, String.format(HttpClientHelper.APPLICATION_JSON, "utf-8"));
-    method.setHeader(HttpHeaders.ACCEPT, String.format(HttpClientHelper.APPLICATION_JSON, "utf-8"));
-    method.setHeader(HttpHeaders.ACCEPT_CHARSET, "utf-8");
-    method.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
-    final HttpEntity entity = new StringEntity(json, "utf-8");
-    method.setEntity(entity);
-  }
-
   void closeAlert(final Alert alert) {
     alert.end = new Date();
     alert.state = AlertState.CLOSED;
-    CloseableHttpResponse response = null;
-    final HttpEntityEnclosingRequestBase httpPut = new HttpPut(getAlertUrl(alert.id));
-    final String json = DynatraceProcessor.toDynaTraceJson(alert).toString();
-    prepareJsonCall(httpPut, json);
-    try {
-      int responseCode = 200;
-      String responseData = "DRY_RUN";
-      if (!isDryRun) {
-        response = httpClient.execute(httpPut, context);
-        responseCode = response.getStatusLine().getStatusCode();
-        final HttpEntity responseEntity = response.getEntity();
-        responseData = ((responseEntity != null) ? EntityUtils.toString(responseEntity) : "");
-      }
-      DynatraceServer.logger.debug("Closing " + alert.id + " " + responseCode + " - " + responseData);
-    }
-    catch (final IOException e) {
-      DynatraceServer.logger.error("Unable to change alert", e);
-    }
-    finally {
-      Helper.close(response);
-    }
+    final String url = getAlertUrl(alert.id);
+    final String json = AppMonProcessor.toDynaTraceJson(alert).toString();
+    final ServerResponse response = makePut(url, json);
+    DynatraceServer.logger.debug("Closing " + alert.id + " " + response.status + " - " + response.message);
   }
 
   public void updateAlert(final Alert alert) {
     final String url = getAlertUrl(alert.id);
-    CloseableHttpResponse response = null;
-    final HttpEntityEnclosingRequestBase httpPut = new HttpPut(url);
-    final String json = DynatraceProcessor.toDynaTraceJson(alert).toString();
-    prepareJsonCall(httpPut, json);
-    try {
-      DynatraceServer.logger.trace("PUT Body=" + json);
-      DynatraceServer.logger.trace("Invoking " + httpPut);
-      int responseCode = 200;
-      String responseData = "DRY_RUN";
-      if (!isDryRun) {
-        response = httpClient.execute(httpPut, context);
-        responseCode = response.getStatusLine().getStatusCode();
-        final HttpEntity responseEntity = response.getEntity();
-        responseData = ((responseEntity != null) ? EntityUtils.toString(responseEntity) : "");
-      }
-      DynatraceServer.logger.debug("Update " + alert.id + " " + responseCode + " - " + responseData);
-    }
-    catch (final IOException e) {
-      DynatraceServer.logger.error("Unable to change alert", e);
-    }
-    finally {
-      Helper.close(response);
-    }
+    final String json = AppMonProcessor.toDynaTraceJson(alert).toString();
+    final ServerResponse response = makePut(url, json);
+    DynatraceServer.logger.debug("Updating " + alert.id + " " + response.status + " - " + response.message);
   }
 
   public void createAlert(final Alert alert) {
-    final String json = DynatraceProcessor.toDynaTraceJson(alert).toString();
     final String url = getAlertUrl();
+    final String json = AppMonProcessor.toDynaTraceJson(alert).toString();
     final HttpEntityEnclosingRequestBase httpPost = new HttpPost(url);
     prepareJsonCall(httpPost, json);
     CloseableHttpResponse response = null;

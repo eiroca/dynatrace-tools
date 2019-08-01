@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.WebServerMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonWebServerMonitor extends AbstractMonitorPlugin {
+public class AppMonWebServerMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "WebServer Monitor";
-    AbstractMonitorPlugin.monitorClass = WebServerMonitor.class;
+    AppMonPluginMonitor.name = "WebServer Monitor";
+    AppMonPluginMonitor.monitorClass = WebServerMonitor.class;
   }
 
 }

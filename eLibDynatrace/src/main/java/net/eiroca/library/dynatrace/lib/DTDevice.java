@@ -14,8 +14,27 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.lib;
 
-public enum ServiceState {
-  OK, WARNING, ERROR, FAILED
+import java.util.ArrayList;
+import java.util.List;
+
+public class DTDevice extends DTObject {
+
+  private final List<String> hosts = new ArrayList<>();
+
+  public DTDevice(final String host) {
+    this(host, host, host);
+  }
+
+  public DTDevice(final String deviceID, final String deviceName, final String deviceHost) {
+    id = deviceID;
+    name = deviceName;
+    hosts.add(deviceHost);
+  }
+
+  public List<String> getHost() {
+    return hosts;
+  }
+
 }

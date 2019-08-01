@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.actions.WebServiceAction;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonWebServiceMonitor extends AbstractMonitorPlugin {
+public class AppMonWebServiceMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "WebService Monitor";
-    AbstractMonitorPlugin.monitorClass = WebServiceAction.class;
+    AppMonPluginMonitor.name = "WebService Monitor";
+    AppMonPluginMonitor.monitorClass = WebServiceAction.class;
   }
 
 }

@@ -26,13 +26,13 @@ import net.eiroca.library.diagnostics.ITask;
 import net.eiroca.library.diagnostics.actions.LocalCommandAction;
 import net.eiroca.library.diagnostics.actions.SSHCommandAction;
 import net.eiroca.library.diagnostics.actions.WebServiceAction;
-import net.eiroca.library.dynatrace.sdk.AbstractTaskPlugin;
-import net.eiroca.library.dynatrace.sdk.DynatraceContext;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonContext;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginTask;
 
-public class AppMonAdvancedTask extends AbstractTaskPlugin {
+public class AppMonAdvancedTask extends AppMonPluginTask {
 
   static {
-    AbstractTaskPlugin.name = "Advanced Task";
+    AppMonPluginTask.name = "Advanced Task";
   }
 
   private static final String CONFIG_TASKTYPE = "taskType";
@@ -45,7 +45,7 @@ public class AppMonAdvancedTask extends AbstractTaskPlugin {
   }
 
   @Override
-  public Status execute(final DynatraceContext<TaskEnvironment> context) throws Exception {
+  public Status execute(final AppMonContext<TaskEnvironment> context) throws Exception {
     context.debug(context.getRunner(), " executing action");
     Status status = new Status(Status.StatusCode.Success);
     final String taskType = context.getConfigString(AppMonAdvancedTask.CONFIG_TASKTYPE);

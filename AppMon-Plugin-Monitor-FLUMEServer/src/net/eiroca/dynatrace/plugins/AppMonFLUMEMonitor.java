@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.FLUMEServerMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonFLUMEMonitor extends AbstractMonitorPlugin {
+public class AppMonFLUMEMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "FLUME Server Monitor";
-    AbstractMonitorPlugin.monitorClass = FLUMEServerMonitor.class;
+    AppMonPluginMonitor.name = "FLUME Server Monitor";
+    AppMonPluginMonitor.monitorClass = FLUMEServerMonitor.class;
   }
 
 }

@@ -14,8 +14,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.lib.appmon;
 
-public class Constants {
-
+public enum AlertSeverity {
+  INFO, WARN, SEVERE, CRITICAL
 }

@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.actions.LocalCommandAction;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonLocalCommandMonitor extends AbstractMonitorPlugin {
+public class AppMonLocalCommandMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "Local Command Monitor";
-    AbstractMonitorPlugin.monitorClass = LocalCommandAction.class;
+    AppMonPluginMonitor.name = "Local Command Monitor";
+    AppMonPluginMonitor.monitorClass = LocalCommandAction.class;
   }
 
 }

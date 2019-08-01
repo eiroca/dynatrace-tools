@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.tools;
+package net.eiroca.library.dynatrace.lib.appmon;
 
 import java.io.StringReader;
 import java.text.DateFormat;
@@ -48,7 +48,7 @@ import net.eiroca.library.rule.context.LookupRuleGroup;
 import net.eiroca.library.rule.context.RegExRuleGroup;
 import net.eiroca.library.system.Logs;
 
-public class DynatraceProcessor {
+public class AppMonProcessor {
 
   protected static Logger logger = Logs.getLogger();
 
@@ -58,10 +58,10 @@ public class DynatraceProcessor {
   public final static String INPUT_PATH = ".\\input\\";
   public final static String OUTPUT_PATH = ".\\output\\";
 
-  private static final String OUTPUT_STATS_LOOKUP = DynatraceProcessor.OUTPUT_PATH + "stats-lookup.csv";
-  private static final String OUTPUT_STATS_MISSING_KEY = DynatraceProcessor.OUTPUT_PATH + "missing-key.csv";
-  public static final String OUTPUT_STATS_REPLACEMENT = DynatraceProcessor.OUTPUT_PATH + "stats-replacement.csv";
-  public static final String OUTPUT_STATS_RULES = DynatraceProcessor.OUTPUT_PATH + "stats-rules.csv";
+  private static final String OUTPUT_STATS_LOOKUP = AppMonProcessor.OUTPUT_PATH + "stats-lookup.csv";
+  private static final String OUTPUT_STATS_MISSING_KEY = AppMonProcessor.OUTPUT_PATH + "missing-key.csv";
+  public static final String OUTPUT_STATS_REPLACEMENT = AppMonProcessor.OUTPUT_PATH + "stats-replacement.csv";
+  public static final String OUTPUT_STATS_RULES = AppMonProcessor.OUTPUT_PATH + "stats-rules.csv";
 
   public static final String FLD_SERVICE = "service";
   public static final String DEFAULT_SERVICE = "";
@@ -92,7 +92,7 @@ public class DynatraceProcessor {
 
   protected static final DateFormat HHMM = new SimpleDateFormat("HH:mm");
   protected static final Date START = new Date(0);
-  protected static final Date END = new Date(DynatraceProcessor.ONE_DAY + 1);
+  protected static final Date END = new Date(AppMonProcessor.ONE_DAY + 1);
 
   private final Map<String, ServiceStatus> services = new HashMap<>();
 
@@ -107,32 +107,32 @@ public class DynatraceProcessor {
   private final static Map<AlertState, String> state2dyna = new HashMap<>();
 
   static {
-    DynatraceProcessor.dyna2severity.put("informational", AlertSeverity.INFO);
-    DynatraceProcessor.dyna2severity.put("warning", AlertSeverity.WARN);
-    DynatraceProcessor.dyna2severity.put("severe", AlertSeverity.SEVERE);
-    DynatraceProcessor.severity2dyna.put(AlertSeverity.INFO, "informational");
-    DynatraceProcessor.severity2dyna.put(AlertSeverity.WARN, "warning");
-    DynatraceProcessor.severity2dyna.put(AlertSeverity.SEVERE, "severe");
-    DynatraceProcessor.severity2dyna.put(AlertSeverity.CRITICAL, "severe");
+    AppMonProcessor.dyna2severity.put("informational", AlertSeverity.INFO);
+    AppMonProcessor.dyna2severity.put("warning", AlertSeverity.WARN);
+    AppMonProcessor.dyna2severity.put("severe", AlertSeverity.SEVERE);
+    AppMonProcessor.severity2dyna.put(AlertSeverity.INFO, "informational");
+    AppMonProcessor.severity2dyna.put(AlertSeverity.WARN, "warning");
+    AppMonProcessor.severity2dyna.put(AlertSeverity.SEVERE, "severe");
+    AppMonProcessor.severity2dyna.put(AlertSeverity.CRITICAL, "severe");
     //
-    DynatraceProcessor.dyna2state.put("InProgress", AlertState.INPROGRESS);
-    DynatraceProcessor.dyna2state.put("Confirmed", AlertState.CONFIRMED);
-    DynatraceProcessor.dyna2state.put("Created", AlertState.NEW);
+    AppMonProcessor.dyna2state.put("InProgress", AlertState.INPROGRESS);
+    AppMonProcessor.dyna2state.put("Confirmed", AlertState.CONFIRMED);
+    AppMonProcessor.dyna2state.put("Created", AlertState.NEW);
     //
-    DynatraceProcessor.state2dyna.put(AlertState.INPROGRESS, "InProgress");
-    DynatraceProcessor.state2dyna.put(AlertState.CONFIRMED, "Confirmed");
-    DynatraceProcessor.state2dyna.put(AlertState.NEW, "Created");
-    DynatraceProcessor.state2dyna.put(AlertState.CLOSED, "Created");
+    AppMonProcessor.state2dyna.put(AlertState.INPROGRESS, "InProgress");
+    AppMonProcessor.state2dyna.put(AlertState.CONFIRMED, "Confirmed");
+    AppMonProcessor.state2dyna.put(AlertState.NEW, "Created");
+    AppMonProcessor.state2dyna.put(AlertState.CLOSED, "Created");
   }
 
-  public DynatraceProcessor(final String defProfile, final String defRule) {
+  public AppMonProcessor(final String defProfile, final String defRule) {
     this.defProfile = defProfile;
     this.defRule = defRule;
   }
 
-  public void readAlerts(final DynatraceServer[] servers, final Date startDate, final Date endDate, final List<Alert> alerts) {
+  public void readAlerts(final AppMonServer[] servers, final Date startDate, final Date endDate, final List<Alert> alerts) {
     alerts.clear();
-    for (final DynatraceServer server : servers) {
+    for (final AppMonServer server : servers) {
       final String alertsList = server.readAlertsList(null, null, null, startDate, endDate);
       importAlerts(server, alerts, alertsList);
     }
@@ -164,7 +164,7 @@ public class DynatraceProcessor {
   public void updateServices() {
     for (final ServiceStatus s : services.values()) {
       s.updateStatus();
-      DynatraceProcessor.logger.info("STATUS=" + s);
+      AppMonProcessor.logger.info("STATUS=" + s);
     }
   }
 
@@ -182,10 +182,10 @@ public class DynatraceProcessor {
       serviceName = null;
     }
     else {
-      serviceName = def.get(DynatraceProcessor.FLD_SERVICE);
+      serviceName = def.get(AppMonProcessor.FLD_SERVICE);
     }
     if (serviceName == null) {
-      serviceName = DynatraceProcessor.DEFAULT_SERVICE;
+      serviceName = AppMonProcessor.DEFAULT_SERVICE;
     }
     return LibStr.isNotEmptyOrNull(serviceName) ? getServiceStatusByName(serviceName) : null;
   }
@@ -194,13 +194,13 @@ public class DynatraceProcessor {
     if (alert == null) { return false; }
     if (alert.state == AlertState.CLOSED) { return false; }
     if (alert.state != AlertState.NEW) { return false; }
-    if (LibStr.is(alert.rule, DynatraceProcessor.MSG_RESPONSE_TIME_DEGRADED_FOR_SLOW_REQUESTS)) {
+    if (LibStr.is(alert.rule, AppMonProcessor.MSG_RESPONSE_TIME_DEGRADED_FOR_SLOW_REQUESTS)) {
       alert.severity = AlertSeverity.WARN;
     }
-    else if (LibStr.is(alert.rule, DynatraceProcessor.MSG_HOST_DISK_UNHEALTHY)) {
+    else if (LibStr.is(alert.rule, AppMonProcessor.MSG_HOST_DISK_UNHEALTHY)) {
       alert.severity = AlertSeverity.WARN;
     }
-    if (LibStr.is(alert.message, DynatraceProcessor.MSG_AGENT_CONNECTION_LOST)) {
+    if (LibStr.is(alert.message, AppMonProcessor.MSG_AGENT_CONNECTION_LOST)) {
       alert.severity = AlertSeverity.INFO;
     }
     if (alert.state == AlertState.INPROGRESS) {
@@ -215,7 +215,7 @@ public class DynatraceProcessor {
     }
   }
 
-  public void raiseAlerts(final DynatraceServer server) {
+  public void raiseAlerts(final AppMonServer server) {
     for (final ServiceStatus serviceStatus : services.values()) {
       boolean isNew = false;
       if (serviceStatus.state != ServiceState.OK) {
@@ -271,15 +271,15 @@ public class DynatraceProcessor {
           sb.append(rootCause.get(i));
         }
         alert.description = sb.toString();
-        alert.message = String.format(DynatraceProcessor.FMT_STATUS_ALERT, serviceStatus.name);
+        alert.message = String.format(AppMonProcessor.FMT_STATUS_ALERT, serviceStatus.name);
         if (isNew) {
           server.createAlert(alert);
-          DynatraceProcessor.logger.info("NEW_ALERT=" + alert);
+          AppMonProcessor.logger.info("NEW_ALERT=" + alert);
         }
       }
       else {
         if (serviceStatus.alert != null) {
-          DynatraceProcessor.logger.info("Closing " + serviceStatus.alert.id);
+          AppMonProcessor.logger.info("Closing " + serviceStatus.alert.id);
           server.closeAlert(serviceStatus.alert);
           serviceStatus.alert = null;
         }
@@ -296,7 +296,7 @@ public class DynatraceProcessor {
     return alert;
   }
 
-  public void importAlerts(final DynatraceServer server, final List<Alert> alerts, final String json) {
+  public void importAlerts(final AppMonServer server, final List<Alert> alerts, final String json) {
     if (json == null) { return; }
     final JsonParser parser = new JsonParser();
     final JsonObject data = parser.parse(json).getAsJsonObject();
@@ -310,7 +310,7 @@ public class DynatraceProcessor {
     }
   }
 
-  public void closePending(final DynatraceServer server) {
+  public void closePending(final AppMonServer server) {
     final String alertsJSon = server.readAlertsList(defProfile, defRule, null, new Date(), null);
     final List<Alert> alerts = new ArrayList<>();
     importAlerts(server, alerts, alertsJSon);
@@ -319,10 +319,10 @@ public class DynatraceProcessor {
     }
   }
 
-  public boolean readAgents(final DynatraceServer[] servers, final List<Agent> agents) {
+  public boolean readAgents(final AppMonServer[] servers, final List<Agent> agents) {
     boolean result = true;
     agents.clear();
-    for (final DynatraceServer server : servers) {
+    for (final AppMonServer server : servers) {
       final String xml = server.readAgents();
       result = result & parseAgents(agents, xml);
     }
@@ -337,25 +337,25 @@ public class DynatraceProcessor {
       final InputSource is = new InputSource(new StringReader(xml));
       final Document doc = dBuilder.parse(is);
       doc.getDocumentElement().normalize();
-      final NodeList nList = doc.getElementsByTagName(DynatraceProcessor.NODE_AGENTINFORMATION);
+      final NodeList nList = doc.getElementsByTagName(AppMonProcessor.NODE_AGENTINFORMATION);
       for (int temp = 0; temp < nList.getLength(); temp++) {
         final Node nNode = nList.item(temp);
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
           final Element eElement = (Element)nNode;
           final Agent agent = new Agent();
-          agent.instanceName = eElement.getElementsByTagName(DynatraceProcessor.NODE_AGENT_INSTANCE_NAME).item(0).getTextContent();
+          agent.instanceName = eElement.getElementsByTagName(AppMonProcessor.NODE_AGENT_INSTANCE_NAME).item(0).getTextContent();
           agents.add(agent);
         }
       }
     }
     catch (final Exception e) {
-      DynatraceProcessor.logger.error("Error parsing agents", e);
+      AppMonProcessor.logger.error("Error parsing agents", e);
       return false;
     }
     return true;
   }
 
-  public void validateAgents(final DynatraceServer server, final List<Agent> agents) {
+  public void validateAgents(final AppMonServer server, final List<Agent> agents) {
     final List<String> violations = new ArrayList<>();
     Collections.sort(agents);
     int minSeverity = Integer.MAX_VALUE;
@@ -364,9 +364,9 @@ public class DynatraceProcessor {
       final String regEx = def[fld++];
       final int minCount = Helper.getInt(def[fld++], 0);
       final int maxCount = Helper.getInt(def[fld++], Integer.MAX_VALUE);
-      final Date minH = Helper.getDate(def[fld++], DynatraceProcessor.HHMM, DynatraceProcessor.START);
-      final Date maxH = Helper.getDate(def[fld++], DynatraceProcessor.HHMM, DynatraceProcessor.END);
-      final long curH = System.currentTimeMillis() % DynatraceProcessor.ONE_DAY;
+      final Date minH = Helper.getDate(def[fld++], AppMonProcessor.HHMM, AppMonProcessor.START);
+      final Date maxH = Helper.getDate(def[fld++], AppMonProcessor.HHMM, AppMonProcessor.END);
+      final long curH = System.currentTimeMillis() % AppMonProcessor.ONE_DAY;
       if ((curH < minH.getTime()) || (curH > maxH.getTime())) {
         continue;
       }
@@ -381,7 +381,7 @@ public class DynatraceProcessor {
         }
       }
       if ((count < minCount) || (count > maxCount)) {
-        DynatraceProcessor.logger.warn("Violation: " + message + " " + minCount + "<=" + count + "<=" + maxCount + " H " + (minH.getTime() / DynatraceProcessor.ONE_HOUR) + "<" + (curH / DynatraceProcessor.ONE_HOUR) + "<" + (maxH.getTime() / DynatraceProcessor.ONE_HOUR));
+        AppMonProcessor.logger.warn("Violation: " + message + " " + minCount + "<=" + count + "<=" + maxCount + " H " + (minH.getTime() / AppMonProcessor.ONE_HOUR) + "<" + (curH / AppMonProcessor.ONE_HOUR) + "<" + (maxH.getTime() / AppMonProcessor.ONE_HOUR));
         violations.add(message);
         minSeverity = Math.min(minSeverity, severity);
       }
@@ -394,7 +394,7 @@ public class DynatraceProcessor {
         }
         agentAlert = newAlert();
         agentAlert.severity = (minSeverity == 1) ? AlertSeverity.SEVERE : AlertSeverity.WARN;
-        agentAlert.message = String.format(DynatraceProcessor.FMT_AGENT_STATUS, agentAlert.severity);
+        agentAlert.message = String.format(AppMonProcessor.FMT_AGENT_STATUS, agentAlert.severity);
         agentAlert.description = description;
         server.createAlert(agentAlert);
       }
@@ -408,17 +408,17 @@ public class DynatraceProcessor {
   }
 
   public void exportStats() {
-    lookupManager.saveStats(DynatraceProcessor.OUTPUT_STATS_LOOKUP);
-    lookupManager.saveMissingKey(DynatraceProcessor.OUTPUT_STATS_MISSING_KEY);
-    replaceManager.saveStats(DynatraceProcessor.OUTPUT_STATS_REPLACEMENT);
-    ruleManager.saveStats(DynatraceProcessor.OUTPUT_STATS_RULES);
+    lookupManager.saveStats(AppMonProcessor.OUTPUT_STATS_LOOKUP);
+    lookupManager.saveMissingKey(AppMonProcessor.OUTPUT_STATS_MISSING_KEY);
+    replaceManager.saveStats(AppMonProcessor.OUTPUT_STATS_REPLACEMENT);
+    ruleManager.saveStats(AppMonProcessor.OUTPUT_STATS_RULES);
   }
 
   public void loadConf() {
-    system2service = lookupManager.addLookupRule("system2service", DynatraceProcessor.CONF_PATH + "system2service.csv");
-    replace_DTdescription = replaceManager.addRegExRules("DT_description", DynatraceProcessor.CONF_PATH + "DT_description.csv");
-    replace_DT_message = replaceManager.addRegExRules("DT_message", DynatraceProcessor.CONF_PATH + "DT_message.csv");
-    agentsRule = replaceManager.addRegExRules("AgentRules", DynatraceProcessor.CONF_PATH + "agentsRules.csv");
+    system2service = lookupManager.addLookupRule("system2service", AppMonProcessor.CONF_PATH + "system2service.csv");
+    replace_DTdescription = replaceManager.addRegExRules("DT_description", AppMonProcessor.CONF_PATH + "DT_description.csv");
+    replace_DT_message = replaceManager.addRegExRules("DT_message", AppMonProcessor.CONF_PATH + "DT_message.csv");
+    agentsRule = replaceManager.addRegExRules("AgentRules", AppMonProcessor.CONF_PATH + "agentsRules.csv");
   }
 
   public Alert fromDynaTraceJson(final String id, final String json) {
@@ -428,10 +428,10 @@ public class DynatraceProcessor {
     a.rule = GsonUtil.getString(data, "rule");
     a.message = GsonUtil.getString(data, "message");
     a.description = GsonUtil.getString(data, "description");
-    a.start = GsonUtil.getDate(data, "start", DynatraceProcessor.ISO8601);
-    a.end = GsonUtil.getDate(data, "end", DynatraceProcessor.ISO8601);
+    a.start = GsonUtil.getDate(data, "start", AppMonProcessor.ISO8601);
+    a.end = GsonUtil.getDate(data, "end", AppMonProcessor.ISO8601);
     final String stateStr = GsonUtil.getString(data, "state");
-    a.state = DynatraceProcessor.dyna2state.get(stateStr);
+    a.state = AppMonProcessor.dyna2state.get(stateStr);
     if (a.state == null) {
       a.state = AlertState.NEW;
     }
@@ -439,7 +439,7 @@ public class DynatraceProcessor {
       a.state = AlertState.CLOSED;
     }
     final String severityStr = GsonUtil.getString(data, "severity");
-    a.severity = DynatraceProcessor.dyna2severity.get(severityStr);
+    a.severity = AppMonProcessor.dyna2severity.get(severityStr);
     if (a.severity == null) {
       a.severity = AlertSeverity.INFO;
     }
@@ -515,13 +515,13 @@ public class DynatraceProcessor {
   public static JsonObject toDynaTraceJson(final Alert alert) {
     final JsonObject data = new JsonObject();
     data.addProperty("systemprofile", alert.system);
-    data.addProperty("severity", DynatraceProcessor.severity2dyna.get(alert.severity));
-    data.addProperty("state", DynatraceProcessor.state2dyna.get(alert.state));
+    data.addProperty("severity", AppMonProcessor.severity2dyna.get(alert.severity));
+    data.addProperty("state", AppMonProcessor.state2dyna.get(alert.state));
     if (alert.start != null) {
-      data.addProperty("start", DynatraceProcessor.ISO8601.format(alert.start));
+      data.addProperty("start", AppMonProcessor.ISO8601.format(alert.start));
     }
     if (alert.end != null) {
-      data.addProperty("end", DynatraceProcessor.ISO8601.format(alert.end));
+      data.addProperty("end", AppMonProcessor.ISO8601.format(alert.end));
     }
     if (alert.rule != null) {
       data.addProperty("rule", alert.rule);
@@ -535,7 +535,7 @@ public class DynatraceProcessor {
     return data;
   }
 
-  public String getDashboard(final DynatraceServer server, final String dashboard, final String type) {
+  public String getDashboard(final AppMonServer server, final String dashboard, final String type) {
     final String result = server.getDashboard(dashboard, type);
     return result;
   }

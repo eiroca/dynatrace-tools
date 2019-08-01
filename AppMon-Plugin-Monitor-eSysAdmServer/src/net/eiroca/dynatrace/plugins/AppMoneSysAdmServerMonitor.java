@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.eSysAdmServerMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMoneSysAdmServerMonitor extends AbstractMonitorPlugin {
+public class AppMoneSysAdmServerMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "eSysAdm Server Monitor";
-    AbstractMonitorPlugin.monitorClass = eSysAdmServerMonitor.class;
+    AppMonPluginMonitor.name = "eSysAdm Server Monitor";
+    AppMonPluginMonitor.monitorClass = eSysAdmServerMonitor.class;
   }
 
 }

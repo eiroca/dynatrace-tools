@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.GraphiteMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonGraphiteMonitor extends AbstractMonitorPlugin {
+public class AppMonGraphiteMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "Graphite Monitor";
-    AbstractMonitorPlugin.monitorClass = GraphiteMonitor.class;
+    AppMonPluginMonitor.name = "Graphite Monitor";
+    AppMonPluginMonitor.monitorClass = GraphiteMonitor.class;
   }
 
 }

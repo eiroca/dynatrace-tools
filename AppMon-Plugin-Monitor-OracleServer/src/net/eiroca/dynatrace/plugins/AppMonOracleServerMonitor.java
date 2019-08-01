@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.OracleMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonOracleServerMonitor extends AbstractMonitorPlugin {
+public class AppMonOracleServerMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "Oracle Server Monitor";
-    AbstractMonitorPlugin.monitorClass = OracleMonitor.class;
+    AppMonPluginMonitor.name = "Oracle Server Monitor";
+    AppMonPluginMonitor.monitorClass = OracleMonitor.class;
   }
 
 }

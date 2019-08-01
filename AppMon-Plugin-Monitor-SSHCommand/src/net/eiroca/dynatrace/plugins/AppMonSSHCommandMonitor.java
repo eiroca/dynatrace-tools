@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.actions.SSHCommandAction;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonSSHCommandMonitor extends AbstractMonitorPlugin {
+public class AppMonSSHCommandMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "SSH Command Monitor";
-    AbstractMonitorPlugin.monitorClass = SSHCommandAction.class;
+    AppMonPluginMonitor.name = "SSH Command Monitor";
+    AppMonPluginMonitor.monitorClass = SSHCommandAction.class;
   }
 
 }

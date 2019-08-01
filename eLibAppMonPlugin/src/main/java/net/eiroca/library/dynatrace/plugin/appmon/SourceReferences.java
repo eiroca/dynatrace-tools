@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.util;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import java.util.ArrayList;
 import java.util.List;

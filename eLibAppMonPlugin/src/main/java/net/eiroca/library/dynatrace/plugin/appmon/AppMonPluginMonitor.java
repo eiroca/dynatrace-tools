@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.sdk;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,45 +26,45 @@ import net.eiroca.library.diagnostics.CommandException;
 import net.eiroca.library.diagnostics.IServerMonitor;
 import net.eiroca.library.metrics.MetricGroup;
 
-public abstract class AbstractMonitorPlugin extends DynatracePlugin implements Monitor {
+public abstract class AppMonPluginMonitor extends AppMonPlugin implements Monitor {
 
   protected static String name = "Dynatrace Monitor Plugin";
   protected static Class<?> monitorClass = null;
 
   @Override
   public Status setup(final MonitorEnvironment env) throws Exception {
-    final DynatraceContext<MonitorEnvironment> context = new DynatraceContext<>(AbstractMonitorPlugin.name, env);
+    final AppMonContext<MonitorEnvironment> context = new AppMonContext<>(AppMonPluginMonitor.name, env);
     final Status status = new Status(Status.StatusCode.Success);
-    context.info(AbstractMonitorPlugin.name, " setup: ", status.getShortMessage());
+    context.info(AppMonPluginMonitor.name, " setup: ", status.getShortMessage());
     return status;
   }
 
   @Override
   public void teardown(final MonitorEnvironment env) throws Exception {
-    final DynatraceContext<MonitorEnvironment> context = new DynatraceContext<>(AbstractMonitorPlugin.name, env);
+    final AppMonContext<MonitorEnvironment> context = new AppMonContext<>(AppMonPluginMonitor.name, env);
     final Status status = new Status(Status.StatusCode.Success);
-    context.info(AbstractMonitorPlugin.name, " teardown: ", status.getShortMessage());
+    context.info(AppMonPluginMonitor.name, " teardown: ", status.getShortMessage());
   }
 
   @Override
   public Status execute(final MonitorEnvironment env) throws Exception {
-    final DynatraceContext<MonitorEnvironment> context = new DynatraceContext<>(AbstractMonitorPlugin.name, env);
+    final AppMonContext<MonitorEnvironment> context = new AppMonContext<>(AppMonPluginMonitor.name, env);
     final String host = env.getHost().getAddress();
     final Status status = monitor(context, host);
-    context.info(AbstractMonitorPlugin.name, " execute: ", status);
+    context.info(AppMonPluginMonitor.name, " execute: ", status);
     return status;
   }
 
-  public Status monitor(final DynatraceContext<MonitorEnvironment> context, final String host) throws Exception {
+  public Status monitor(final AppMonContext<MonitorEnvironment> context, final String host) throws Exception {
     Status status = new Status(Status.StatusCode.Success);
-    if (AbstractMonitorPlugin.monitorClass != null) {
-      final IServerMonitor monitor = (IServerMonitor)AbstractMonitorPlugin.monitorClass.newInstance();
+    if (AppMonPluginMonitor.monitorClass != null) {
+      final IServerMonitor monitor = (IServerMonitor)AppMonPluginMonitor.monitorClass.newInstance();
       try {
         final List<MetricGroup> groups = new ArrayList<>();
         monitor.setup(context);
         monitor.check(host);
         monitor.loadMetricGroup(groups);
-        DynatracePlugin.publishMeasures(context, groups);
+        AppMonPlugin.publishMeasures(context, groups);
       }
       catch (final CommandException err) {
         status = fromException(err);

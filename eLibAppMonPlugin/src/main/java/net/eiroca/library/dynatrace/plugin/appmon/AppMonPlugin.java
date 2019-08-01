@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.sdk;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,9 +31,9 @@ import net.eiroca.library.metrics.MetricGroup;
 import net.eiroca.library.metrics.datum.IDatum;
 import net.eiroca.library.metrics.datum.StatisticDatum;
 
-public class DynatracePlugin {
+public class AppMonPlugin {
 
-  final public static void publishMeasures(final DynatraceContext<MonitorEnvironment> context, final List<MetricGroup> groups) {
+  final public static void publishMeasures(final AppMonContext<MonitorEnvironment> context, final List<MetricGroup> groups) {
     if (groups == null) { return; }
     final List<IMetric<?>> metricsList = new ArrayList<>();
     for (final MetricGroup g : groups) {
@@ -43,13 +43,13 @@ public class DynatracePlugin {
         g.refresh(false);
         g.loadMetrics(metricsList, false);
         for (final IMetric<?> m : metricsList) {
-          DynatracePlugin.exportMeasure(context, g, m);
+          AppMonPlugin.exportMeasure(context, g, m);
         }
       }
     }
   }
 
-  final public static void exportMeasure(final DynatraceContext<MonitorEnvironment> context, final MetricGroup g, final IMetric<?> m) {
+  final public static void exportMeasure(final AppMonContext<MonitorEnvironment> context, final MetricGroup g, final IMetric<?> m) {
     final String group = g.getName();
     final String key = m.getMetadata().getDisplayName();
     final IDatum value = m.getDatum();

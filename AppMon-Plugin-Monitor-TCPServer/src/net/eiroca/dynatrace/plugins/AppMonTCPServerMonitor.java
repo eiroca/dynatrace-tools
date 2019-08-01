@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.TCPServerMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonTCPServerMonitor extends AbstractMonitorPlugin {
+public class AppMonTCPServerMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "TCPServer Monitor";
-    AbstractMonitorPlugin.monitorClass = TCPServerMonitor.class;
+    AppMonPluginMonitor.name = "TCPServer Monitor";
+    AppMonPluginMonitor.monitorClass = TCPServerMonitor.class;
   }
 
 }

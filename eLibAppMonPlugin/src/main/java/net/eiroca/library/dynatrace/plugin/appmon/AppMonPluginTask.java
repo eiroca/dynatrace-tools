@@ -14,40 +14,40 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.sdk;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import com.dynatrace.diagnostics.pdk.Status;
 import com.dynatrace.diagnostics.pdk.Status.StatusCode;
 import com.dynatrace.diagnostics.pdk.Task;
 import com.dynatrace.diagnostics.pdk.TaskEnvironment;
 
-public abstract class AbstractTaskPlugin extends DynatracePlugin implements Task {
+public abstract class AppMonPluginTask extends AppMonPlugin implements Task {
 
   protected static String name = "Dynatrace Task Plugin";
 
   @Override
   public Status setup(final TaskEnvironment env) throws Exception {
-    final DynatraceContext<TaskEnvironment> context = new DynatraceContext<>(AbstractTaskPlugin.name, env);
+    final AppMonContext<TaskEnvironment> context = new AppMonContext<>(AppMonPluginTask.name, env);
     final Status status = new Status(StatusCode.Success);
-    context.info(AbstractTaskPlugin.name, " setup: ", status.getShortMessage());
+    context.info(AppMonPluginTask.name, " setup: ", status.getShortMessage());
     return status;
   }
 
   @Override
   public void teardown(final TaskEnvironment env) throws Exception {
-    final DynatraceContext<TaskEnvironment> context = new DynatraceContext<>(AbstractTaskPlugin.name, env);
+    final AppMonContext<TaskEnvironment> context = new AppMonContext<>(AppMonPluginTask.name, env);
     final Status status = new Status(Status.StatusCode.Success);
-    context.info(AbstractTaskPlugin.name, " teardown: ", status.getShortMessage());
+    context.info(AppMonPluginTask.name, " teardown: ", status.getShortMessage());
   }
 
   @Override
   public Status execute(final TaskEnvironment env) throws Exception {
-    final DynatraceContext<TaskEnvironment> context = new DynatraceContext<>(AbstractTaskPlugin.name, env);
+    final AppMonContext<TaskEnvironment> context = new AppMonContext<>(AppMonPluginTask.name, env);
     final Status status = execute(context);
-    context.info(AbstractTaskPlugin.name, " execute: ", status);
+    context.info(AppMonPluginTask.name, " execute: ", status);
     return status;
   }
 
-  abstract public Status execute(DynatraceContext<TaskEnvironment> context) throws Exception;
+  abstract public Status execute(AppMonContext<TaskEnvironment> context) throws Exception;
 
 }

@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.sdk;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import java.text.SimpleDateFormat;
 import com.dynatrace.diagnostics.pdk.Action;
@@ -22,7 +22,7 @@ import com.dynatrace.diagnostics.pdk.ActionEnvironment;
 import com.dynatrace.diagnostics.pdk.Status;
 import net.eiroca.library.core.Helper;
 
-public abstract class AbstractActionPlugin extends DynatracePlugin implements Action {
+public abstract class AppMonPluginAction extends AppMonPlugin implements Action {
 
   private static final String CONFIG_DATEFORMAT = "dateFormat";
 
@@ -30,30 +30,30 @@ public abstract class AbstractActionPlugin extends DynatracePlugin implements Ac
 
   @Override
   public Status setup(final ActionEnvironment env) throws Exception {
-    final DynatraceContext<ActionEnvironment> context = new DynatraceContext<>(AbstractActionPlugin.name, env);
+    final AppMonContext<ActionEnvironment> context = new AppMonContext<>(AppMonPluginAction.name, env);
     final Status status = new Status(Status.StatusCode.Success);
-    context.info(AbstractActionPlugin.name, " setup: ", status.getShortMessage());
+    context.info(AppMonPluginAction.name, " setup: ", status.getShortMessage());
     return status;
   }
 
   @Override
   public void teardown(final ActionEnvironment env) throws Exception {
-    final DynatraceContext<ActionEnvironment> context = new DynatraceContext<>(AbstractActionPlugin.name, env);
+    final AppMonContext<ActionEnvironment> context = new AppMonContext<>(AppMonPluginAction.name, env);
     final Status status = new Status(Status.StatusCode.Success);
-    context.info(AbstractActionPlugin.name, " teardown: ", status.getShortMessage());
+    context.info(AppMonPluginAction.name, " teardown: ", status.getShortMessage());
   }
 
   @Override
   public Status execute(final ActionEnvironment env) throws Exception {
-    final DynatraceContext<ActionEnvironment> context = new DynatraceContext<>(AbstractActionPlugin.name, env);
-    final SimpleDateFormat dateFormat = new SimpleDateFormat(context.getConfigString(AbstractActionPlugin.CONFIG_DATEFORMAT, "yyyyMMddHHmmss"));
-    final DynatraceActionData data = DynatraceActionData.fromEnvironment(env, dateFormat);
+    final AppMonContext<ActionEnvironment> context = new AppMonContext<>(AppMonPluginAction.name, env);
+    final SimpleDateFormat dateFormat = new SimpleDateFormat(context.getConfigString(AppMonPluginAction.CONFIG_DATEFORMAT, "yyyyMMddHHmmss"));
+    final AppMonActionData data = AppMonActionData.fromEnvironment(env, dateFormat);
     context.info("Action Data", Helper.NL, data.toString());
     final Status status = execute(context, data);
-    context.info(AbstractActionPlugin.name, " execute: ", status);
+    context.info(AppMonPluginAction.name, " execute: ", status);
     return status;
   }
 
-  abstract public Status execute(final DynatraceContext<ActionEnvironment> context, final DynatraceActionData data) throws Exception;
+  abstract public Status execute(final AppMonContext<ActionEnvironment> context, final AppMonActionData data) throws Exception;
 
 }

@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.RedisMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonRedisMonitor extends AbstractMonitorPlugin {
+public class AppMonRedisMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "Redis Monitor";
-    AbstractMonitorPlugin.monitorClass = RedisMonitor.class;
+    AppMonPluginMonitor.name = "Redis Monitor";
+    AppMonPluginMonitor.monitorClass = RedisMonitor.class;
   }
 
 }

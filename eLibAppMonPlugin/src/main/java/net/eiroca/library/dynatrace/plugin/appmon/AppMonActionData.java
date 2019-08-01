@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  **/
-package net.eiroca.library.dynatrace.sdk;
+package net.eiroca.library.dynatrace.plugin.appmon;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -52,10 +52,8 @@ import com.dynatrace.diagnostics.sdk.resources.DurationFormat;
 import net.eiroca.library.core.LibStr;
 import net.eiroca.library.diagnostics.actiondata.ActionData;
 import net.eiroca.library.diagnostics.actiondata.Messages;
-import net.eiroca.library.dynatrace.util.SourceReferences;
-import net.eiroca.library.dynatrace.util.Sources;
 
-public class DynatraceActionData extends ActionData {
+public class AppMonActionData extends ActionData {
 
   public static final String SYSTEM_PROFILE = "SYSTEM_PROFILE";
 
@@ -133,9 +131,9 @@ public class DynatraceActionData extends ActionData {
     data.put(name, d != null ? d.toString() : null);
   }
 
-  public static DynatraceActionData fromEnvironment(final ActionEnvironment env, final SimpleDateFormat dateFormat) {
+  public static AppMonActionData fromEnvironment(final ActionEnvironment env, final SimpleDateFormat dateFormat) {
     final List<Incident> list = new ArrayList<>();
-    final DynatraceActionData actionData = new DynatraceActionData();
+    final AppMonActionData actionData = new AppMonActionData();
     final Collection<Incident> incidents = env.getIncidents();
     if ((incidents != null) && !incidents.isEmpty()) {
       for (final Incident incident : incidents) {
@@ -149,49 +147,49 @@ public class DynatraceActionData extends ActionData {
     final Sources s = new Sources(list);
     final Map<SourceType, SourceReferences> sources = s.sources;
 
-    actionData.set(DynatraceActionData.SYSTEM_PROFILE, env.getSystemProfileName());
+    actionData.set(AppMonActionData.SYSTEM_PROFILE, env.getSystemProfileName());
 
     if (s != null) {
       SourceReferences sr = sources.get(SourceType.Agent);
       if (sr != null) {
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.AGENT_NAME, DynatraceActionData.fAGENT_NAME, true);
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.AGENT_HOST, DynatraceActionData.fAGENT_HOST, false);
-        actionData.set(DynatraceActionData.ALL_AGENTS, sr.getAllNameHosts());
-        actionData.set(DynatraceActionData.ALL_AGENT_NAMES, sr.getAllNames());
-        actionData.set(DynatraceActionData.ALL_AGENT_HOSTS, sr.getAllHosts());
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.AGENT_NAME, AppMonActionData.fAGENT_NAME, true);
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.AGENT_HOST, AppMonActionData.fAGENT_HOST, false);
+        actionData.set(AppMonActionData.ALL_AGENTS, sr.getAllNameHosts());
+        actionData.set(AppMonActionData.ALL_AGENT_NAMES, sr.getAllNames());
+        actionData.set(AppMonActionData.ALL_AGENT_HOSTS, sr.getAllHosts());
       }
       sr = sources.get(SourceType.AgentGroup);
       if (sr != null) {
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.AGENT_GROUP_NAME, DynatraceActionData.fAGENT_GROUP_NAME, true);
-        actionData.set(DynatraceActionData.ALL_AGENT_GROUP_NAMES, sr.getAllNames());
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.AGENT_GROUP_NAME, AppMonActionData.fAGENT_GROUP_NAME, true);
+        actionData.set(AppMonActionData.ALL_AGENT_GROUP_NAMES, sr.getAllNames());
       }
       sr = sources.get(SourceType.Monitor);
       if (sr != null) {
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.MONITOR_NAME, DynatraceActionData.fMONITOR_NAME, true);
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.MONITOR_HOST, DynatraceActionData.fMONITOR_HOST, false);
-        actionData.set(DynatraceActionData.ALL_MONITORS, sr.getAllNameHosts());
-        actionData.set(DynatraceActionData.ALL_MONITOR_NAMES, sr.getAllNames());
-        actionData.set(DynatraceActionData.ALL_MONITOR_HOSTS, sr.getAllHosts());
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.MONITOR_NAME, AppMonActionData.fMONITOR_NAME, true);
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.MONITOR_HOST, AppMonActionData.fMONITOR_HOST, false);
+        actionData.set(AppMonActionData.ALL_MONITORS, sr.getAllNameHosts());
+        actionData.set(AppMonActionData.ALL_MONITOR_NAMES, sr.getAllNames());
+        actionData.set(AppMonActionData.ALL_MONITOR_HOSTS, sr.getAllHosts());
         final List<String> hosts = sr.getSourceHosts();
-        actionData.set(DynatraceActionData.MONITOR_HOST, ((hosts != null) && (hosts.size() > 0)) ? hosts.get(0) : null);
+        actionData.set(AppMonActionData.MONITOR_HOST, ((hosts != null) && (hosts.size() > 0)) ? hosts.get(0) : null);
       }
       sr = sources.get(SourceType.Collector);
       if (sr != null) {
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.COLLECTOR_NAME, DynatraceActionData.fCOLLECTOR_NAME, true);
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.COLLECTOR_HOST, DynatraceActionData.fCOLLECTOR_HOST, false);
-        actionData.set(DynatraceActionData.ALL_COLLECTORS, sr.getAllNameHosts());
-        actionData.set(DynatraceActionData.ALL_COLLECTOR_NAMES, sr.getAllNames());
-        actionData.set(DynatraceActionData.ALL_COLLECTOR_HOSTS, sr.getAllHosts());
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.COLLECTOR_NAME, AppMonActionData.fCOLLECTOR_NAME, true);
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.COLLECTOR_HOST, AppMonActionData.fCOLLECTOR_HOST, false);
+        actionData.set(AppMonActionData.ALL_COLLECTORS, sr.getAllNameHosts());
+        actionData.set(AppMonActionData.ALL_COLLECTOR_NAMES, sr.getAllNames());
+        actionData.set(AppMonActionData.ALL_COLLECTOR_HOSTS, sr.getAllHosts());
       }
       sr = sources.get(SourceType.Server);
       if (sr != null) {
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.SERVER_NAME, DynatraceActionData.fSERVER_NAME, true);
-        DynatraceActionData.setSourceTypeVariables(actionData, sr, DynatraceActionData.SERVER_HOST, DynatraceActionData.fSERVER_HOST, false);
-        actionData.set(DynatraceActionData.ALL_SERVER_NAMES, sr.getAllHosts());
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.SERVER_NAME, AppMonActionData.fSERVER_NAME, true);
+        AppMonActionData.setSourceTypeVariables(actionData, sr, AppMonActionData.SERVER_HOST, AppMonActionData.fSERVER_HOST, false);
+        actionData.set(AppMonActionData.ALL_SERVER_NAMES, sr.getAllHosts());
       }
     }
     if (firstIncident != null) {
-      final Violation violation = DynatraceActionData.getViolation(firstIncident);
+      final Violation violation = AppMonActionData.getViolation(firstIncident);
       // populate fields which are coming from the Incident instance, ViolatedMeasure instance,
       final IncidentRule rule = firstIncident.getIncidentRule();
       final Sensitivity sensitivity = (rule != null) ? rule.getSensitivity() : null;
@@ -199,61 +197,61 @@ public class DynatraceActionData extends ActionData {
       final Measure m = (violation != null) ? violation.getViolatedMeasure() : null;
       final Source source = (m != null) ? m.getSource() : null;
       final Metric metric = (m != null) ? m.getMetric() : null;
-      final TriggerValue tv = DynatraceActionData.getTriggerValue(violation);
+      final TriggerValue tv = AppMonActionData.getTriggerValue(violation);
       final boolean isOpen = firstIncident.isOpen();
-      actionData.set(DynatraceActionData.DYNATRACE_SERVER_NAME, firstIncident.getServerName());
-      actionData.set(DynatraceActionData.START_TIME, DynatraceActionData.getDateAsString(firstIncident.getStartTime(), dateFormat));
-      actionData.set(DynatraceActionData.END_TIME, DynatraceActionData.getDateAsString(firstIncident.getEndTime(), dateFormat));
-      actionData.set(DynatraceActionData.MESSAGE, firstIncident.getMessage());
-      actionData.set(DynatraceActionData.RULE_NAME, (rule != null) ? rule.getName() : null);
-      actionData.set(DynatraceActionData.RULE_DESCRIPTION, (rule != null) ? rule.getDescription() : null);
-      actionData.set(DynatraceActionData.SENSITIVITY, (sensitivity != null) ? sensitivity.getType().name() : null);
-      actionData.set(DynatraceActionData.SESSION_ID, firstIncident.getRecordedSessionId());
-      actionData.set(DynatraceActionData.SESSION_NAME, firstIncident.getRecordedSessionName());
-      actionData.set(DynatraceActionData.DURATION, DynatraceActionData.getDurationAsString(firstIncident));
-      actionData.set(DynatraceActionData.IS_OPEN, isOpen);
+      actionData.set(AppMonActionData.DYNATRACE_SERVER_NAME, firstIncident.getServerName());
+      actionData.set(AppMonActionData.START_TIME, AppMonActionData.getDateAsString(firstIncident.getStartTime(), dateFormat));
+      actionData.set(AppMonActionData.END_TIME, AppMonActionData.getDateAsString(firstIncident.getEndTime(), dateFormat));
+      actionData.set(AppMonActionData.MESSAGE, firstIncident.getMessage());
+      actionData.set(AppMonActionData.RULE_NAME, (rule != null) ? rule.getName() : null);
+      actionData.set(AppMonActionData.RULE_DESCRIPTION, (rule != null) ? rule.getDescription() : null);
+      actionData.set(AppMonActionData.SENSITIVITY, (sensitivity != null) ? sensitivity.getType().name() : null);
+      actionData.set(AppMonActionData.SESSION_ID, firstIncident.getRecordedSessionId());
+      actionData.set(AppMonActionData.SESSION_NAME, firstIncident.getRecordedSessionName());
+      actionData.set(AppMonActionData.DURATION, AppMonActionData.getDurationAsString(firstIncident));
+      actionData.set(AppMonActionData.IS_OPEN, isOpen);
       if (isOpen) {
-        actionData.set(DynatraceActionData.INCIDENT_STARTED_ENDED, "started");
-        actionData.set(DynatraceActionData.IMAGE_WARNING_OK, "res/notification_email_warning.png");
+        actionData.set(AppMonActionData.INCIDENT_STARTED_ENDED, "started");
+        actionData.set(AppMonActionData.IMAGE_WARNING_OK, "res/notification_email_warning.png");
       }
       else {
-        actionData.set(DynatraceActionData.INCIDENT_STARTED_ENDED, "ended");
-        actionData.set(DynatraceActionData.IMAGE_WARNING_OK, "res/notification_email_ok.png");
+        actionData.set(AppMonActionData.INCIDENT_STARTED_ENDED, "ended");
+        actionData.set(AppMonActionData.IMAGE_WARNING_OK, "res/notification_email_ok.png");
       }
-      actionData.set(DynatraceActionData.IS_CLOSED, firstIncident.isClosed());
-      actionData.set(DynatraceActionData.SEVERITY, DynatraceActionData.getSeverityString(firstIncident));
-      actionData.set(DynatraceActionData.KEY, key.getUUID());
-      actionData.set(DynatraceActionData.STATE, String.valueOf(firstIncident.getState()));
+      actionData.set(AppMonActionData.IS_CLOSED, firstIncident.isClosed());
+      actionData.set(AppMonActionData.SEVERITY, AppMonActionData.getSeverityString(firstIncident));
+      actionData.set(AppMonActionData.KEY, key.getUUID());
+      actionData.set(AppMonActionData.STATE, String.valueOf(firstIncident.getState()));
       if (m != null) {
-        actionData.set(DynatraceActionData.APPLICATION, m.getApplication());
+        actionData.set(AppMonActionData.APPLICATION, m.getApplication());
         final String measureName = m.getName();
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_NAME, measureName);
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_DESCRIPTION, m.getDescription());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_UNIT, m.getUnit());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_CONFIGURATION, m.getConfigurationSummary());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_TRESHOLD_UPPER_SEVERE, m.getUpperSevere());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_TRESHOLD_LOWER_SEVERE, m.getLowerSevere());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_TRESHOLD_UPPER_WARNING, m.getUpperWarning());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_TRESHOLD_LOWER_WARNING, m.getLowerWarning());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_SPLITTINGS, LibStr.merge(m.getSplittings(), ",", ""));
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_NAME, measureName);
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_DESCRIPTION, m.getDescription());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_UNIT, m.getUnit());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_CONFIGURATION, m.getConfigurationSummary());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_TRESHOLD_UPPER_SEVERE, m.getUpperSevere());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_TRESHOLD_LOWER_SEVERE, m.getLowerSevere());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_TRESHOLD_UPPER_WARNING, m.getUpperWarning());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_TRESHOLD_LOWER_WARNING, m.getLowerWarning());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_SPLITTINGS, LibStr.merge(m.getSplittings(), ",", ""));
       }
       if (tv != null) {
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_VALUE, tv.getValue().getValue());
-        actionData.set(DynatraceActionData.VIOLATED_TRIGGER_VALUE, tv.getValue().getValue());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_VALUE, tv.getValue().getValue());
+        actionData.set(AppMonActionData.VIOLATED_TRIGGER_VALUE, tv.getValue().getValue());
       }
       if (metric != null) {
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_METRIC_NAME, metric.getName());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_METRIC_DESCRIPTION, metric.getDescription());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_METRIC_GROUP, metric.getGroup());
-        actionData.set(DynatraceActionData.VIOLATED_MEASURE_METRIC_UNIT, metric.getUnit());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_METRIC_NAME, metric.getName());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_METRIC_DESCRIPTION, metric.getDescription());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_METRIC_GROUP, metric.getGroup());
+        actionData.set(AppMonActionData.VIOLATED_MEASURE_METRIC_UNIT, metric.getUnit());
       }
       if (source != null) {
-        actionData.set(DynatraceActionData.VIOLATED_TRIGGER_VALUE_SOURCE_TYPE, source.getSourceType().name());
-        actionData.set(DynatraceActionData.VIOLATED_TRIGGER_VALUE_SOURCE_NAME, DynatraceActionData.getSourceName(source));
-        actionData.set(DynatraceActionData.VIOLATED_TRIGGER_VALUE_SOURCE_HOST, DynatraceActionData.getSourceHost(source));
+        actionData.set(AppMonActionData.VIOLATED_TRIGGER_VALUE_SOURCE_TYPE, source.getSourceType().name());
+        actionData.set(AppMonActionData.VIOLATED_TRIGGER_VALUE_SOURCE_NAME, AppMonActionData.getSourceName(source));
+        actionData.set(AppMonActionData.VIOLATED_TRIGGER_VALUE_SOURCE_HOST, AppMonActionData.getSourceHost(source));
       }
       // Setup VIOLATION_HEADER, VIOLATION_MESSAGE entries
-      final Map<String, List<String>> map = DynatraceActionData.getViolations(firstIncident);
+      final Map<String, List<String>> map = AppMonActionData.getViolations(firstIncident);
       final Set<Entry<String, List<String>>> set = (map != null) ? map.entrySet() : null;
       final List<String> violHeaders = new ArrayList<>();
       final List<String> violMessages = new ArrayList<>();
@@ -269,8 +267,8 @@ public class DynatraceActionData extends ActionData {
           final List<String> data = entry.getValue();
           violMessages.add((i < data.size()) ? data.get(i) : null);
         }
-        actionData.set(DynatraceActionData.fVIOLATION_HEADER, violHeaders, sizeOfViolationHeader);
-        actionData.set(DynatraceActionData.fVIOLATION_MESSAGE, violMessages, sizeOfViolationHeader);
+        actionData.set(AppMonActionData.fVIOLATION_HEADER, violHeaders, sizeOfViolationHeader);
+        actionData.set(AppMonActionData.fVIOLATION_MESSAGE, violMessages, sizeOfViolationHeader);
       }
     }
     return actionData;
@@ -424,16 +422,16 @@ public class DynatraceActionData extends ActionData {
           final String thresholdvalueString = new StringBuilder(Messages.DEFAULT_DECIMAL_FORMAT.format(thresholdValue)).append(BaseConstants.WS).append(violatedMeasure.getUnit()).toString();
           final Threshold.Type ttype = violatedThreshold.getType();
           if (ttype == Threshold.Type.UpperSevere) {
-            triggerValueAsString.append(MessageFormat.format(Messages.BaseIncidentFormatter_MEASURED_VALUE_WAS_LOWER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
+            triggerValueAsString.append(MessageFormat.format(Messages.FMT_MEASURED_VALUE_WAS_LOWER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
           }
           else if (ttype == Threshold.Type.UpperWarning) {
-            triggerValueAsString.append(MessageFormat.format(Messages.BaseIncidentFormatter_MEASURED_VALUE_WAS_LOWER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
+            triggerValueAsString.append(MessageFormat.format(Messages.FMT_MEASURED_VALUE_WAS_LOWER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
           }
           else if (ttype == Threshold.Type.LowerSevere) {
-            triggerValueAsString.append(MessageFormat.format(Messages.BaseIncidentFormatter_MEASURED_VALUE_WAS_HIGHER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
+            triggerValueAsString.append(MessageFormat.format(Messages.FMT_MEASURED_VALUE_WAS_HIGHER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
           }
           else if (ttype == Threshold.Type.LowerWarning) {
-            triggerValueAsString.append(MessageFormat.format(Messages.BaseIncidentFormatter_MEASURED_VALUE_WAS_HIGHER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
+            triggerValueAsString.append(MessageFormat.format(Messages.FMT_MEASURED_VALUE_WAS_HIGHER_THAN_THRESHOLD_EMAIL_TEXT, measuredValue, thresholdvalueString));
           }
           // do not add values if they are already there
           final String s = triggerValueAsString.toString();
@@ -447,7 +445,7 @@ public class DynatraceActionData extends ActionData {
     return result;
   }
 
-  public static void setSourceTypeVariables(final DynatraceActionData record, final SourceReferences sr, final String keyName, final String keyFormat, final boolean isNames) {
+  public static void setSourceTypeVariables(final AppMonActionData record, final SourceReferences sr, final String keyName, final String keyFormat, final boolean isNames) {
     List<String> list;
     // Populate Variable field
     if (isNames) {

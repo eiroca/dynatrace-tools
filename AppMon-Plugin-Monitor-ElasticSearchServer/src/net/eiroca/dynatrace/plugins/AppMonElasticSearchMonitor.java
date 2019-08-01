@@ -17,13 +17,13 @@
 package net.eiroca.dynatrace.plugins;
 
 import net.eiroca.library.diagnostics.monitors.ElasticSearchMonitor;
-import net.eiroca.library.dynatrace.sdk.AbstractMonitorPlugin;
+import net.eiroca.library.dynatrace.plugin.appmon.AppMonPluginMonitor;
 
-public class AppMonElasticSearchMonitor extends AbstractMonitorPlugin {
+public class AppMonElasticSearchMonitor extends AppMonPluginMonitor {
 
   static {
-    AbstractMonitorPlugin.name = "ElasticSearch Monitor";
-    AbstractMonitorPlugin.monitorClass = ElasticSearchMonitor.class;
+    AppMonPluginMonitor.name = "ElasticSearch Monitor";
+    AppMonPluginMonitor.monitorClass = ElasticSearchMonitor.class;
   }
 
 }
