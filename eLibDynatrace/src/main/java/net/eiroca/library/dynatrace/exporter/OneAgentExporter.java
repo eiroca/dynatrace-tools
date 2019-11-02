@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.eiroca.ext.library.gson.SimpleGson;
+import net.eiroca.ext.library.gson.GsonCursor;
 import net.eiroca.library.config.parameter.IntegerParameter;
 import net.eiroca.library.config.parameter.StringParameter;
 import net.eiroca.library.core.LibStr;
@@ -31,6 +31,7 @@ import net.eiroca.library.dynatrace.lib.DTDevice;
 import net.eiroca.library.dynatrace.lib.DTDimensionDefinition;
 import net.eiroca.library.dynatrace.lib.DTMetricDefinition;
 import net.eiroca.library.dynatrace.lib.oneagent.OneAgentServer;
+import net.eiroca.library.metrics.MetricMetadata;
 import net.eiroca.library.sysadm.monitoring.api.Event;
 import net.eiroca.library.sysadm.monitoring.sdk.GenericProducer;
 import net.eiroca.library.sysadm.monitoring.sdk.exporter.GenericExporter;
@@ -59,7 +60,7 @@ public class OneAgentExporter extends GenericExporter {
   @Override
   public void setup(final IContext context) throws Exception {
     super.setup(context);
-    GenericExporter.config.convert(context, GenericExporter.CONFIG_PREFIX, this, "config_");
+    GenericExporter.config.convert(context, ID+".", this, "config_");
     GenericExporter.logger.debug("Dynatrace OneAgent: Server ", config_server, " token ", config_token, " version ", config_version);
     if (LibStr.isEmptyOrNull(config_server) || LibStr.isEmptyOrNull(config_token)) {
       GenericExporter.logger.error("Dynatrace OneAgent Server or token cannot be null");
@@ -73,7 +74,6 @@ public class OneAgentExporter extends GenericExporter {
   @Override
   public boolean beginBulk() {
     final boolean export = (server != null);
-    buffer.clear();
     return export;
   }
 
@@ -84,14 +84,15 @@ public class OneAgentExporter extends GenericExporter {
 
   @Override
   public void process(final Event event) {
-    final SimpleGson json = event.getData();
+    MetricMetadata metricInfo = event.getMetricInfo();
+    final GsonCursor json = new GsonCursor(event.getData());
     final DTDevice device = getDevice(json);
     if (device == null) { return; }
     final Map<DTMetricDefinition, Map<DTDimensionDefinition, List<Event>>> deviceBuffer = getDeviceBuffer(device);
-    final DTMetricDefinition metric = getMetric(json);
+    final DTMetricDefinition metric = getMetric(metricInfo, json);
     if (metric == null) { return; }
     final Map<DTDimensionDefinition, List<Event>> metricBuffer = getMetricBuffer(deviceBuffer, metric);
-    final DTDimensionDefinition dimension = getDimension(json);
+    final DTDimensionDefinition dimension = getDimension(metricInfo, json);
     final List<Event> dimensionBuffer = getDimensionBuffer(metricBuffer, dimension);
     dimensionBuffer.add(event);
   }
@@ -139,12 +140,12 @@ public class OneAgentExporter extends GenericExporter {
     final JsonArray series = new JsonArray();
     data.add("series", series);
     for (final Entry<DTMetricDefinition, Map<DTDimensionDefinition, List<Event>>> metric : metrics.entrySet()) {
-      final JsonObject serie = new JsonObject();
-      series.add(serie);
       final DTMetricDefinition metricDef = metric.getKey();
-      serie.addProperty("timeseriesId", metricDef.getId());
       final Map<DTDimensionDefinition, List<Event>> dimensions = metric.getValue();
       for (final Entry<DTDimensionDefinition, List<Event>> dimension : dimensions.entrySet()) {
+        final JsonObject serie = new JsonObject();
+        series.add(serie);
+        serie.addProperty("timeseriesId", metricDef.getId());
         final DTDimensionDefinition dimensionInfo = dimension.getKey();
         if (LibStr.isNotEmptyOrNull(dimensionInfo.getId())) {
           final JsonObject dimensionJson = new JsonObject();
@@ -166,30 +167,53 @@ public class OneAgentExporter extends GenericExporter {
     server.addDataPoints(device, data);
   }
 
-  private DTDevice getDevice(final SimpleGson json) {
-    final String host = json.getNode(GenericProducer.FLD_HOST).getAsString();
+  private DTDevice getDevice(final GsonCursor json) {
+    final String host = json.getString(GenericProducer.FLD_HOST);
     return LibStr.isNotEmptyOrNull(host) ? new DTDevice(host) : null;
   }
 
-  private DTMetricDefinition getMetric(final SimpleGson json) {
-    String name = "";
-    final String group = json.getNode(GenericProducer.FLD_GROUP).getAsString();
+  private DTMetricDefinition getMetric(MetricMetadata metricInfo, final GsonCursor json) {
+    StringBuilder name = new StringBuilder(128);
+    final String group = json.getString(GenericProducer.FLD_GROUP);
     if (group != null) {
-      name = group.replace('.', ' ') + ".";
+      name.append(group.replace('.', ' ')).append('.');
     }
-    final String metric = json.getNode(GenericProducer.FLD_METRIC).getAsString();
+    final String metric = json.getString(GenericProducer.FLD_METRIC);
     if (metric != null) {
-      name = name + metric.replace('.', ' ');
+      name.append(metric.replace('.', ' '));
     }
-    if (LibStr.isEmptyOrNull(name)) { return null; }
-    final String id = "net.eiroca:" + name.toLowerCase().replace(' ', '_');
-    return new DTMetricDefinition(id, name);
+    final String splitGroup = json.getString(GenericProducer.FLD_SPLIT_GROUP);
+    if (LibStr.isNotEmptyOrNull(splitGroup)) {
+      final String splitName = json.getString(GenericProducer.FLD_SPLIT_NAME);
+      if (metricInfo == null) {
+        name.append('.').append(splitGroup.replace('.', ' '));
+        if (LibStr.isNotEmptyOrNull(splitName)) {
+          name.append('.').append(splitName.replace('.', ' '));
+        }
+      }
+      else {
+        if (!metricInfo.dimensions().contains(splitGroup)) {
+          name.append('.').append(splitGroup.replace('.', ' '));
+          if (LibStr.isNotEmptyOrNull(splitName)) {
+            name.append('.').append(splitName.replace('.', ' '));
+          }
+        }
+      }
+    }
+    if (name.length() == 0) { return null; }
+    String metricName = name.toString();
+    final String id = "net.eiroca:" + metricName.toLowerCase().replace(' ', '_');
+    return new DTMetricDefinition(id, metricName);
   }
 
-  private DTDimensionDefinition getDimension(final SimpleGson json) {
-    final String splitGroup = json.getNode(GenericProducer.FLD_SPLIT_GROUP).getAsString();
-    if (LibStr.isEmptyOrNull(splitGroup)) { return DTDimensionDefinition.EMPTY; }
-    return new DTDimensionDefinition(splitGroup);
+  private DTDimensionDefinition getDimension(MetricMetadata metricInfo, final GsonCursor json) {
+    final String splitGroup = json.getString(GenericProducer.FLD_SPLIT_GROUP);
+    final String splitName = json.getString(GenericProducer.FLD_SPLIT_NAME);
+    if (LibStr.isEmptyOrNull(splitGroup) || LibStr.isEmptyOrNull(splitName)) { return DTDimensionDefinition.EMPTY; }
+    if (metricInfo != null) {
+      if (!metricInfo.dimensions().contains(splitGroup)) { return DTDimensionDefinition.EMPTY; }
+    }
+    return new DTDimensionDefinition(splitGroup, splitName);
   }
 
 }

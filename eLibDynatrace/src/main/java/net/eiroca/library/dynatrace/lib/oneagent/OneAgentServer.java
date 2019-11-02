@@ -70,7 +70,7 @@ public class OneAgentServer extends DynatraceServer {
   }
 
   public void addDataPoints(final DTDevice deviceInfo, final JsonObject data) {
-    makePost(getUrl("/entity/infrastructure/custom/" + deviceInfo.getId()), data.toString());
+//    makePost(getUrl("/entity/infrastructure/custom/" + deviceInfo.getId()), data.toString());
   }
 
   private String getUrl(final String api) {

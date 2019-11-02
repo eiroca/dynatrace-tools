@@ -54,6 +54,7 @@ public class Alert implements Comparable<Alert> {
   public Alert() {
     newId();
     start = new Date();
+    state = AlertState.NEW;
   }
 
   @Override

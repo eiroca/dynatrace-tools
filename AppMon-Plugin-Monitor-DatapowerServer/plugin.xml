@@ -184,6 +184,29 @@
       <metric name="Environmental Sensors - Volt5" description="EnvironmentalSensors_Volt5" unit="number" />
     </metricgroup>
   </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AdvancedMonitor.metricgroup_9" name="DataPower Ethernet Interface Status">
+    <metricgroup monitorid="net.eiroca.dynatrace.plugins.AdvancedMonitor.monitor">
+      <metric name="Interface Status - Collisions" description="EthernetInterfaceStatus_Collisions" unit="number" />
+      <metric name="Interface Status - Collisions2" description="EthernetInterfaceStatus_Collisions2" unit="number" />
+      <metric name="Interface Status - RxDrops" description="EthernetInterfaceStatus_RxDrops" unit="number" />
+      <metric name="Interface Status - RxDrops2" description="EthernetInterfaceStatus_RxDrops2" unit="number" />
+      <metric name="Interface Status - RxErrors" description="EthernetInterfaceStatus_RxErrors" unit="number" />
+      <metric name="Interface Status - RxErrors2" description="EthernetInterfaceStatus_RxErrors2" unit="number" />
+      <metric name="Interface Status - RxHCBytes" description="EthernetInterfaceStatus_RxHCBytes" unit="bytes" />
+      <metric name="Interface Status - RxHCBytes2" description="EthernetInterfaceStatus_RxHCBytes2" unit="bytes" />
+      <metric name="Interface Status - RxHCPackets" description="EthernetInterfaceStatus_RxHCPackets" unit="number" />
+      <metric name="Interface Status - RxHCPackets2" description="EthernetInterfaceStatus_RxHCPackets2" unit="number" />
+      <metric name="Interface Status - Status" description="EthernetInterfaceStatus_Status" unit="number" />
+      <metric name="Interface Status - TxDrops" description="EthernetInterfaceStatus_TxDrops" unit="number" />
+      <metric name="Interface Status - TxDrops2" description="EthernetInterfaceStatus_TxDrops2" unit="number" />
+      <metric name="Interface Status - TxErrors" description="EthernetInterfaceStatus_TxErrors" unit="number" />
+      <metric name="Interface Status - TxErrors2" description="EthernetInterfaceStatus_TxErrors2" unit="number" />
+      <metric name="Interface Status - TxHCBytes" description="EthernetInterfaceStatus_TxHCBytes" unit="bytes" />
+      <metric name="Interface Status - TxHCBytes2" description="EthernetInterfaceStatus_TxHCBytes2" unit="bytes" />
+      <metric name="Interface Status - TxHCPackets" description="EthernetInterfaceStatus_TxHCPackets" unit="number" />
+      <metric name="Interface Status - TxHCPackets2" description="EthernetInterfaceStatus_TxHCPackets2" unit="number" />
+    </metricgroup>
+  </extension>
   <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor.metricgroup7" name="DataPower FileSystem Status">
     <metricgroup monitorid="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor.monitor">
       <metric name="FileSystem Status - FreeEncrypted" description="FileSystemStatus_FreeEncrypted" unit="number" />

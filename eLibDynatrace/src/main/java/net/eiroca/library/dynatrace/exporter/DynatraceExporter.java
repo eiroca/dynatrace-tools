@@ -22,6 +22,7 @@ public class DynatraceExporter {
 
   public static void init() {
     Exporters.registry.addEntry(OneAgentExporter.ID, OneAgentExporter.class.getName());
+    Exporters.defExporters.add(OneAgentExporter.ID);
   }
 
 }

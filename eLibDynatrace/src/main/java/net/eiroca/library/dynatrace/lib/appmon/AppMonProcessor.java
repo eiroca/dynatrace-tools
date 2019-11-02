@@ -72,6 +72,7 @@ public class AppMonProcessor {
   public final RuleManager replaceManager = new RuleManager("replace");
   public RegExRuleGroup replace_DTdescription = null;
   public RegExRuleGroup replace_DT_message = null;
+  public RegExRuleGroup fix_DT_severity = null;
 
   public final RuleManager ruleManager = new RuleManager("rule");
   public RegExRuleGroup agentsRule = null;
@@ -110,6 +111,7 @@ public class AppMonProcessor {
     AppMonProcessor.dyna2severity.put("informational", AlertSeverity.INFO);
     AppMonProcessor.dyna2severity.put("warning", AlertSeverity.WARN);
     AppMonProcessor.dyna2severity.put("severe", AlertSeverity.SEVERE);
+    //
     AppMonProcessor.severity2dyna.put(AlertSeverity.INFO, "informational");
     AppMonProcessor.severity2dyna.put(AlertSeverity.WARN, "warning");
     AppMonProcessor.severity2dyna.put(AlertSeverity.SEVERE, "severe");
@@ -242,7 +244,9 @@ public class AppMonProcessor {
         if (!isNew && (alert.severity != sev)) {
           // Cambio severity, chiude vecchio e apre nuovo
           server.closeAlert(alert);
+          Date startDate = alert.start;
           alert = newAlert();
+          alert.start = startDate;
           serviceStatus.alert = alert;
           isNew = true;
         }
@@ -418,6 +422,7 @@ public class AppMonProcessor {
     system2service = lookupManager.addLookupRule("system2service", AppMonProcessor.CONF_PATH + "system2service.csv");
     replace_DTdescription = replaceManager.addRegExRules("DT_description", AppMonProcessor.CONF_PATH + "DT_description.csv");
     replace_DT_message = replaceManager.addRegExRules("DT_message", AppMonProcessor.CONF_PATH + "DT_message.csv");
+    fix_DT_severity = replaceManager.addRegExRules("DT_fixSeverity", AppMonProcessor.CONF_PATH + "DT_fixSeverity.csv");
     agentsRule = replaceManager.addRegExRules("AgentRules", AppMonProcessor.CONF_PATH + "agentsRules.csv");
   }
 
@@ -454,8 +459,12 @@ public class AppMonProcessor {
           a.agent = LibRegEx.getField(m, "agent");
           a.host = LibRegEx.getField(m, "host");
           a.message = m.replaceAll(replace);
+          break;
         }
-        break;
+      }
+      AlertSeverity sev = findSeverityFix(a.message);
+      if (sev != null) {
+        a.severity = sev;
       }
     }
     if (a.description != null) {
@@ -512,6 +521,24 @@ public class AppMonProcessor {
     return a;
   }
 
+  public AlertSeverity findSeverityFix(String message) {
+    AlertSeverity sev = null;
+    for (final String[] def : fix_DT_severity.getDefinitions().getData()) {
+      final String regEx = def[0];
+      final String severity = def[1];
+      final RegExRule pattern = fix_DT_severity.getPattern(regEx);
+      final Matcher m = pattern.getMatcher(message);
+      if (m.find()) {
+        pattern.hits++;
+        sev = AppMonProcessor.dyna2severity.get(severity);
+        if (sev != null) {
+          break;
+        }
+      }
+    }
+    return sev;
+  }
+
   public static JsonObject toDynaTraceJson(final Alert alert) {
     final JsonObject data = new JsonObject();
     data.addProperty("systemprofile", alert.system);
@@ -542,6 +569,10 @@ public class AppMonProcessor {
 
   public Collection<ServiceStatus> getServices() {
     return services.values();
+  }
+
+  public String severityToString(AlertSeverity severity) {
+    return (severity != null) ? severity2dyna.get(severity) : null;
   }
 
 }
