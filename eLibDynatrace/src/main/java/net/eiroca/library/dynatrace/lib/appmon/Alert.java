@@ -78,4 +78,9 @@ public class Alert implements Comparable<Alert> {
   public void newId() {
     id = "$" + UUID.randomUUID().toString();
   }
+
+  public boolean isNew() {
+    return (state == AlertState.NEW);
+  }
+
 }

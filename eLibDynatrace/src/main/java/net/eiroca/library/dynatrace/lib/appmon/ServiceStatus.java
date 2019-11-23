@@ -17,6 +17,7 @@
 package net.eiroca.library.dynatrace.lib.appmon;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,10 @@ public class ServiceStatus {
   public String name;
   public String description;
   public ServiceState state = ServiceState.OK;
+  public Date lastChange = null;
   public List<Alert> alerts = new ArrayList<>();
   public Map<AlertSeverity, Integer> statusCount = new HashMap<>();
+  public Map<AlertSeverity, Date> statusDate = new HashMap<>();
   public Alert alert;
 
   public ServiceStatus(final String name, final String description) {
@@ -55,33 +58,54 @@ public class ServiceStatus {
       else {
         statusCount.put(severity, cnt + 1);
       }
+      final Date startDate = alert.start;
+      Date lastDate = statusDate.get(severity);
+      if ((lastDate == null) || ((startDate != null) && lastDate.after(startDate))) {
+        lastDate = startDate;
+      }
+      statusDate.put(severity, lastDate);
     }
     final int infoCount = ServiceStatus.val(statusCount.get(AlertSeverity.INFO), 0);
     final int warnCount = ServiceStatus.val(statusCount.get(AlertSeverity.WARN), 0);
     final int errCount = ServiceStatus.val(statusCount.get(AlertSeverity.SEVERE), 0);
     final int criticalCount = ServiceStatus.val(statusCount.get(AlertSeverity.CRITICAL), 0);
-    if (infoCount > 50) {
+    final Date now = new Date();
+    final Date infoDate = ServiceStatus.val(statusDate.get(AlertSeverity.INFO), now);
+    final Date warnDate = ServiceStatus.val(statusDate.get(AlertSeverity.WARN), now);
+    final Date errDate = ServiceStatus.val(statusDate.get(AlertSeverity.SEVERE), now);
+    final Date criticalDate = ServiceStatus.val(statusDate.get(AlertSeverity.CRITICAL), now);
+    state = ServiceState.OK;
+    if (infoCount > 9) {
       state = ServiceState.WARNING;
+      lastChange = infoDate;
     }
     if (warnCount > 0) {
-      state = ServiceState.WARNING;
-    }
-    if (errCount > 0) {
-      if (warnCount > 0) {
+      lastChange = warnDate;
+      if (warnCount > 1) {
+        state = ServiceState.ERROR;
+      }
+      else if (infoCount > 2) {
         state = ServiceState.ERROR;
       }
       else {
         state = ServiceState.WARNING;
       }
     }
-    if (errCount > 1) {
-      state = ServiceState.ERROR;
+    if (errCount > 0) {
+      lastChange = errDate;
+      if (errCount > 1) {
+        state = ServiceState.FAILED;
+      }
+      else if (warnCount > 3) {
+        state = ServiceState.FAILED;
+      }
+      else {
+        state = ServiceState.ERROR;
+      }
     }
     if (criticalCount > 0) {
-      state = ServiceState.ERROR;
-    }
-    if (criticalCount > 10) {
       state = ServiceState.FAILED;
+      lastChange = criticalDate;
     }
   }
 
@@ -94,9 +118,19 @@ public class ServiceStatus {
     }
   }
 
+  private static Date val(final Date val, final Date def) {
+    if (val == null) {
+      return def;
+    }
+    else {
+      return val;
+    }
+  }
+
   public void reset() {
     state = ServiceState.OK;
     alerts.clear();
     statusCount.clear();
+    statusDate.clear();
   }
 }

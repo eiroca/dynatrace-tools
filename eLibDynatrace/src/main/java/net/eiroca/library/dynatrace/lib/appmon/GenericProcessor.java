@@ -16,6 +16,11 @@
  **/
 package net.eiroca.library.dynatrace.lib.appmon;
 
-public class Constants {
+import org.slf4j.Logger;
+import net.eiroca.library.system.Logs;
+
+public class GenericProcessor {
+
+  protected static Logger logger = Logs.getLogger();
 
 }
