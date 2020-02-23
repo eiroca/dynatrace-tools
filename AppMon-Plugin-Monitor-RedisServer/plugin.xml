@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonRedisMonitor" name="AppMon Redis Monitor">
     <information>
-      <description value="Collect metrics form a Redis Server" />
+      <description value="Collect metrics from a Redis Server" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonLocalCommandMonitor" name="AppMon LocalCommand Monitor">
     <information>
-      <description value="Collect metrics form an output of a local command" />
+      <description value="Collect metrics from an output of a local command" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonAdvancedMonitor" name="AppMon Advanced Monitor">
     <information>
-      <description value="Collect metrics form different server type. In particular:&#xA;- Apache server status page and parses out the results into the repository&#xA;- Web Server&#xA;- Database&#xA;- eSysAdm Server&#xA;- FLUME collector&#xA;- Redis Server" />
+      <description value="Collect metrics from different server type. In particular:&#xA;- Apache server status page and parses out the results into the repository&#xA;- Web Server&#xA;- Database&#xA;- eSysAdm Server&#xA;- FLUME collector&#xA;- Redis Server" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

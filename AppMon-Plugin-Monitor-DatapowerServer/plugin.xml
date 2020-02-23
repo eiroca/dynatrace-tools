@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor" name="AppMon DataPower Monitor">
     <information>
-      <description value="Collect metrics form a DataPower appliance" />
+      <description value="Collect metrics from a DataPower appliance" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

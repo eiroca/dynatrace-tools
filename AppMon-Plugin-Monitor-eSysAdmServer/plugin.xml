@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMoneSysAdmServerMonitor" name="AppMon eSysAdm Server Monitor">
     <information>
-      <description value="Collect metrics form an eSysAdm Server" />
+      <description value="Collect metrics from an eSysAdm Server" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

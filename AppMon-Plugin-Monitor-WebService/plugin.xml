@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonWebServiceMonitor" name="AppMon WebService Monitor">
     <information>
-      <description value="Collect metrics form a Web Service" />
+      <description value="Collect metrics from a Web Service" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonSSHCommandMonitor" name="AppMon SSHCommand Monitor">
     <information>
-      <description value="Collect metrics form a SSH command" />
+      <description value="Collect metrics from a SSH command" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

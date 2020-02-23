@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonTCPServerMonitor" name="AppMon TCPServer Monitor">
     <information>
-      <description value="Collect metrics form a TCP connection" />
+      <description value="Collect metrics from a TCP connection" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

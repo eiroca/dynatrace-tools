@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonApacheWebServerMonitor" name="AppMon ApacheWebServer Monitor">
     <information>
-      <description value="Collect metrics form an Apache Web Server" />
+      <description value="Collect metrics from an Apache Web Server" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />

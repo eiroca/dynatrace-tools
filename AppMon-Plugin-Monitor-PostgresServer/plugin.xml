@@ -3,7 +3,7 @@
 <plugin>
   <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="net.eiroca.dynatrace.plugins.AppMonPostgresServerMonitor" name="AppMon PostgresSQL Monitor">
     <information>
-      <description value="Collect metrics form a PostgresSQL Server" />
+      <description value="Collect metrics from a PostgresSQL Server" />
       <category value="" />
       <license value="LICENSE" />
       <supportlevel value="unsupported" />
