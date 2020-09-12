@@ -5,47 +5,48 @@
     <classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
     <classpathentry kind="lib" path="lib/bcprov-jdk15on-1.61.jar"/>
     <classpathentry kind="lib" path="lib/commons-codec-1.11.jar"/>
-    <classpathentry kind="lib" path="lib/commons-lang3-3.9.jar"/>
+    <classpathentry kind="lib" path="lib/commons-lang3-3.10.jar"/>
     <classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
     <classpathentry kind="lib" path="lib/commons-pool2-2.6.2.jar"/>
     <classpathentry kind="lib" path="lib/commons-text-1.8.jar"/>
     <classpathentry kind="lib" path="lib/db2jcc4.jar"/>
     <classpathentry kind="lib" path="lib/db2jcc_license_cisuz.jar"/>
-    <classpathentry kind="lib" path="lib/eExtLib-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibAppMonPlugin-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibCore-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibDB-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibDiagnostic-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibExt-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibHTTP-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/eLibSys-0.0.9.jar"/>
-    <classpathentry kind="lib" path="lib/fluent-hc-4.5.10.jar"/>
-    <classpathentry kind="lib" path="lib/googleauth-1.2.0.jar"/>
+    <classpathentry kind="lib" path="lib/eExtLib-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibAppMonPlugin-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibCore-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibDB-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibDiagnostic-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibExt-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibHTTP-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/eLibSys-0.0.10.jar"/>
+    <classpathentry kind="lib" path="lib/fluent-hc-4.5.12.jar"/>
+    <classpathentry kind="lib" path="lib/googleauth-1.5.0.jar"/>
     <classpathentry kind="lib" path="lib/groovy-2.4.7.jar"/>
     <classpathentry kind="lib" path="lib/groovy-json-2.4.7.jar"/>
     <classpathentry kind="lib" path="lib/groovy-xml-2.4.7.jar"/>
-    <classpathentry kind="lib" path="lib/gson-2.8.5.jar"/>
+    <classpathentry kind="lib" path="lib/gson-2.8.6.jar"/>
     <classpathentry kind="lib" path="lib/guava-11.0.2.jar"/>
-    <classpathentry kind="lib" path="lib/httpclient-4.5.10.jar"/>
-    <classpathentry kind="lib" path="lib/httpcore-4.4.12.jar"/>
+    <classpathentry kind="lib" path="lib/httpclient-4.5.12.jar"/>
+    <classpathentry kind="lib" path="lib/httpcore-4.4.13.jar"/>
     <classpathentry kind="lib" path="lib/iijdbc-10.2-4.1.10.jar"/>
-    <classpathentry kind="lib" path="lib/jcifs-ng-2.1.3.jar"/>
-    <classpathentry kind="lib" path="lib/jedis-3.1.0.jar"/>
+    <classpathentry kind="lib" path="lib/jcifs-ng-2.1.4.jar"/>
+    <classpathentry kind="lib" path="lib/jedis-3.3.0.jar"/>
     <classpathentry kind="lib" path="lib/json-20190722.jar"/>
     <classpathentry kind="lib" path="lib/jsr305-1.3.9.jar"/>
-    <classpathentry kind="lib" path="lib/mongo-java-driver-3.11.0.jar"/>
-    <classpathentry kind="lib" path="lib/mysql-connector-java-8.0.17.jar"/>
+    <classpathentry kind="lib" path="lib/mongo-java-driver-3.12.5.jar"/>
+    <classpathentry kind="lib" path="lib/mssql-jdbc-8.2.2.jre8.jar"/>
+    <classpathentry kind="lib" path="lib/mysql-connector-java-8.0.20.jar"/>
     <classpathentry kind="lib" path="lib/ojdbc8.jar"/>
     <classpathentry kind="lib" path="lib/ons.jar"/>
     <classpathentry kind="lib" path="lib/oraclepki.jar"/>
     <classpathentry kind="lib" path="lib/orai18n.jar"/>
     <classpathentry kind="lib" path="lib/osdt_cert.jar"/>
     <classpathentry kind="lib" path="lib/osdt_core.jar"/>
-    <classpathentry kind="lib" path="lib/postgresql-42.2.6.jre7.jar"/>
+    <classpathentry kind="lib" path="lib/postgresql-42.2.14.jar"/>
     <classpathentry kind="lib" path="lib/protobuf-java-3.6.1.jar"/>
     <classpathentry kind="lib" path="lib/re2j-1.3.jar"/>
     <classpathentry kind="lib" path="lib/simplefan.jar"/>
-    <classpathentry kind="lib" path="lib/slf4j-api-1.7.28.jar"/>
+    <classpathentry kind="lib" path="lib/slf4j-api-1.7.30.jar"/>
     <classpathentry kind="lib" path="lib/soa-model-core-1.6.0.jar"/>
     <classpathentry kind="lib" path="lib/trilead-ssh2-1.0.0-build222.jar"/>
     <classpathentry kind="lib" path="lib/ucp.jar"/>

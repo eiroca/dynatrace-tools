@@ -248,8 +248,7 @@ public class AppMonProcessor extends GenericProcessor {
 
   public void importAlerts(final AppMonServer server, final List<Alert> alerts, final String json) {
     if (json == null) { return; }
-    final JsonParser parser = new JsonParser();
-    final JsonObject data = parser.parse(json).getAsJsonObject();
+    final JsonObject data = JsonParser.parseString(json).getAsJsonObject();
     final JsonArray records = data.getAsJsonArray("alerts");
     for (int i = 0; i < records.size(); i++) {
       final JsonObject alert = records.get(i).getAsJsonObject();
@@ -359,7 +358,7 @@ public class AppMonProcessor extends GenericProcessor {
 
   public Alert fromDynaTraceJson(final String id, final String json) {
     final Alert a = new Alert(id);
-    final JsonObject data = a.parser.parse(json).getAsJsonObject();
+    final JsonObject data = JsonParser.parseString(json).getAsJsonObject();
     a.system = GsonUtil.getString(data, "systemprofile");
     a.rule = GsonUtil.getString(data, "rule");
     a.message = GsonUtil.getString(data, "message");

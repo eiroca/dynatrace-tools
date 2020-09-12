@@ -18,7 +18,6 @@ package net.eiroca.library.dynatrace.lib.appmon;
 
 import java.util.Date;
 import java.util.UUID;
-import com.google.gson.JsonParser;
 import net.eiroca.ext.library.gson.GsonUtil;
 
 public class Alert implements Comparable<Alert> {
@@ -44,8 +43,6 @@ public class Alert implements Comparable<Alert> {
   public Double measureUpperLimit;
   public Double measureUpperLimitWarning;
   public Double measureStatus;
-
-  final transient JsonParser parser = new JsonParser();
 
   public Alert(final String id) {
     this.id = id;
