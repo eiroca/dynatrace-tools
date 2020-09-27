@@ -22,6 +22,7 @@ Bundle-ClassPath: .,lib/bcprov-jdk15on-1.61.jar,lib/commons-codec-1.11
  -ssh2-1.0.0-build222.jar,lib/ucp.jar,lib/xdb6.jar
 Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: eIrOcA.net
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonAdvancedMonitor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 

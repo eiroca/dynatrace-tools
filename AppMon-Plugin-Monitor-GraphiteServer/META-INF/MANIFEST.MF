@@ -17,6 +17,7 @@ Bundle-ClassPath: .,lib/bcprov-jdk15on-1.61.jar,lib/commons-codec-1.11
  jar
 Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: eIrOcA.net
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonGraphiteMonitor
 

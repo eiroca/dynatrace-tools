@@ -20,4 +20,6 @@ Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
 Bundle-Vendor: eIrOcA.net
 Created-By: 17.0-b16 (Sun Microsystems Inc.)
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonAdvancedAction
 
