@@ -33,7 +33,7 @@ import net.eiroca.library.dynatrace.lib.DTMetricDefinition;
 import net.eiroca.library.dynatrace.lib.oneagent.OneAgentServer;
 import net.eiroca.library.metrics.MetricMetadata;
 import net.eiroca.library.sysadm.monitoring.api.Event;
-import net.eiroca.library.sysadm.monitoring.sdk.GenericProducer;
+import net.eiroca.library.sysadm.monitoring.sdk.MeasureProducer;
 import net.eiroca.library.sysadm.monitoring.sdk.exporter.GenericExporter;
 import net.eiroca.library.system.IContext;
 
@@ -168,23 +168,23 @@ public class OneAgentExporter extends GenericExporter {
   }
 
   private DTDevice getDevice(final GsonCursor json) {
-    final String host = json.getString(GenericProducer.FLD_HOST);
+    final String host = json.getString(MeasureProducer.FLD_HOST);
     return LibStr.isNotEmptyOrNull(host) ? new DTDevice(host) : null;
   }
 
   private DTMetricDefinition getMetric(final MetricMetadata metricInfo, final GsonCursor json) {
     final StringBuilder name = new StringBuilder(128);
-    final String group = json.getString(GenericProducer.FLD_GROUP);
+    final String group = json.getString(MeasureProducer.FLD_GROUP);
     if (group != null) {
       name.append(group.replace('.', ' ')).append('.');
     }
-    final String metric = json.getString(GenericProducer.FLD_METRIC);
+    final String metric = json.getString(MeasureProducer.FLD_METRIC);
     if (metric != null) {
       name.append(metric.replace('.', ' '));
     }
-    final String splitGroup = json.getString(GenericProducer.FLD_SPLIT_GROUP);
+    final String splitGroup = json.getString(MeasureProducer.FLD_SPLIT_GROUP);
     if (LibStr.isNotEmptyOrNull(splitGroup)) {
-      final String splitName = json.getString(GenericProducer.FLD_SPLIT_NAME);
+      final String splitName = json.getString(MeasureProducer.FLD_SPLIT_NAME);
       if (metricInfo == null) {
         name.append('.').append(splitGroup.replace('.', ' '));
         if (LibStr.isNotEmptyOrNull(splitName)) {
@@ -207,8 +207,8 @@ public class OneAgentExporter extends GenericExporter {
   }
 
   private DTDimensionDefinition getDimension(final MetricMetadata metricInfo, final GsonCursor json) {
-    final String splitGroup = json.getString(GenericProducer.FLD_SPLIT_GROUP);
-    final String splitName = json.getString(GenericProducer.FLD_SPLIT_NAME);
+    final String splitGroup = json.getString(MeasureProducer.FLD_SPLIT_GROUP);
+    final String splitName = json.getString(MeasureProducer.FLD_SPLIT_NAME);
     if (LibStr.isEmptyOrNull(splitGroup) || LibStr.isEmptyOrNull(splitName)) { return DTDimensionDefinition.EMPTY; }
     if (metricInfo != null) {
       if (!metricInfo.dimensions().contains(splitGroup)) { return DTDimensionDefinition.EMPTY; }
