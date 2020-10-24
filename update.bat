@@ -26,6 +26,7 @@ xcopy /y %ELIB_PATH%\eJDBCDrivers\target\libs\orai18n-* .\AppMon-Plugin-Monitor-
 xcopy /y %ELIB_PATH%\eJDBCDrivers\target\libs\osdt_* .\AppMon-Plugin-Monitor-OracleServer\lib
 xcopy /y %ELIB_PATH%\eJDBCDrivers\target\libs\ucp-* .\AppMon-Plugin-Monitor-OracleServer\lib
 xcopy /y %ELIB_PATH%\eJDBCDrivers\target\libs\xdb-* .\AppMon-Plugin-Monitor-OracleServer\lib
+xcopy /y %ELIB_PATH%\eJDBCDrivers\target\libs\simplefan-* .\AppMon-Plugin-Monitor-OracleServer\lib
 
 xcopy /y %ELIB_PATH%\eJDBCDrivers\target\libs\* .\AppMon-Plugin-Monitor-DatabaseServer\lib
 
