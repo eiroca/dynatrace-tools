@@ -1,5 +1,5 @@
 SET ELIB_PATH=..\
-SET ELIB_VER="0.0.10"
+SET ELIB_VER=0.0.10
 
 for /D %%d in (AppMon-Plugin-Monitor-*) do (
 	del /Q .\%%d\lib\*
