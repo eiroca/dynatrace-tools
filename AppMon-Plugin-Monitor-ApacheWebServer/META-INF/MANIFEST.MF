@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonApacheWebSer
+ verMonitor
 Bundle-SymbolicName: net.eiroca.dynatrace.plugins.AppMonApacheWebServe
  rMonitor;singleton:=true
 Bundle-Name: AppMon ApacheWebServer Monitor
@@ -19,4 +21,4 @@ Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: eIrOcA.net
-Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonApacheWebServerMonitor
+

@@ -29,18 +29,18 @@
     <classpathentry kind="lib" path="lib/jedis-3.3.0.jar"/>
     <classpathentry kind="lib" path="lib/json-20190722.jar"/>
     <classpathentry kind="lib" path="lib/jsr305-1.3.9.jar"/>
-    <classpathentry kind="lib" path="lib/ojdbc8.jar"/>
-    <classpathentry kind="lib" path="lib/ons.jar"/>
-    <classpathentry kind="lib" path="lib/oraclepki.jar"/>
-    <classpathentry kind="lib" path="lib/orai18n.jar"/>
-    <classpathentry kind="lib" path="lib/osdt_cert.jar"/>
-    <classpathentry kind="lib" path="lib/osdt_core.jar"/>
+    <classpathentry kind="lib" path="lib/ojdbc8-19.7.0.0.jar"/>
+    <classpathentry kind="lib" path="lib/ons-19.7.0.0.jar"/>
+    <classpathentry kind="lib" path="lib/oraclepki-19.7.0.0.jar"/>
+    <classpathentry kind="lib" path="lib/orai18n-19.7.0.0.jar"/>
+    <classpathentry kind="lib" path="lib/osdt_cert-19.7.0.0.jar"/>
+    <classpathentry kind="lib" path="lib/osdt_core-19.7.0.0.jar"/>
     <classpathentry kind="lib" path="lib/re2j-1.3.jar"/>
-    <classpathentry kind="lib" path="lib/simplefan.jar"/>
+    <classpathentry kind="lib" path="lib/simplefan-19.7.0.0.jar"/>
     <classpathentry kind="lib" path="lib/slf4j-api-1.7.30.jar"/>
     <classpathentry kind="lib" path="lib/soa-model-core-1.6.0.jar"/>
     <classpathentry kind="lib" path="lib/trilead-ssh2-1.0.0-build222.jar"/>
-    <classpathentry kind="lib" path="lib/ucp.jar"/>
-    <classpathentry kind="lib" path="lib/xdb6.jar"/>
+    <classpathentry kind="lib" path="lib/ucp-19.7.0.0.jar"/>
+    <classpathentry kind="lib" path="lib/xdb-19.7.0.0.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>

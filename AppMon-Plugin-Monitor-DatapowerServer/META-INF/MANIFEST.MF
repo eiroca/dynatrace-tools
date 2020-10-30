@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonDataPowerMon
+ itor
 Bundle-SymbolicName: net.eiroca.dynatrace.plugins.AppMonDataPowerMonit
  or;singleton:=true
 Bundle-Name: AppMon DataPower Monitor
@@ -19,5 +21,4 @@ Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: eIrOcA.net
-Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonDataPowerMonitor
 

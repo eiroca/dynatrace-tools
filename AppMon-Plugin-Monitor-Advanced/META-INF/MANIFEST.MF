@@ -1,28 +1,30 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonAdvancedMoni
+ tor
 Bundle-SymbolicName: net.eiroca.dynatrace.plugins.AppMonAdvancedMonito
  r;singleton:=true
 Bundle-Name: AppMon Advanced Monitor
 Bundle-Version: 1.0.1
 Bundle-ClassPath: .,lib/bcprov-jdk15on-1.61.jar,lib/commons-codec-1.11
  .jar,lib/commons-lang3-3.10.jar,lib/commons-logging-1.2.jar,lib/commo
- ns-pool2-2.6.2.jar,lib/commons-text-1.8.jar,lib/db2jcc4.jar,lib/db2jc
- c_license_cisuz.jar,lib/eExtLib-0.0.10.jar,lib/eLibAppMonPlugin-0.0.1
- 0.jar,lib/eLibCore-0.0.10.jar,lib/eLibDB-0.0.10.jar,lib/eLibDiagnosti
- c-0.0.10.jar,lib/eLibExt-0.0.10.jar,lib/eLibHTTP-0.0.10.jar,lib/eLibS
- ys-0.0.10.jar,lib/fluent-hc-4.5.12.jar,lib/googleauth-1.5.0.jar,lib/g
- roovy-2.4.7.jar,lib/groovy-json-2.4.7.jar,lib/groovy-xml-2.4.7.jar,li
- b/gson-2.8.6.jar,lib/guava-11.0.2.jar,lib/httpclient-4.5.12.jar,lib/h
- ttpcore-4.4.13.jar,lib/iijdbc-10.2-4.1.10.jar,lib/jcifs-ng-2.1.4.jar,
- lib/jedis-3.3.0.jar,lib/json-20190722.jar,lib/jsr305-1.3.9.jar,lib/mo
- ngo-java-driver-3.12.5.jar,lib/mssql-jdbc-8.2.2.jre8.jar,lib/mysql-co
- nnector-java-8.0.20.jar,lib/ojdbc8.jar,lib/ons.jar,lib/oraclepki.jar,
- lib/orai18n.jar,lib/osdt_cert.jar,lib/osdt_core.jar,lib/postgresql-42
- .2.14.jar,lib/protobuf-java-3.6.1.jar,lib/re2j-1.3.jar,lib/simplefan.
- jar,lib/slf4j-api-1.7.30.jar,lib/soa-model-core-1.6.0.jar,lib/trilead
- -ssh2-1.0.0-build222.jar,lib/ucp.jar,lib/xdb6.jar
+ ns-pool2-2.6.2.jar,lib/commons-text-1.8.jar,lib/eExtLib-0.0.10.jar,li
+ b/eLibAppMonPlugin-0.0.10.jar,lib/eLibCore-0.0.10.jar,lib/eLibDB-0.0.
+ 10.jar,lib/eLibDiagnostic-0.0.10.jar,lib/eLibExt-0.0.10.jar,lib/eLibH
+ TTP-0.0.10.jar,lib/eLibSys-0.0.10.jar,lib/fluent-hc-4.5.12.jar,lib/go
+ ogleauth-1.5.0.jar,lib/groovy-2.4.7.jar,lib/groovy-json-2.4.7.jar,lib
+ /groovy-xml-2.4.7.jar,lib/gson-2.8.6.jar,lib/guava-11.0.2.jar,lib/htt
+ pclient-4.5.12.jar,lib/httpcore-4.4.13.jar,lib/iijdbc-10.2-4.1.10.jar
+ ,lib/jcc-11.5.4.0.jar,lib/jcifs-ng-2.1.4.jar,lib/jedis-3.3.0.jar,lib/
+ json-20190722.jar,lib/jsr305-1.3.9.jar,lib/mongo-java-driver-3.12.5.j
+ ar,lib/mssql-jdbc-8.2.2.jre8.jar,lib/mysql-connector-java-8.0.20.jar,
+ lib/ojdbc8-19.7.0.0.jar,lib/ons-19.7.0.0.jar,lib/oraclepki-19.7.0.0.j
+ ar,lib/orai18n-19.7.0.0.jar,lib/osdt_cert-19.7.0.0.jar,lib/osdt_core-
+ 19.7.0.0.jar,lib/postgresql-42.2.14.jar,lib/protobuf-java-3.6.1.jar,l
+ ib/re2j-1.3.jar,lib/simplefan-19.7.0.0.jar,lib/slf4j-api-1.7.30.jar,l
+ ib/soa-model-core-1.6.0.jar,lib/trilead-ssh2-1.0.0-build222.jar,lib/u
+ cp-19.7.0.0.jar,lib/xdb-19.7.0.0.jar
 Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
-Bundle-Vendor: eIrOcA.net
-Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonAdvancedMonitor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: eIrOcA.net
 

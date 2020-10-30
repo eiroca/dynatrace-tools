@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor
 Bundle-SymbolicName: net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor;s
  ingleton:=true
 Bundle-Name: AppMon FLUME Monitor
@@ -19,5 +20,4 @@ Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: eIrOcA.net
-Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonFLUMEMonitor
 

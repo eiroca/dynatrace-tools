@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
+Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonRedisServerM
+ onitor
 Bundle-SymbolicName: net.eiroca.dynatrace.plugins.AppMonRedisServerMon
  itor;singleton:=true
 Bundle-Name: AppMon Redis Monitor
@@ -19,5 +21,4 @@ Require-Bundle: com.dynatrace.diagnostics.sdk
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: eIrOcA.net
-Automatic-Module-Name: net.eiroca.dynatrace.plugins.AppMonRedisServerMonitor
 
