@@ -63,3 +63,6 @@ local.properties
 **/build/*
 /external\ docs/*
 /test_dashboard/
+
+**/.classpath
+**/.project

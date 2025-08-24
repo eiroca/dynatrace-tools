@@ -3,7 +3,7 @@
   <name>dynatrace-tools</name>
   <groupId>net.eiroca</groupId>
   <artifactId>dynatrace-tools</artifactId>
-  <version>0.0.10</version>
+  <version>1.8.1</version>
   <packaging>pom</packaging>
   <organization>
     <name>net.eiroca</name>
@@ -12,11 +12,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <jdk.version>1.8</jdk.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
     <surefire.version>2.22.2</surefire.version>
     <junit.version>4.13.2</junit.version>
     <servlet.version>3.1.0</servlet.version>
-    <eJDBCDrivers.version>0.0.10</eJDBCDrivers.version>
-    <eLib.version>0.0.10</eLib.version>
+    <eJDBCDrivers.version>1.8.1</eJDBCDrivers.version>
+    <eLib.version>1.8.1</eLib.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codecs.version>1.15</commons-codecs.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -64,6 +66,7 @@
             <exclude>**/placeholder</exclude>
           </excludes>
           <archive>
+            <addMavenDescriptor>false</addMavenDescriptor>
             <manifestEntries>
               <Build-Jdk>${jdk.version}</Build-Jdk>
               <Implementation-Title>${project.name}</Implementation-Title>
